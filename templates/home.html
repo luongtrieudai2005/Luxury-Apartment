@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ - RentHouse{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Danh sách nhà cho thuê</h3>
+    <a href="#" class="btn btn-success">Đăng tin mới</a>
+  </div>
+
+  <div class="row g-3">
+    {% for item in listings %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card listing-card h-100">
+        <img src="{{ item.img }}" class="card-img-top" alt="image">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.title }}</h5>
+          <p class="card-text text-muted small">{{ item.location }} · {{ item.price }}</p>
+          <p class="card-text">{{ item.summary }}</p>
+          <a href="#" class="btn btn-primary btn-sm">Xem chi tiết</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}

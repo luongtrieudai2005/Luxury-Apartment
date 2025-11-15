@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Quản lý nhà / hợp đồng{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-4">Quản lý nhà / hợp đồng</h3>
+
+<div class="card p-3 shadow-sm mb-4">
+
+  <!-- Hàng 1 -->
+  <div class="row g-3">
+
+    <!-- Tìm cơ sở lưu trú -->
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Tìm cơ sở lưu trú...">
+    </div>
+
+    <!-- Nhắc thanh toán -->
+    <div class="col-md-3">
+      <button class="btn btn-info text-primary w-100 d-flex align-items-center justify-content-center">
+        <i class="bi bi-bell me-2"></i> Nhắc thanh toán
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Hàng 2: Sắp xếp theo -->
+  <div class="row g-3 mt-2">
+    <div class="col-md-3">
+      <select class="form-select">
+        <option selected>Sắp xếp theo</option>
+        <option value="az">Từ A - Z</option>
+        <option value="za">Từ Z - A</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Bảng quản lý nhà -->
+<div class="card shadow-sm p-3">
+  <table class="table table-bordered align-middle">
+    <thead class="custom-header">
+  <tr>
+    <th>Nhà</th>
+    <th>Phòng trống</th>
+    <th>Phòng chưa thanh toán</th>
+    <th>Sắp hết hạn hợp đồng</th>
+    <th>Chức năng</th>
+  </tr>
+</thead>
+
+
+
+    <tbody>
+      <tr>
+        <td>22L Quận 7</td>
+        <td>1/2</td>
+        <td>0</td>
+        <td>1</td>
+        <td class="text-center">
+          <a href="#" class="btn btn-light btn-sm">Xem nhà</a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>223 Quận 1</td>
+        <td>1/2</td>
+        <td>1</td>
+        <td>1</td>
+        <td class="text-center">
+          <a href="#" class="btn btn-light btn-sm">Xem nhà</a>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+<!-- Nút thêm nhà -->
+<div class="d-flex justify-content-end mt-3">
+  <a href="#" class="btn btn-warning">
+    <i class="bi bi-plus-circle me-2"></i> Thêm nhà
+  </a>
+</div>
+
+
+{% endblock %} 

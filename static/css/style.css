@@ -1,0 +1,222 @@
+/* ===================== */
+/* MÀU CHỦ ĐẠO THEO GIAO DIỆN */
+/* ===================== */
+:root{
+  --rh-primary: #0d6efd;
+
+  /* màu mới theo giao diện hình bạn gửi */
+  --sidebar-bg: #0A0F24;          /* Xanh đậm sidebar */
+  --sidebar-hover: #FFD54F;       /* Hover vàng */
+  --sidebar-active: #FFCA28;      /* Active vàng đậm */
+  --sidebar-text: #ffffff;        /* Chữ sidebar */
+
+  --content-bg: #FFFFFF;          /* Nền trang */
+  --card-border: #0A66C2;         /* Viền xanh dương */
+  --text-light: #E2E8F0;
+}
+
+/* ===================== */
+/* BỐ CỤC CHUNG */
+/* ===================== */
+body{
+  background: var(--content-bg);
+}
+
+#wrapper { 
+  min-height:100vh;
+  display:flex; 
+}
+
+#page-content-wrapper { 
+  flex:1; 
+  background: var(--content-bg);
+  padding: 20px;
+}
+
+/* Sidebar: bạn đang include file "sidebar.html" nên dùng class .sidebar */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--sidebar-bg) !important;
+  color: var(--sidebar-text);
+  border-right: 3px solid var(--card-border);
+  transition: all 0.3s;
+}
+
+/* avatar + info */
+.sidebar .text-center h6,
+.sidebar small {
+  color: var(--text-light);
+}
+
+/* ô search */
+.sidebar input {
+  background: #1A223A;
+  border: none;
+  color: #fff;
+}
+
+.sidebar input::placeholder {
+  color: #ccc;
+}
+
+/* responsive */
+@media (max-width:768px){
+  .sidebar {
+    margin-left:-260px;
+    position:absolute;
+    z-index:1030;
+  }
+  #wrapper.toggled .sidebar {
+    margin-left:0;
+  }
+}
+
+/* ===================== */
+/* MENU SIDEBAR */
+/* ===================== */
+.nav-link {
+  color: var(--text-light) !important;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  padding: 10px 14px;
+  transition: 0.25s ease;
+}
+
+/* Hover vàng */
+.nav-link:hover {
+  background-color: var(--sidebar-hover) !important;
+  color: #000 !important;
+}
+
+/* Active vàng đậm */
+.nav-link.active {
+  background-color: var(--sidebar-active) !important;
+  color: #000 !important;
+  font-weight: 600;
+}
+
+/* submenu links */
+#menuLuutru a,
+#menuDichvu a,
+#menuTienich a {
+  padding: 8px 14px;
+  border-radius: 6px;
+  display: block;
+  color: var(--text-light) !important;
+}
+
+#menuLuutru a:hover,
+#menuDichvu a:hover,
+#menuTienich a:hover {
+  background: var(--sidebar-hover);
+  color: #000 !important;
+}
+
+.nav-link i {
+  margin-right: 6px;
+}
+
+/* ===================== */
+/* NAVBAR (phần trên bên phải) */
+/* ===================== */
+.navbar {
+  background: #ffffff !important;
+  border-bottom: 3px solid var(--card-border);
+}
+
+/* ===================== */
+/* HỘP NỘI DUNG GIỐNG HÌNH */
+/* ===================== */
+.content-box {
+  background: #fff;
+  border-radius: 10px;
+  border: 3px solid var(--card-border);
+  padding: 25px;
+  min-height: 80vh;
+  color: #000;
+}
+
+/* ===================== */
+/* NÚT / BUTTON */
+/* ===================== */
+.btn {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ===================== */
+/* BẢNG TABLE */
+/* ===================== */
+.table thead.custom-header tr th {
+  background-color: #FFC107 !important;
+  color: #000 !important;
+}
+
+.table thead.custom-header tr {
+  background-color: #FFC107 !important;
+}
+
+/* ===================== */
+/* FORM */
+/* ===================== */
+form label {
+  font-weight: 500;
+}
+
+form .form-control, 
+form .form-select {
+  box-shadow: none;
+}
+
+form .btn-primary {
+  min-width: 100px;
+}
+
+/* ===================== */
+/* XỬ LÝ NỘI DUNG DÀI + XEM THÊM */
+/* ===================== */
+
+/* Khung chứa nội dung để giới hạn chiều rộng và giữ bố cục */
+/* Ô chứa nội dung */
+.cell-text {
+  max-width: 320px;       /* Điều chỉnh vừa bảng */
+  white-space: nowrap;    /* Rút gọn trên 1 dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Nội dung đầy đủ (ẩn) */
+.full-text {
+  display: none;
+  white-space: normal;
+}
+
+/* Nút xem thêm */
+.more-link {
+  color: #0d6efd;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.more-link:hover {
+  text-decoration: underline;
+}
+
+/* Cần hỗ trợ*/
+/* Tiêu đề trắng như hình */
+h2 {
+  color: #fff !important;
+}
+
+/* Text links vàng */
+.text-warning {
+  color: #FFD54F !important;
+}
+

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Yêu cầu/Phản ánh{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-4">Yêu cầu/Phản ánh</h3>
+
+<div class="card p-3 shadow-sm mb-4">
+
+  <!-- Hàng 1 -->
+  <div class="row g-3">
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Tìm cơ sở lưu trú...">
+    </div>
+  </div>
+
+  <!-- Hàng 2 -->
+  <div class="row g-3 mt-2">
+    <div class="col-md-3">
+      <select class="form-select">
+        <option selected>Sắp xếp theo</option>
+        <option value="az">Từ A - Z</option>
+        <option value="za">Từ Z - A</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+
+<div class="card shadow-sm p-3">
+  <table class="table table-bordered align-middle">
+    <thead class="custom-header">
+      <tr>
+        <th>Nhà</th>
+        <th>Phòng</th>
+        <th>Nội dung</th>
+        <th>Chức năng</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <!-- DÒNG 1 -->
+      <tr>
+        <td>22L Quận 7</td>
+        <td>002</td>
+        <td>
+          <div class="text-box" data-id="1">
+            Mất điện mất wifi thường xuyên, vòi nước cứng khó sử dụng.
+          </div>
+        </td>
+        <td class="text-center">
+          <a href="#" class="btn btn-light btn-sm">Phản hồi</a>
+        </td>
+      </tr>
+
+      <!-- DÒNG 2 -->
+      <tr>
+        <td>223 Quận 1</td>
+        <td>001</td>
+        <td>
+          <div class="text-box" data-id="2">
+            Thang máy bị hư và tạo tiếng ồn lớn khi hoạt động.
+          </div>
+        </td>
+        <td class="text-center">
+          <a href="#" class="btn btn-light btn-sm">Phản hồi</a>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .more-link {
+    color: #007bff;
+    cursor: pointer;
+    font-size: 13px;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const MAX_LENGTH = 50; // số ký tự tối đa trước khi rút gọn
+    const items = document.querySelectorAll(".text-box");
+
+    items.forEach(item => {
+      const fullText = item.innerText.trim();
+      const id = item.dataset.id;
+
+      if (fullText.length > MAX_LENGTH) {
+        const shortText = fullText.substring(0, MAX_LENGTH) + "...";
+
+        item.innerHTML = `
+          <span id="short-${id}" class="cell-text">${shortText}</span>
+          <span id="full-${id}" class="full-text" style="display:none;">${fullText}</span>
+          <span id="link-${id}" class="more-link" onclick="toggleMore(${id})">xem thêm</span>
+        `;
+      }
+    });
+  });
+
+  function toggleMore(id) {
+    const shortText = document.getElementById(`short-${id}`);
+    const fullText = document.getElementById(`full-${id}`);
+    const link = document.getElementById(`link-${id}`);
+
+    if (fullText.style.display === "none") {
+      shortText.style.display = "none";
+      fullText.style.display = "inline";
+      link.innerText = "thu gọn";
+    } else {
+      shortText.style.display = "inline";
+      fullText.style.display = "none";
+      link.innerText = "xem thêm";
+    }
+  }
+</script>
+
+{% endblock %}

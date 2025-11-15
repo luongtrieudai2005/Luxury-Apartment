@@ -1,0 +1,78 @@
+<div class="sidebar bg-white border-end vh-100 d-flex flex-column justify-content-between">
+  <!-- User Info -->
+  <div>
+    <div class="text-center py-3 border-bottom">
+      <img src="{{ url_for('static', filename='images/avatar.png') }}" class="rounded-circle mb-2" width="60" height="60">
+      <h6 class="mb-0">{{ username or 'Username' }}</h6>
+      <small class="text-muted">{{ email or 'vidu@email.com' }}</small>
+    </div>
+
+    <!-- Search -->
+    <div class="p-3">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-0" placeholder="Tìm kiếm mục">
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <ul class="nav flex-column px-2">
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('home') }}">
+          <i class="bi bi-house-door"></i> Trang chủ
+        </a>
+      </li>
+
+      <!-- Quản lý lưu trú -->
+      <li class="nav-item">
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuLuutru">
+          <span><i class="bi bi-people"></i> Quản lý lưu trú</span>
+          <i class="bi bi-chevron-down small"></i>
+        </a>
+        <div class="collapse ps-3" id="menuLuutru">
+          <div class = "nav flex-column">
+          <a href="{{ url_for('register_stay') }}">Đăng ký lưu trú</a>
+          <a href="{{ url_for('manage_houses') }}">Quản lý nhà/hợp đồng</a>
+        </div>
+        </div>
+      </li>
+
+      <!-- Quản lý dịch vụ -->
+      <li class="nav-item">
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuDichvu">
+          <span><i class="bi bi-heart"></i> Quản lý dịch vụ</span>
+          <i class="bi bi-chevron-down small"></i>
+        </a>
+        <div class="collapse ps-3" id="menuDichvu">
+          <a href="{{ url_for('el_water')  }}">Quản lý chỉ số điện nước</a>
+          <a href="{{ url_for('ql_dichvukhac')  }}">Quản lý dịch vụ khác</a>
+          <a href="{{ url_for('ql_xe')  }}">Quản lý phương tiện</a>
+          <a href="{{ url_for('yc_phananh')  }}">Yêu cầu/Phản ánh</a>
+        </div>
+      </li>
+
+      <!-- Công cụ tiện ích -->
+      <li class="nav-item">
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuTienich">
+          <span><i class="bi bi-tools"></i> Công cụ tiện ích</span>
+          <i class="bi bi-chevron-down small"></i>
+        </a>
+        <div class="collapse ps-3" id="menuTienich">
+          <a href="#" class="nav-link">Thống kê, in ấn, xuất file</a>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('support') }}">
+          <i class="bi bi-question-circle"></i> Cần hỗ trợ?</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Logout -->
+  <div class="p-3 border-top">
+    <a href="{{ url_for('logout') }}" class="btn btn-light w-100">
+      <i class="bi bi-box-arrow-right"></i> Đăng xuất
+    </a>
+  </div>
+</div>
