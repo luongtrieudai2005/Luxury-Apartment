@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config['SECRET_KEY'] = 'dev-secret-key'  # đổi trong production hoặc load từ .env
 
 # Demo dữ liệu
 listings = [
-    {"id":1, "title":"Căn hộ 2PN - Trung tâm", "price":"7.000.000 VND/tháng", "location":"Quận 1", "img":"/static/img/house1.jpg", "summary":"Gần chợ, đầy đủ nội thất"},
-    {"id":2, "title":"Nhà trệt 3PN - Yên tĩnh", "price":"10.000.000 VND/tháng", "location":"Thủ Đức", "img":"/static/img/house2.jpg", "summary":"Sân vườn, có gara"},
+    {"id":1, "title":"Căn hộ 2PN - Trung tâm", "price":"7.000.000 VND/tháng", "location":"Quận 1", "img":"../static/img/Vector.png", "summary":"Gần chợ, đầy đủ nội thất"},
+    {"id":2, "title":"Nhà trệt 3PN - Yên tĩnh", "price":"10.000.000 VND/tháng", "location":"Thủ Đức", "img":"../static/img/Vector.png", "summary":"Sân vườn, có gara"},
 ]
 
 @app.route('/')
@@ -34,7 +34,6 @@ def signup():
         return redirect(url_for('login'))
     return render_template('signup.html')
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session
 
 # Quên mật khẩu
 
@@ -138,13 +137,6 @@ def support():
             flash("Vui lòng mô tả vấn đề bạn đang gặp.", "warning")
 
     return render_template('support.html')
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
