@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__, static_folder="static", template_folder="app/templates")
 app.config['SECRET_KEY'] = 'dev-secret-key'  # đổi trong production hoặc load từ .env
 
 # Demo dữ liệu

@@ -1,0 +1,23 @@
+-- Database schema definition
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password_hash VARCHAR(200) NOT NULL,
+    role VARCHAR(50) DEFAULT 'tenant',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS apartments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
+    location VARCHAR(200) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    bedrooms INTEGER NOT NULL,
+    bathrooms INTEGER NOT NULL,
+    area DECIMAL(8,2) NOT NULL,
+    image_url VARCHAR(500),
+    available BOOLEAN DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
