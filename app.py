@@ -105,24 +105,24 @@ def manage_houses():
 #Quản lý chỉ số điện nước
 @app.route('/dien-nuoc')
 def el_water():
-    return render_template('el_water.html')
+    return render_template('electric_water_readings.html')
 
 #Quản lý phương tiện 
 @app.route('/phuong-tien')
 def ql_xe():
-    return render_template('ql_xe.html')
+    return render_template('parking_vehicles.html')
 
 #Quản lý dịch vụ khác
 
 @app.route('/dich-vu')
 def ql_dichvukhac():
-    return render_template('ql_dichvukhac.html')
+    return render_template('other_services.html')
 
 
 #Yêu cầu/Phản ánh
 @app.route('/yc-pa')
 def yc_phananh():
-    return render_template('yc_phananh.html')
+    return render_template('requests_feedback.html')
 
 
 # Cần hỗ trợ
