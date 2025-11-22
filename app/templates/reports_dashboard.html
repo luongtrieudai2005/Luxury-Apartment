@@ -1,0 +1,966 @@
+{% extends "base.html" %}
+{% block title %}Báo cáo & Thống kê{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Báo cáo & Thống kê</h3>
+
+<!-- Thẻ tổng quan -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Tổng doanh thu tháng</h6>
+            <h4 class="mb-0">245.500.000đ</h4>
+            <small><i class="bi bi-arrow-up"></i> +12% so tháng trước</small>
+          </div>
+          <i class="bi bi-cash-stack fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Tỷ lệ lấp đầy</h6>
+            <h4 class="mb-0">87.5%</h4>
+            <small>35/40 phòng đang thuê</small>
+          </div>
+          <i class="bi bi-building fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Công nợ chưa thu</h6>
+            <h4 class="mb-0">15.200.000đ</h4>
+            <small>8 hợp đồng chưa thanh toán</small>
+          </div>
+          <i class="bi bi-exclamation-triangle fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Phòng trống</h6>
+            <h4 class="mb-0">5 phòng</h4>
+            <small>Sẵn sàng cho thuê</small>
+          </div>
+          <i class="bi bi-door-open fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Danh sách loại báo cáo -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-white">
+    <h5 class="mb-0"><i class="bi bi-file-earmark-bar-graph"></i> Chọn loại báo cáo</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <button class="btn btn-outline-primary w-100 p-3" onclick="showReportConfig('revenue')">
+          <i class="bi bi-currency-exchange fs-3 d-block mb-2"></i>
+          <strong>Báo cáo doanh thu</strong>
+          <small class="d-block text-muted">Theo kỳ, theo nhà</small>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-success w-100 p-3" onclick="showReportConfig('room-status')">
+          <i class="bi bi-clipboard-data fs-3 d-block mb-2"></i>
+          <strong>Tình trạng phòng</strong>
+          <small class="d-block text-muted">Phòng trống, đang thuê</small>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-info w-100 p-3" onclick="showReportConfig('payment-history')">
+          <i class="bi bi-clock-history fs-3 d-block mb-2"></i>
+          <strong>Lịch sử thanh toán</strong>
+          <small class="d-block text-muted">Đã thu, chưa thu</small>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-warning w-100 p-3" onclick="showReportConfig('service-fee')">
+          <i class="bi bi-receipt fs-3 d-block mb-2"></i>
+          <strong>Phí dịch vụ</strong>
+          <small class="d-block text-muted">Điện, nước, internet</small>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-danger w-100 p-3" onclick="showReportConfig('utility-usage')">
+          <i class="bi bi-lightning-charge fs-3 d-block mb-2"></i>
+          <strong>Chỉ số điện/nước</strong>
+          <small class="d-block text-muted">Theo phòng, theo tháng</small>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button class="btn btn-outline-secondary w-100 p-3" onclick="showReportConfig('occupancy')">
+          <i class="bi bi-graph-up fs-3 d-block mb-2"></i>
+          <strong>Tỷ lệ lấp đầy</strong>
+          <small class="d-block text-muted">Theo thời gian</small>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Form cấu hình báo cáo -->
+<div id="reportConfigSection" class="card shadow-sm mb-4" style="display:none;">
+  <div class="card-header bg-light">
+    <h5 class="mb-0"><i class="bi bi-sliders"></i> Cấu hình báo cáo: <span id="reportTypeName"></span></h5>
+  </div>
+  <div class="card-body">
+    <form id="reportConfigForm">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Khoảng thời gian *</label>
+          <select class="form-select" name="time_range" required onchange="toggleCustomDateRange()">
+            <option value="this_month">Tháng này</option>
+            <option value="last_month">Tháng trước</option>
+            <option value="this_quarter">Quý này</option>
+            <option value="this_year">Năm này</option>
+            <option value="custom">Tùy chỉnh</option>
+          </select>
+        </div>
+
+        <div class="col-md-3" id="customDateRange" style="display:none;">
+          <label class="form-label">Từ ngày</label>
+          <input type="date" class="form-control" name="start_date">
+        </div>
+
+        <div class="col-md-3" id="customDateRange2" style="display:none;">
+          <label class="form-label">Đến ngày</label>
+          <input type="date" class="form-control" name="end_date">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Chọn nhà</label>
+          <select class="form-select" name="house_id">
+            <option value="">Tất cả</option>
+            <option value="1">22L Quận 7</option>
+            <option value="2">223 Quận 1</option>
+          </select>
+        </div>
+
+        <div class="col-md-3" id="serviceFeeType" style="display:none;">
+          <label class="form-label">Loại phí</label>
+          <select class="form-select" name="service_type">
+            <option value="">Tất cả</option>
+            <option value="electric">Điện</option>
+            <option value="water">Nước</option>
+            <option value="internet">Internet</option>
+            <option value="parking">Giữ xe</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Định dạng xuất</label>
+          <select class="form-select" name="export_format">
+            <option value="view">Xem trên màn hình</option>
+            <option value="pdf">Xuất PDF</option>
+            <option value="excel">Xuất Excel</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button type="button" class="btn btn-primary" onclick="generateReport()">
+          <i class="bi bi-play-circle"></i> Tạo báo cáo
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="hideReportConfig()">
+          <i class="bi bi-x-circle"></i> Hủy
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Khu vực hiển thị báo cáo -->
+<div id="reportResultSection" style="display:none;">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> <span id="reportTitle"></span></h5>
+      <div>
+        <button class="btn btn-sm btn-outline-primary" onclick="printReport()">
+          <i class="bi bi-printer"></i> In
+        </button>
+        <button class="btn btn-sm btn-outline-success" onclick="exportReport('pdf')">
+          <i class="bi bi-file-pdf"></i> PDF
+        </button>
+        <button class="btn btn-sm btn-outline-info" onclick="exportReport('excel')">
+          <i class="bi bi-file-excel"></i> Excel
+        </button>
+      </div>
+    </div>
+    <div class="card-body" id="reportContent">
+      <!-- Nội dung báo cáo được tạo động -->
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+let currentReportType = '';
+let currentChart = null;
+
+function showReportConfig(reportType) {
+  currentReportType = reportType;
+  
+  const reportNames = {
+    'revenue': 'Báo cáo doanh thu',
+    'room-status': 'Tình trạng phòng',
+    'payment-history': 'Lịch sử thanh toán',
+    'service-fee': 'Phí dịch vụ',
+    'utility-usage': 'Chỉ số điện/nước',
+    'occupancy': 'Tỷ lệ lấp đầy'
+  };
+  
+  document.getElementById('reportTypeName').textContent = reportNames[reportType];
+  document.getElementById('reportConfigSection').style.display = 'block';
+  document.getElementById('reportResultSection').style.display = 'none';
+  
+  // Hiển thị/ẩn trường theo loại báo cáo
+  document.getElementById('serviceFeeType').style.display = 
+    reportType === 'service-fee' ? 'block' : 'none';
+}
+
+function hideReportConfig() {
+  document.getElementById('reportConfigSection').style.display = 'none';
+}
+
+function toggleCustomDateRange() {
+  const timeRange = document.querySelector('select[name="time_range"]').value;
+  const isCustom = timeRange === 'custom';
+  
+  document.getElementById('customDateRange').style.display = isCustom ? 'block' : 'none';
+  document.getElementById('customDateRange2').style.display = isCustom ? 'block' : 'none';
+}
+
+function generateReport() {
+  const form = document.getElementById('reportConfigForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  
+  const formData = new FormData(form);
+  const exportFormat = formData.get('export_format');
+  
+  if (exportFormat === 'pdf') {
+    alert('Đang xuất báo cáo PDF... (Demo)');
+    return;
+  } else if (exportFormat === 'excel') {
+    alert('Đang xuất báo cáo Excel... (Demo)');
+    return;
+  }
+  
+  // Hiển thị báo cáo trên màn hình
+  document.getElementById('reportResultSection').style.display = 'block';
+  
+  // Scroll đến phần báo cáo
+  document.getElementById('reportResultSection').scrollIntoView({ behavior: 'smooth' });
+  
+  // Tạo nội dung báo cáo theo loại
+  switch(currentReportType) {
+    case 'revenue':
+      generateRevenueReport(formData);
+      break;
+    case 'room-status':
+      generateRoomStatusReport(formData);
+      break;
+    case 'payment-history':
+      generatePaymentHistoryReport(formData);
+      break;
+    case 'service-fee':
+      generateServiceFeeReport(formData);
+      break;
+    case 'utility-usage':
+      generateUtilityUsageReport(formData);
+      break;
+    case 'occupancy':
+      generateOccupancyReport(formData);
+      break;
+  }
+}
+
+function generateRevenueReport(formData) {
+  document.getElementById('reportTitle').textContent = 'Báo cáo doanh thu';
+  
+  const content = `
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Tổng quan doanh thu</h6>
+        <div class="row g-3 mt-2">
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-light rounded">
+              <h5 class="text-primary mb-1">245.500.000đ</h5>
+              <small class="text-muted">Tổng doanh thu</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-light rounded">
+              <h5 class="text-success mb-1">230.300.000đ</h5>
+              <small class="text-muted">Đã thu</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-light rounded">
+              <h5 class="text-warning mb-1">15.200.000đ</h5>
+              <small class="text-muted">Chưa thu</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3 bg-light rounded">
+              <h5 class="text-info mb-1">93.8%</h5>
+              <small class="text-muted">Tỷ lệ thu</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Biểu đồ doanh thu theo tháng</h6>
+        <canvas id="revenueChart" height="80"></canvas>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Chi tiết theo nhà</h6>
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Nhà</th>
+              <th>Số phòng</th>
+              <th>Doanh thu</th>
+              <th>Đã thu</th>
+              <th>Chưa thu</th>
+              <th>Tỷ lệ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>22L Quận 7</strong></td>
+              <td>20 phòng</td>
+              <td>120.000.000đ</td>
+              <td>112.000.000đ</td>
+              <td>8.000.000đ</td>
+              <td><span class="badge bg-success">93.3%</span></td>
+            </tr>
+            <tr>
+              <td><strong>223 Quận 1</strong></td>
+              <td>20 phòng</td>
+              <td>125.500.000đ</td>
+              <td>118.300.000đ</td>
+              <td>7.200.000đ</td>
+              <td><span class="badge bg-success">94.3%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('reportContent').innerHTML = content;
+  
+  // Vẽ biểu đồ
+  setTimeout(() => {
+    if (currentChart) currentChart.destroy();
+    
+    const ctx = document.getElementById('revenueChart');
+    currentChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+        datasets: [{
+          label: 'Doanh thu (triệu đồng)',
+          data: [210, 195, 220, 235, 228, 240, 245, 238, 250, 242, 248, 245],
+          backgroundColor: 'rgba(13, 110, 253, 0.7)',
+          borderColor: 'rgba(13, 110, 253, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + 'tr';
+              }
+            }
+          }
+        }
+      }
+    });
+  }, 100);
+}
+
+function generateRoomStatusReport(formData) {
+  document.getElementById('reportTitle').textContent = 'Báo cáo tình trạng phòng';
+  
+  const content = `
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h6 class="border-bottom pb-2">Biểu đồ tình trạng phòng</h6>
+        <canvas id="roomStatusChart" height="200"></canvas>
+      </div>
+      <div class="col-md-6">
+        <h6 class="border-bottom pb-2">Thống kê theo nhà</h6>
+        <table class="table table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Nhà</th>
+              <th>Tổng</th>
+              <th>Đang thuê</th>
+              <th>Trống</th>
+              <th>Bảo trì</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>22L Quận 7</strong></td>
+              <td>20</td>
+              <td><span class="badge bg-success">18</span></td>
+              <td><span class="badge bg-warning">2</span></td>
+              <td><span class="badge bg-secondary">0</span></td>
+            </tr>
+            <tr>
+              <td><strong>223 Quận 1</strong></td>
+              <td>20</td>
+              <td><span class="badge bg-success">17</span></td>
+              <td><span class="badge bg-warning">3</span></td>
+              <td><span class="badge bg-secondary">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Danh sách phòng trống</h6>
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Phòng</th>
+              <th>Nhà</th>
+              <th>Giá thuê</th>
+              <th>Ngày trống</th>
+              <th>Số ngày trống</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Phòng 103</td>
+              <td>22L Quận 7</td>
+              <td>5.000.000đ</td>
+              <td>15/11/2025</td>
+              <td>7 ngày</td>
+            </tr>
+            <tr>
+              <td>Phòng 205</td>
+              <td>22L Quận 7</td>
+              <td>5.500.000đ</td>
+              <td>10/11/2025</td>
+              <td>12 ngày</td>
+            </tr>
+            <tr>
+              <td>Phòng 301</td>
+              <td>223 Quận 1</td>
+              <td>7.000.000đ</td>
+              <td>18/11/2025</td>
+              <td>4 ngày</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('reportContent').innerHTML = content;
+  
+  setTimeout(() => {
+    if (currentChart) currentChart.destroy();
+    
+    const ctx = document.getElementById('roomStatusChart');
+    currentChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Đang thuê', 'Phòng trống', 'Bảo trì'],
+        datasets: [{
+          data: [35, 5, 0],
+          backgroundColor: [
+            'rgba(25, 135, 84, 0.7)',
+            'rgba(255, 193, 7, 0.7)',
+            'rgba(108, 117, 125, 0.7)'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }, 100);
+}
+
+function generatePaymentHistoryReport(formData) {
+  document.getElementById('reportTitle').textContent = 'Báo cáo lịch sử thanh toán';
+  
+  const content = `
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Ngày</th>
+            <th>Mã thanh toán</th>
+            <th>Khách hàng</th>
+            <th>Phòng</th>
+            <th>Kỳ thanh toán</th>
+            <th>Số tiền</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>05/11/2025</td>
+            <td><strong>#PAY001</strong></td>
+            <td>Nguyễn Văn A</td>
+            <td>Phòng 101</td>
+            <td>Tháng 11/2025</td>
+            <td>5.680.000đ</td>
+            <td><span class="badge bg-success">Đã thanh toán</span></td>
+          </tr>
+          <tr>
+            <td>05/11/2025</td>
+            <td><strong>#PAY002</strong></td>
+            <td>Trần Thị B</td>
+            <td>Phòng 201</td>
+            <td>Tháng 11/2025</td>
+            <td>7.850.000đ</td>
+            <td><span class="badge bg-success">Đã thanh toán</span></td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><strong>#PAY003</strong></td>
+            <td>Lê Văn C</td>
+            <td>Phòng 102</td>
+            <td>Tháng 11/2025</td>
+            <td>5.500.000đ</td>
+            <td><span class="badge bg-warning">Chưa thanh toán</span></td>
+          </tr>
+          <tr>
+            <td>10/11/2025</td>
+            <td><strong>#PAY004</strong></td>
+            <td>Phạm Thị D</td>
+            <td>Phòng 202</td>
+            <td>Tháng 11/2025</td>
+            <td>7.200.000đ</td>
+            <td><span class="badge bg-success">Đã thanh toán</span></td>
+          </tr>
+          <tr class="table-danger">
+            <td>-</td>
+            <td><strong>#PAY005</strong></td>
+            <td>Hoàng Văn E</td>
+            <td>Phòng 105</td>
+            <td>Tháng 11/2025</td>
+            <td>5.200.000đ</td>
+            <td><span class="badge bg-danger">Quá hạn 3 ngày</span></td>
+          </tr>
+        </tbody>
+        <tfoot class="table-light">
+          <tr>
+            <th colspan="5" class="text-end">Tổng cộng:</th>
+            <th>31.430.000đ</th>
+            <th></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  `;
+  
+  document.getElementById('reportContent').innerHTML = content;
+}
+
+function generateServiceFeeReport(formData) {
+  document.getElementById('reportTitle').textContent = 'Báo cáo phí dịch vụ';
+  
+  const content = `
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Biểu đồ phí dịch vụ theo loại</h6>
+        <canvas id="serviceFeeChart" height="80"></canvas>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Chi tiết phí dịch vụ</h6>
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Loại dịch vụ</th>
+              <th>Tổng số tiền</th>
+              <th>Số phòng sử dụng</th>
+              <th>Trung bình/phòng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><i class="bi bi-lightning-charge text-warning"></i> Điện</td>
+              <td><strong>18.500.000đ</strong></td>
+              <td>35 phòng</td>
+              <td>528.571đ</td>
+            </tr>
+            <tr>
+              <td><i class="bi bi-droplet text-primary"></i> Nước</td>
+              <td><strong>8.750.000đ</strong></td>
+              <td>35 phòng</td>
+              <td>250.000đ</td>
+            </tr>
+            <tr>
+              <td><i class="bi bi-wifi text-info"></i> Internet</td>
+              <td><strong>3.500.000đ</strong></td>
+              <td>35 phòng</td>
+              <td>100.000đ</td>
+            </tr>
+            <tr>
+              <td><i class="bi bi-car-front text-secondary"></i> Giữ xe</td>
+              <td><strong>2.800.000đ</strong></td>
+              <td>28 phòng</td>
+              <td>100.000đ</td>
+            </tr>
+          </tbody>
+          <tfoot class="table-light">
+            <tr>
+              <th>Tổng cộng</th>
+              <th>33.550.000đ</th>
+              <th colspan="2"></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('reportContent').innerHTML = content;
+  
+  setTimeout(() => {
+    if (currentChart) currentChart.destroy();
+    
+    const ctx = document.getElementById('serviceFeeChart');
+    currentChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Điện', 'Nước', 'Internet', 'Giữ xe'],
+        datasets: [{
+          label: 'Phí dịch vụ (triệu đồng)',
+          data: [18.5, 8.75, 3.5, 2.8],
+          backgroundColor: [
+            'rgba(255, 193, 7, 0.7)',
+            'rgba(13, 110, 253, 0.7)',
+            'rgba(13, 202, 240, 0.7)',
+            'rgba(108, 117, 125, 0.7)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + 'tr';
+              }
+            }
+          }
+        }
+      }
+    });
+  }, 100);
+}
+
+function generateUtilityUsageReport(formData) {
+  document.getElementById('reportTitle').textContent = 'Báo cáo chỉ số điện/nước';
+  
+  const content = `
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h6 class="border-bottom pb-2">Biểu đồ tiêu thụ điện</h6>
+        <canvas id="electricChart" height="200"></canvas>
+      </div>
+      <div class="col-md-6">
+        <h6 class="border-bottom pb-2">Biểu đồ tiêu thụ nước</h6>
+        <canvas id="waterChart" height="200"></canvas>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Chi tiết theo phòng</h6>
+        <table class="table table-hover table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Phòng</th>
+              <th>Khách thuê</th>
+              <th>Điện đầu kỳ</th>
+              <th>Điện cuối kỳ</th>
+              <th>Tiêu thụ (kWh)</th>
+              <th>Nước đầu kỳ</th>
+              <th>Nước cuối kỳ</th>
+              <th>Tiêu thụ (m³)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>P101</strong></td>
+              <td>Nguyễn Văn A</td>
+              <td>1250</td>
+              <td>1380</td>
+              <td><span class="badge bg-info">130</span></td>
+              <td>85</td>
+              <td>97</td>
+              <td><span class="badge bg-primary">12</span></td>
+            </tr>
+            <tr>
+              <td><strong>P102</strong></td>
+              <td>Lê Văn C</td>
+              <td>980</td>
+              <td>1095</td>
+              <td><span class="badge bg-info">115</span></td>
+              <td>62</td>
+              <td>72</td>
+              <td><span class="badge bg-primary">10</span></td>
+            </tr>
+            <tr>
+              <td><strong>P201</strong></td>
+              <td>Trần Thị B</td>
+              <td>1450</td>
+              <td>1610</td>
+              <td><span class="badge bg-warning">160</span></td>
+              <td>105</td>
+              <td>120</td>
+              <td><span class="badge bg-warning">15</span></td>
+            </tr>
+            <tr>
+              <td><strong>P202</strong></td>
+              <td>Phạm Thị D</td>
+              <td>1120</td>
+              <td>1245</td>
+              <td><span class="badge bg-info">125</span></td>
+              <td>78</td>
+              <td>89</td>
+              <td><span class="badge bg-primary">11</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('reportContent').innerHTML = content;
+  
+  setTimeout(() => {
+    if (currentChart) currentChart.destroy();
+    
+    const ctx1 = document.getElementById('electricChart');
+    new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
+        datasets: [{
+          label: 'Tiêu thụ điện (kWh)',
+          data: [4200, 3950, 4100, 4350, 4280, 4500],
+          borderColor: 'rgba(255, 193, 7, 1)',
+          backgroundColor: 'rgba(255, 193, 7, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true
+      }
+    });
+    
+    const ctx2 = document.getElementById('waterChart');
+    new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
+        datasets: [{
+          label: 'Tiêu thụ nước (m³)',
+          data: [380, 365, 390, 405, 395, 420],
+          borderColor: 'rgba(13, 110, 253, 1)',
+          backgroundColor: 'rgba(13, 110, 253, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true
+      }
+    });
+  }, 100);
+}
+
+function generateOccupancyReport(formData) {
+  document.getElementById('reportTitle').textContent = 'Báo cáo tỷ lệ lấp đầy';
+  
+  const content = `
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Biểu đồ tỷ lệ lấp đầy theo thời gian</h6>
+        <canvas id="occupancyChart" height="80"></canvas>
+      </div>
+    </div>
+    
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h6 class="border-bottom pb-2">Thống kê theo nhà</h6>
+        <table class="table table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Nhà</th>
+              <th>Tỷ lệ lấp đầy</th>
+              <th>Đánh giá</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>22L Quận 7</strong></td>
+              <td>90%</td>
+              <td><span class="badge bg-success">Tốt</span></td>
+            </tr>
+            <tr>
+              <td><strong>223 Quận 1</strong></td>
+              <td>85%</td>
+              <td><span class="badge bg-success">Tốt</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="col-md-6">
+        <h6 class="border-bottom pb-2">So sánh với kỳ trước</h6>
+        <div class="p-3 bg-light rounded">
+          <p class="mb-2"><strong>Tỷ lệ lấp đầy hiện tại:</strong> <span class="text-success fs-4">87.5%</span></p>
+          <p class="mb-2"><strong>Tháng trước:</strong> 82.5%</p>
+          <p class="mb-0"><strong>Tăng/giảm:</strong> <span class="text-success"><i class="bi bi-arrow-up"></i> +5%</span></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <h6 class="border-bottom pb-2">Phân tích chi tiết</h6>
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i>
+          <strong>Nhận xét:</strong> Tỷ lệ lấp đầy đang ở mức tốt (87.5%). Có xu hướng tăng trong 3 tháng gần đây. 
+          Nên duy trì chất lượng dịch vụ và tăng cường marketing cho 5 phòng còn trống.
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('reportContent').innerHTML = content;
+  
+  setTimeout(() => {
+    if (currentChart) currentChart.destroy();
+    
+    const ctx = document.getElementById('occupancyChart');
+    currentChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+        datasets: [{
+          label: 'Tỷ lệ lấp đầy (%)',
+          data: [75, 78, 82, 80, 85, 83, 87, 86, 88, 85, 87, 87.5],
+          borderColor: 'rgba(25, 135, 84, 1)',
+          backgroundColor: 'rgba(25, 135, 84, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function(value) {
+                return value + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+  }, 100);
+}
+
+function printReport() {
+  window.print();
+}
+
+function exportReport(format) {
+  if (format === 'pdf') {
+    alert('Đang xuất báo cáo PDF... (Demo)');
+  } else if (format === 'excel') {
+    alert('Đang xuất báo cáo Excel... (Demo)');
+  }
+}
+</script>
+
+<style>
+@media print {
+  .sidebar, nav, button, .btn {
+    display: none !important;
+  }
+  #reportResultSection {
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+}
+</style>
+
+{% endblock %}

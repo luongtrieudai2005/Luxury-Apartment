@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+{% block title %}Quản lý hợp đồng thuê{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Quản lý hợp đồng thuê</h3>
+
+<!-- Thanh tìm kiếm và lọc -->
+<div class="card p-3 shadow-sm mb-4">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <input type="text" class="form-control" id="searchContract" placeholder="Tìm kiếm hợp đồng...">
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" id="filterContractStatus">
+        <option value="">Tất cả trạng thái</option>
+        <option value="active">Đang hiệu lực</option>
+        <option value="expired">Hết hạn</option>
+        <option value="terminated">Đã thanh lý</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" id="sortContract">
+        <option value="date_desc">Mới nhất</option>
+        <option value="date_asc">Cũ nhất</option>
+        <option value="expire_soon">Sắp hết hạn</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addContractModal">
+        <i class="bi bi-plus-lg"></i> Tạo hợp đồng
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bảng danh sách hợp đồng -->
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Mã HĐ</th>
+          <th>Khách thuê</th>
+          <th>Phòng</th>
+          <th>Ngày bắt đầu</th>
+          <th>Ngày kết thúc</th>
+          <th>Giá thuê</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="contractTableBody">
+        <tr data-contract-id="1" data-status="active">
+          <td><strong>#HD001</strong></td>
+          <td>Nguyễn Văn A<br><small class="text-muted">0901234567</small></td>
+          <td>Phòng 101<br><small class="text-muted">22L Quận 7</small></td>
+          <td>01/12/2025</td>
+          <td>01/06/2026</td>
+          <td><strong>5.000.000đ</strong></td>
+          <td><span class="badge bg-success">Đang hiệu lực</span></td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-info" onclick="viewContract(1)" title="Xem">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-warning" onclick="editContract(1)" title="Sửa">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-primary" onclick="exportContract(1)" title="Xuất">
+                <i class="bi bi-download"></i>
+              </button>
+              <button class="btn btn-danger" onclick="terminateContract(1)" title="Thanh lý">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr data-contract-id="2" data-status="active" class="table-warning">
+          <td><strong>#HD002</strong></td>
+          <td>Trần Thị B<br><small class="text-muted">0912345678</small></td>
+          <td>Phòng 201<br><small class="text-muted">223 Quận 1</small></td>
+          <td>15/06/2025</td>
+          <td>15/12/2025</td>
+          <td><strong>7.000.000đ</strong></td>
+          <td>
+            <span class="badge bg-success">Đang hiệu lực</span>
+            <small class="text-danger d-block">Còn 23 ngày</small>
+          </td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <button class="btn btn-info" onclick="viewContract(2)">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-success" onclick="renewContract(2)" title="Gia hạn">
+                <i class="bi bi-arrow-repeat"></i>
+              </button>
+              <button class="btn btn-primary" onclick="exportContract(2)">
+                <i class="bi bi-download"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal tạo/sửa hợp đồng -->
+<div class="modal fade" id="addContractModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contractModalTitle">Tạo hợp đồng thuê mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="contractForm">
+          <h6 class="border-bottom pb-2 mb-3">Thông tin bên cho thuê</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label">Họ và tên chủ nhà *</label>
+              <input type="text" class="form-control" name="owner_name" value="Nguyễn Văn Chủ" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">CCCD chủ nhà *</label>
+              <input type="text" class="form-control" name="owner_id" value="001122334455" required>
+            </div>
+          </div>
+
+          <h6 class="border-bottom pb-2 mb-3">Thông tin bên thuê</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label class="form-label">Họ và tên *</label>
+              <input type="text" class="form-control" name="tenant_name" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Số điện thoại *</label>
+              <input type="tel" class="form-control" name="tenant_phone" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">CCCD/CMND *</label>
+              <input type="text" class="form-control" name="tenant_id" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="tenant_email">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Địa chỉ thường trú</label>
+              <input type="text" class="form-control" name="tenant_address">
+            </div>
+          </div>
+
+          <h6 class="border-bottom pb-2 mb-3">Thông tin phòng thuê</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label class="form-label">Nhà *</label>
+              <select class="form-select" name="house" required onchange="loadContractRooms(this.value)">
+                <option value="">Chọn nhà</option>
+                <option value="1">22L Quận 7</option>
+                <option value="2">223 Quận 1</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Phòng *</label>
+              <select class="form-select" name="room" required>
+                <option value="">Chọn phòng</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Diện tích (m²)</label>
+              <input type="number" class="form-control" name="area" value="25" readonly>
+            </div>
+          </div>
+
+          <h6 class="border-bottom pb-2 mb-3">Thời hạn và giá thuê</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-3">
+              <label class="form-label">Ngày bắt đầu *</label>
+              <input type="date" class="form-control" name="start_date" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Thời hạn (tháng) *</label>
+              <input type="number" class="form-control" name="duration" min="1" value="6" required onchange="calculateEndDate()">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Ngày kết thúc</label>
+              <input type="date" class="form-control" name="end_date" readonly>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Giá thuê (VNĐ) *</label>
+              <input type="number" class="form-control" name="monthly_rent" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Tiền đặt cọc (VNĐ) *</label>
+              <input type="number" class="form-control" name="deposit" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Ngày thanh toán</label>
+              <select class="form-select" name="payment_day">
+                <option value="1">Ngày 1 hàng tháng</option>
+                <option value="5">Ngày 5 hàng tháng</option>
+                <option value="10">Ngày 10 hàng tháng</option>
+                <option value="15">Ngày 15 hàng tháng</option>
+              </select>
+            </div>
+          </div>
+
+          <h6 class="border-bottom pb-2 mb-3">Dịch vụ đi kèm</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-3">
+              <label class="form-label">Điện (đ/kWh)</label>
+              <input type="number" class="form-control" name="electric_price" value="3500">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Nước (đ/m³)</label>
+              <input type="number" class="form-control" name="water_price" value="25000">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Internet (đ/tháng)</label>
+              <input type="number" class="form-control" name="internet_price" value="100000">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Phí quản lý (đ/tháng)</label>
+              <input type="number" class="form-control" name="management_fee" value="0">
+            </div>
+          </div>
+
+          <h6 class="border-bottom pb-2 mb-3">Điều khoản đặc biệt</h6>
+          <div class="mb-3">
+            <textarea class="form-control" name="special_terms" rows="3" placeholder="Nhập các điều khoản đặc biệt (nếu có)..."></textarea>
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+            <label class="form-check-label" for="agreeTerms">
+              Tôi xác nhận các thông tin trên là chính xác và đồng ý với các điều khoản hợp đồng
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="submitContract()">
+          <i class="bi bi-save"></i> Lưu hợp đồng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xem chi tiết hợp đồng -->
+<div class="modal fade" id="viewContractModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Chi tiết hợp đồng #<span id="detailContractId"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="contractDetailContent">
+        <!-- Content được load động -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" onclick="printContract()">
+          <i class="bi bi-printer"></i> In hợp đồng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const contracts = {
+  1: {
+    id: 'HD001',
+    owner: {name: 'Nguyễn Văn Chủ', id: '001122334455'},
+    tenant: {name: 'Nguyễn Văn A', phone: '0901234567', id: '001234567890', email: 'nguyenvana@email.com'},
+    house: '22L Quận 7',
+    room: 'Phòng 101',
+    area: 25,
+    start_date: '01/12/2025',
+    end_date: '01/06/2026',
+    duration: 6,
+    monthly_rent: 5000000,
+    deposit: 10000000,
+    payment_day: 1,
+    electric_price: 3500,
+    water_price: 25000,
+    internet_price: 100000,
+    status: 'active'
+  }
+};
+
+const contractRooms = {
+  '1': [{value: '101', text: 'Phòng 101', rent: 5000000, area: 25}],
+  '2': [{value: '201', text: 'Phòng 201', rent: 7000000, area: 30}]
+};
+
+function loadContractRooms(houseId) {
+  const roomSelect = document.querySelector('#contractForm select[name="room"]');
+  roomSelect.innerHTML = '<option value="">Chọn phòng</option>';
+  
+  if (contractRooms[houseId]) {
+    contractRooms[houseId].forEach(room => {
+      const option = document.createElement('option');
+      option.value = room.value;
+      option.textContent = room.text;
+      option.dataset.rent = room.rent;
+      option.dataset.area = room.area;
+      roomSelect.appendChild(option);
+    });
+  }
+  
+  roomSelect.addEventListener('change', function() {
+    const selected = this.options[this.selectedIndex];
+    if (selected.value) {
+      document.querySelector('input[name="monthly_rent"]').value = selected.dataset.rent;
+      document.querySelector('input[name="area"]').value = selected.dataset.area;
+      document.querySelector('input[name="deposit"]').value = selected.dataset.rent * 2;
+    }
+  });
+}
+
+function calculateEndDate() {
+  const startDate = document.querySelector('input[name="start_date"]').value;
+  const duration = parseInt(document.querySelector('input[name="duration"]').value);
+  
+  if (startDate && duration) {
+    const start = new Date(startDate);
+    start.setMonth(start.getMonth() + duration);
+    document.querySelector('input[name="end_date"]').value = start.toISOString().split('T')[0];
+  }
+}
+
+function submitContract() {
+  const form = document.getElementById('contractForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  
+  alert('Hợp đồng đã được tạo thành công! (Demo)');
+  bootstrap.Modal.getInstance(document.getElementById('addContractModal')).hide();
+  form.reset();
+}
+
+function viewContract(id) {
+  const contract = contracts[id];
+  document.getElementById('detailContractId').textContent = contract.id;
+  document.getElementById('contractDetailContent').innerHTML = `
+    <div class="contract-view p-3">
+      <h5 class="text-center mb-4">HỢP ĐỒNG THUÊ PHÒNG TRỌ</h5>
+      
+      <h6 class="border-bottom pb-2 mb-3">BÊN CHO THUÊ (Bên A)</h6>
+      <p>Ông/Bà: <strong>${contract.owner.name}</strong><br>
+      CCCD: <strong>${contract.owner.id}</strong></p>
+      
+      <h6 class="border-bottom pb-2 mb-3 mt-4">BÊN THUÊ (Bên B)</h6>
+      <p>Ông/Bà: <strong>${contract.tenant.name}</strong><br>
+      CCCD: <strong>${contract.tenant.id}</strong><br>
+      Số điện thoại: <strong>${contract.tenant.phone}</strong><br>
+      Email: <strong>${contract.tenant.email}</strong></p>
+      
+      <h6 class="border-bottom pb-2 mb-3 mt-4">THÔNG TIN PHÒNG THUÊ</h6>
+      <p>Địa chỉ: <strong>${contract.house} - ${contract.room}</strong><br>
+      Diện tích: <strong>${contract.area} m²</strong></p>
+      
+      <h6 class="border-bottom pb-2 mb-3 mt-4">THỜI HẠN VÀ GIÁ THUÊ</h6>
+      <p>Thời gian thuê: Từ <strong>${contract.start_date}</strong> đến <strong>${contract.end_date}</strong> (${contract.duration} tháng)<br>
+      Giá thuê: <strong>${contract.monthly_rent.toLocaleString('vi-VN')} VNĐ/tháng</strong><br>
+      Tiền đặt cọc: <strong>${contract.deposit.toLocaleString('vi-VN')} VNĐ</strong><br>
+      Ngày thanh toán: <strong>Ngày ${contract.payment_day} hàng tháng</strong></p>
+      
+      <h6 class="border-bottom pb-2 mb-3 mt-4">CHI PHÍ DỊCH VỤ</h6>
+      <p>Điện: <strong>${contract.electric_price.toLocaleString('vi-VN')} đ/kWh</strong><br>
+      Nước: <strong>${contract.water_price.toLocaleString('vi-VN')} đ/m³</strong><br>
+      Internet: <strong>${contract.internet_price.toLocaleString('vi-VN')} đ/tháng</strong></p>
+    </div>
+  `;
+  
+  new bootstrap.Modal(document.getElementById('viewContractModal')).show();
+}
+
+function editContract(id) {
+  alert('Chức năng sửa hợp đồng (Demo)');
+}
+
+function exportContract(id) {
+  alert('Xuất hợp đồng PDF (Demo)');
+}
+
+function terminateContract(id) {
+  if (confirm('Thanh lý hợp đồng này? Hành động không thể hoàn tác.')) {
+    alert('Đã thanh lý hợp đồng (Demo)');
+  }
+}
+
+function renewContract(id) {
+  if (confirm('Gia hạn hợp đồng này?')) {
+    alert('Chuyển sang tạo hợp đồng mới với thông tin kế thừa (Demo)');
+  }
+}
+
+function printContract() {
+  window.print();
+}
+
+// Search và Filter
+document.getElementById('searchContract')?.addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const rows = document.querySelectorAll('#contractTableBody tr');
+  
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+});
+
+document.getElementById('filterContractStatus')?.addEventListener('change', function(e) {
+  const status = e.target.value;
+  const rows = document.querySelectorAll('#contractTableBody tr');
+  
+  rows.forEach(row => {
+    if (!status || row.dataset.status === status) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+</script>
+
+{% endblock %}

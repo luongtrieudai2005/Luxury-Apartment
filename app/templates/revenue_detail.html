@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}Báo cáo doanh thu chi tiết{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Báo cáo doanh thu chi tiết</h3>
+    <small class="text-muted">Tháng 11/2025</small>
+  </div>
+  <div>
+    <button class="btn btn-outline-secondary" onclick="window.history.back()">
+      <i class="bi bi-arrow-left"></i> Quay lại
+    </button>
+    <button class="btn btn-outline-primary" onclick="window.print()">
+      <i class="bi bi-printer"></i> In
+    </button>
+    <button class="btn btn-primary">
+      <i class="bi bi-download"></i> Xuất file
+    </button>
+  </div>
+</div>
+
+<!-- Tổng quan -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card border-primary">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Tổng doanh thu</h6>
+        <h4 class="text-primary mb-0">245.500.000đ</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-success">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Tiền phòng</h6>
+        <h4 class="text-success mb-0">175.000.000đ</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-info">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Tiền dịch vụ</h6>
+        <h4 class="text-info mb-0">55.300.000đ</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Phí khác</h6>
+        <h4 class="text-warning mb-0">15.200.000đ</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bảng chi tiết -->
+<div class="card shadow-sm">
+  <div class="card-header bg-white">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h5 class="mb-0"><i class="bi bi-table"></i> Chi tiết doanh thu theo phòng</h5>
+      </div>
+      <div class="col-md-6 text-end">
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-secondary active">Tất cả nhà</button>
+          <button class="btn btn-outline-secondary">22L Quận 7</button>
+          <button class="btn btn-outline-secondary">223 Quận 1</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Phòng</th>
+          <th>Khách thuê</th>
+          <th>Tiền phòng</th>
+          <th>Điện</th>
+          <th>Nước</th>
+          <th>Dịch vụ khác</th>
+          <th>Tổng cộng</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 22L Quận 7 -->
+        <tr class="table-secondary">
+          <td colspan="8"><strong>22L Quận 7</strong></td>
+        </tr>
+        <tr>
+          <td><strong>P101</strong></td>
+          <td>Nguyễn Văn A</td>
+          <td>5.000.000đ</td>
+          <td>455.000đ</td>
+          <td>300.000đ</td>
+          <td>100.000đ</td>
+          <td><strong>5.855.000đ</strong></td>
+          <td><span class="badge bg-success">Đã thu</span></td>
+        </tr>
+        <tr>
+          <td><strong>P102</strong></td>
+          <td>Lê Văn C</td>
+          <td>5.000.000đ</td>
+          <td>402.500đ</td>
+          <td>250.000đ</td>
+          <td>100.000đ</td>
+          <td><strong>5.752.500đ</strong></td>
+          <td><span class="badge bg-warning">Chưa thu</span></td>
+        </tr>
+        <tr>
+          <td><strong>P103</strong></td>
+          <td><em class="text-muted">Trống</em></td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td><strong>0đ</strong></td>
+          <td><span class="badge bg-secondary">Không áp dụng</span></td>
+        </tr>
+        <tr>
+          <td><strong>P104</strong></td>
+          <td>Võ Thị E</td>
+          <td>5.500.000đ</td>
+          <td>490.000đ</td>
+          <td>275.000đ</td>
+          <td>150.000đ</td>
+          <td><strong>6.415.000đ</strong></td>
+          <td><span class="badge bg-success">Đã thu</span></td>
+        </tr>
+        <tr class="table-light">
+          <td colspan="6" class="text-end"><strong>Tổng phụ 22L Quận 7:</strong></td>
+          <td><strong>18.022.500đ</strong></td>
+          <td></td>
+        </tr>
+        
+        <!-- 223 Quận 1 -->
+        <tr class="table-secondary">
+          <td colspan="8"><strong>223 Quận 1</strong></td>
+        </tr>
+        <tr>
+          <td><strong>P201</strong></td>
+          <td>Trần Thị B</td>
+          <td>7.000.000đ</td>
+          <td>560.000đ</td>
+          <td>375.000đ</td>
+          <td>200.000đ</td>
+          <td><strong>8.135.000đ</strong></td>
+          <td><span class="badge bg-success">Đã thu</span></td>
+        </tr>
+        <tr>
+          <td><strong>P202</strong></td>
+          <td>Phạm Thị D</td>
+          <td>7.000.000đ</td>
+          <td>437.500đ</td>
+          <td>275.000đ</td>
+          <td>200.000đ</td>
+          <td><strong>7.912.500đ</strong></td>
+          <td><span class="badge bg-success">Đã thu</span></td>
+        </tr>
+        <tr>
+          <td><strong>P203</strong></td>
+          <td>Đỗ Văn F</td>
+          <td>7.500.000đ</td>
+          <td>525.000đ</td>
+          <td>300.000đ</td>
+          <td>200.000đ</td>
+          <td><strong>8.525.000đ</strong></td>
+          <td><span class="badge bg-danger">Quá hạn</span></td>
+        </tr>
+        <tr class="table-light">
+          <td colspan="6" class="text-end"><strong>Tổng phụ 223 Quận 1:</strong></td>
+          <td><strong>24.572.500đ</strong></td>
+          <td></td>
+        </tr>
+      </tbody>
+      
+      <tfoot class="table-primary">
+        <tr>
+          <th colspan="6" class="text-end">TỔNG CỘNG:</th>
+          <th>42.595.000đ</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- Ghi chú -->
+<div class="card mt-4">
+  <div class="card-body">
+    <h6 class="mb-3"><i class="bi bi-info-circle"></i> Ghi chú</h6>
+    <ul class="mb-0">
+      <li>Doanh thu tính theo kỳ thanh toán tháng 11/2025</li>
+      <li>Tiền điện tính theo đơn giá: 3.500đ/kWh</li>
+      <li>Tiền nước tính theo đơn giá: 25.000đ/m³</li>
+      <li>Dịch vụ khác bao gồm: Internet, giữ xe, vệ sinh</li>
+      <li>Phòng trống không tính vào doanh thu</li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

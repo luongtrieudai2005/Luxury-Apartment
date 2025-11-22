@@ -30,10 +30,12 @@
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuLuutru">
-          <div class = "nav flex-column">
-          <a href="{{ url_for('register_stay') }}">Đăng ký lưu trú</a>
-          <a href="{{ url_for('manage_houses') }}">Quản lý nhà/hợp đồng</a>
-        </div>
+          <div class="nav flex-column">
+            <a href="{{ url_for('register_stay') }}" class="nav-link py-1">Đăng ký lưu trú</a>
+            <a href="{{ url_for('manage_houses') }}" class="nav-link py-1">Quản lý nhà</a>
+            <a href="{{ url_for('bookings') }}" class="nav-link py-1">Đặt phòng</a>
+            <a href="{{ url_for('contracts') }}" class="nav-link py-1">Hợp đồng thuê</a>
+          </div>
         </div>
       </li>
 
@@ -44,10 +46,26 @@
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuDichvu">
-          <a href="{{ url_for('el_water')  }}">Quản lý chỉ số điện nước</a>
-          <a href="{{ url_for('ql_dichvukhac')  }}">Quản lý dịch vụ khác</a>
-          <a href="{{ url_for('ql_xe')  }}">Quản lý phương tiện</a>
-          <a href="{{ url_for('yc_phananh')  }}">Yêu cầu/Phản ánh</a>
+          <div class="nav flex-column">
+            <a href="{{ url_for('utilities') }}" class="nav-link py-1">Chỉ số điện nước</a>
+            <a href="{{ url_for('services') }}" class="nav-link py-1">Dịch vụ khác</a>
+            <a href="{{ url_for('parking') }}" class="nav-link py-1">Phương tiện</a>
+            <a href="{{ url_for('requests_feedback') }}" class="nav-link py-1">Yêu cầu/Phản ánh</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Báo cáo & Thống kê -->
+      <li class="nav-item">
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuBaocao">
+          <span><i class="bi bi-bar-chart-line"></i> Báo cáo & Thống kê</span>
+          <i class="bi bi-chevron-down small"></i>
+        </a>
+        <div class="collapse ps-3" id="menuBaocao">
+          <div class="nav flex-column">
+            <a href="{{ url_for('reports') }}" class="nav-link py-1">Dashboard báo cáo</a>
+            <a href="{{ url_for('revenue_report') }}" class="nav-link py-1">Báo cáo doanh thu</a>
+          </div>
         </div>
       </li>
 
@@ -58,13 +76,14 @@
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuTienich">
-          <a href="#" class="nav-link">Thống kê, in ấn, xuất file</a>
+          <a href="#" class="nav-link py-1">Thống kê, in ấn, xuất file</a>
         </div>
       </li>
 
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('support') }}">
-          <i class="bi bi-question-circle"></i> Cần hỗ trợ?</a>
+          <i class="bi bi-question-circle"></i> Cần hỗ trợ?
+        </a>
       </li>
     </ul>
   </div>
