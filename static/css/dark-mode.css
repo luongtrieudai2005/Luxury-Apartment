@@ -1,0 +1,1312 @@
+/* ========== DARK MODE GLOBAL STYLES ========== */
+
+/* Transition mượt mà cho tất cả elements */
+body,
+.bg-light,
+.bg-white,
+.card,
+.navbar,
+.sidebar,
+.form-control,
+.form-select,
+.btn,
+.table,
+.modal-content {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ========== BODY & LAYOUT ========== */
+.dark-mode {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .bg-light {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .bg-white {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .text-muted {
+  color: #b0b0b0 !important;
+}
+
+.dark-mode .text-dark {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .text-secondary {
+  color: #b0b0b0 !important;
+}
+
+/* ========== SIDEBAR ========== */
+.dark-mode .sidebar {
+  background-color: #2d2d2d !important;
+  border-color: #404040 !important;
+}
+
+.dark-mode .sidebar .border-bottom,
+.dark-mode .sidebar .border-top {
+  border-color: #404040 !important;
+}
+
+.dark-mode .nav-link {
+  color: #e0e0e0;
+}
+
+.dark-mode .nav-link:hover {
+  background-color: #3d3d3d !important;
+}
+
+.dark-mode .nav-link.active {
+  background-color: #1e3a5f !important;
+  color: #4da6ff;
+}
+
+/* Dark mode cho scrollbar sidebar */
+.dark-mode .sidebar .overflow-auto::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.dark-mode .sidebar .overflow-auto::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.dark-mode .sidebar .overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* ========== NAVBAR ========== */
+.dark-mode .navbar {
+  background-color: #2d2d2d !important;
+  border-color: #404040 !important;
+}
+
+.dark-mode .navbar-light {
+  background-color: #2d2d2d !important;
+}
+
+.dark-mode .navbar .border-bottom {
+  border-color: #404040 !important;
+}
+
+/* Fix navbar container */
+.dark-mode .navbar .container-fluid {
+  background-color: transparent;
+}
+
+/* Nút hamburger menu (☰) */
+.dark-mode .navbar .btn-outline-secondary {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .navbar .btn-outline-secondary:hover {
+  background-color: #4d4d4d;
+  border-color: #505050;
+  color: #e0e0e0;
+}
+
+/* Nút Dark Mode toggle */
+.dark-mode #darkModeToggle {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #ffd54f;
+}
+
+.dark-mode #darkModeToggle:hover {
+  background-color: #4d4d4d;
+  border-color: #505050;
+  color: #ffd54f;
+}
+
+/* Icon trong dark mode toggle */
+.dark-mode #darkModeToggle i {
+  color: #ffd54f;
+}
+
+/* Navbar text và elements */
+.dark-mode .navbar * {
+  color: #e0e0e0;
+}
+
+/* Nút đăng nhập giữ nguyên màu primary */
+.dark-mode .navbar .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+.dark-mode .navbar .btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+  color: #fff;
+}
+
+/* Gap và spacing trong navbar */
+.dark-mode .navbar .gap-2 {
+  background-color: transparent;
+}
+
+.dark-mode .navbar .ms-auto {
+  background-color: transparent;
+}
+
+.dark-mode .navbar .d-flex {
+  background-color: transparent;
+}
+
+/* ========== CARDS ========== */
+.dark-mode .card {
+  background-color: #2d2d2d !important;
+  border-color: #404040 !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .card-header {
+  background-color: #242424 !important;
+  border-color: #404040 !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .card-body {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .card-footer {
+  background-color: #242424 !important;
+  border-color: #404040 !important;
+}
+
+.dark-mode .card.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(255, 255, 255, .075) !important;
+}
+
+/* ========== TABLES ========== */
+.dark-mode .table {
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+.dark-mode .table-light,
+.dark-mode .table thead {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .table-hover tbody tr:hover {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+.dark-mode .table-bordered {
+  border-color: #404040;
+}
+
+.dark-mode .table-bordered td,
+.dark-mode .table-bordered th {
+  border-color: #404040;
+}
+
+.dark-mode .table-secondary {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .table-primary {
+  background-color: #1e3a5f !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .table-warning {
+  background-color: #5a4a2d !important;
+}
+
+.dark-mode .table-danger {
+  background-color: #5a2d2d !important;
+}
+
+.dark-mode .custom-header {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0;
+}
+
+/* ========== FORMS ========== */
+.dark-mode .form-control,
+.dark-mode .form-select {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .form-control::placeholder {
+  color: #888;
+}
+
+.dark-mode .form-control:focus,
+.dark-mode .form-select:focus {
+  background-color: #3d3d3d;
+  border-color: #4da6ff;
+  color: #e0e0e0;
+  box-shadow: 0 0 0 0.25rem rgba(77, 166, 255, 0.25);
+}
+
+.dark-mode .form-control:disabled,
+.dark-mode .form-control[readonly] {
+  background-color: #2a2a2a;
+  color: #888;
+}
+
+.dark-mode .input-group-text {
+  background-color: #3d3d3d !important;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .form-label {
+  color: #e0e0e0;
+}
+
+.dark-mode .form-check-input {
+  background-color: #3d3d3d;
+  border-color: #404040;
+}
+
+.dark-mode .form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.dark-mode .form-check-label {
+  color: #e0e0e0;
+}
+
+/* ========== BUTTONS ========== */
+.dark-mode .btn-light {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .btn-light:hover {
+  background-color: #4d4d4d;
+  border-color: #505050;
+  color: #e0e0e0;
+}
+
+.dark-mode .btn-outline-secondary {
+  color: #b0b0b0;
+  border-color: #404040;
+}
+
+.dark-mode .btn-outline-secondary:hover {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .btn-outline-primary:hover {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+.dark-mode .btn-outline-success:hover {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.dark-mode .btn-outline-warning:hover {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #000;
+}
+
+.dark-mode .btn-outline-danger:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.dark-mode .btn-outline-info:hover {
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+  color: #000;
+}
+
+.dark-mode .btn-group .btn {
+  border-color: #404040;
+}
+
+/* ========== BADGES ========== */
+.dark-mode .badge.bg-light {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0;
+}
+
+.dark-mode .badge.bg-warning {
+  background-color: #d39e00 !important;
+  color: #000;
+}
+
+.dark-mode .badge.bg-secondary {
+  background-color: #555 !important;
+}
+
+/* ========== MODALS ========== */
+.dark-mode .modal-content {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+.dark-mode .modal-header {
+  border-color: #404040;
+  background-color: #242424;
+}
+
+.dark-mode .modal-footer {
+  border-color: #404040;
+  background-color: #242424;
+}
+
+.dark-mode .modal-body {
+  background-color: #2d2d2d;
+}
+
+.dark-mode .modal-title {
+  color: #e0e0e0;
+}
+
+.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ========== ALERTS ========== */
+.dark-mode .alert {
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .alert-success {
+  background-color: #1e4620;
+  border-color: #2d5a2f;
+  color: #90ee90;
+}
+
+.dark-mode .alert-danger {
+  background-color: #4a1e1e;
+  border-color: #5a2d2d;
+  color: #ff6b6b;
+}
+
+.dark-mode .alert-warning {
+  background-color: #4a3d1e;
+  border-color: #5a4a2d;
+  color: #ffd54f;
+}
+
+.dark-mode .alert-info {
+  background-color: #1e3a4a;
+  border-color: #2d4a5a;
+  color: #6dd5ed;
+}
+
+/* ========== DROPDOWNS ========== */
+.dark-mode .dropdown-menu {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.dark-mode .dropdown-item {
+  color: #e0e0e0;
+}
+
+.dark-mode .dropdown-item:hover,
+.dark-mode .dropdown-item:focus {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+.dark-mode .dropdown-divider {
+  border-color: #404040;
+}
+
+/* ========== PAGINATION ========== */
+.dark-mode .pagination .page-link {
+  background-color: #2d2d2d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .pagination .page-link:hover {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* ========== BREADCRUMB ========== */
+.dark-mode .breadcrumb {
+  background-color: #2d2d2d;
+}
+
+.dark-mode .breadcrumb-item a {
+  color: #4da6ff;
+}
+
+.dark-mode .breadcrumb-item.active {
+  color: #b0b0b0;
+}
+
+/* ========== BORDERS ========== */
+.dark-mode .border,
+.dark-mode .border-top,
+.dark-mode .border-bottom,
+.dark-mode .border-start,
+.dark-mode .border-end {
+  border-color: #404040 !important;
+}
+
+.dark-mode .border-primary {
+  border-color: #0d6efd !important;
+}
+
+.dark-mode .border-success {
+  border-color: #198754 !important;
+}
+
+.dark-mode .border-warning {
+  border-color: #ffc107 !important;
+}
+
+.dark-mode .border-danger {
+  border-color: #dc3545 !important;
+}
+
+.dark-mode .border-info {
+  border-color: #0dcaf0 !important;
+}
+
+/* ========== LIST GROUP ========== */
+.dark-mode .list-group-item {
+  background-color: #2d2d2d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .list-group-item:hover {
+  background-color: #3d3d3d;
+}
+
+.dark-mode .list-group-item.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* ========== PROGRESS BARS ========== */
+.dark-mode .progress {
+  background-color: #3d3d3d;
+}
+
+/* ========== TOOLTIPS & POPOVERS ========== */
+.dark-mode .tooltip-inner {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+.dark-mode .popover {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.dark-mode .popover-header {
+  background-color: #242424;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .popover-body {
+  color: #e0e0e0;
+}
+
+/* ========== ACCORDIONS ========== */
+.dark-mode .accordion-item {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.dark-mode .accordion-button {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .accordion-button:not(.collapsed) {
+  background-color: #1e3a5f;
+  color: #e0e0e0;
+}
+
+.dark-mode .accordion-body {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+}
+
+/* ========== TABS ========== */
+.dark-mode .nav-tabs {
+  border-color: #404040;
+}
+
+.dark-mode .nav-tabs .nav-link {
+  color: #b0b0b0;
+  border-color: transparent;
+}
+
+.dark-mode .nav-tabs .nav-link:hover {
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .nav-tabs .nav-link.active {
+  background-color: #2d2d2d;
+  border-color: #404040 #404040 #2d2d2d;
+  color: #e0e0e0;
+}
+
+/* ========== OFFCANVAS ========== */
+.dark-mode .offcanvas {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .offcanvas-header {
+  border-color: #404040;
+}
+
+/* ========== SPECIAL ELEMENTS ========== */
+.dark-mode hr {
+  border-color: #404040;
+  opacity: 1;
+}
+
+.dark-mode .text-box {
+  color: #e0e0e0;
+}
+
+.dark-mode .more-link {
+  color: #4da6ff;
+}
+
+.dark-mode small {
+  color: #b0b0b0;
+}
+
+/* ========== LISTING CARDS ========== */
+.dark-mode .listing-card {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.dark-mode .listing-card:hover {
+  box-shadow: 0 .5rem 1rem rgba(255, 255, 255, .15) !important;
+}
+
+/* ========== SCROLLBAR GENERAL ========== */
+.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* ========== CHART.JS (nếu có biểu đồ) ========== */
+.dark-mode canvas {
+  filter: brightness(0.9);
+}
+
+/* ========== PRINT MODE ========== */
+@media print {
+  .dark-mode {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  .dark-mode .card,
+  .dark-mode .table,
+  .dark-mode .form-control {
+    background-color: white !important;
+    color: black !important;
+    border-color: #dee2e6 !important;
+  }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .dark-mode .sidebar {
+    background-color: #1a1a1a !important;
+  }
+}
+
+/* ========== CUSTOM CLASSES ========== */
+.dark-mode .rounded {
+  border-color: #404040;
+}
+
+.dark-mode .shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(255, 255, 255, .075) !important;
+}
+
+.dark-mode .shadow {
+  box-shadow: 0 .5rem 1rem rgba(255, 255, 255, .15) !important;
+}
+
+.dark-mode .shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(255, 255, 255, .175) !important;
+}
+
+/* ========== COLORED BACKGROUNDS IN DARK MODE ========== */
+.dark-mode .bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.dark-mode .bg-success {
+  background-color: #198754 !important;
+}
+
+.dark-mode .bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.dark-mode .bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.dark-mode .bg-info {
+  background-color: #0dcaf0 !important;
+  color: #000 !important;
+}
+
+/* ========== TEXT COLORS ========== */
+.dark-mode .text-primary {
+  color: #4da6ff !important;
+}
+
+.dark-mode .text-success {
+  color: #90ee90 !important;
+}
+
+.dark-mode .text-danger {
+  color: #ff6b6b !important;
+}
+
+.dark-mode .text-warning {
+  color: #ffd54f !important;
+}
+
+.dark-mode .text-info {
+  color: #6dd5ed !important;
+}
+
+/* ========== SPECIFIC TEMPLATE FIXES ========== */
+/* Support page */
+.dark-mode .text-light {
+  color: #e0e0e0 !important;
+}
+
+/* Reports dashboard */
+.dark-mode .contract-view {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+}
+
+/* Booking management */
+.dark-mode .btn-group-sm .btn {
+  border-color: #404040;
+}
+
+/* Contract details */
+.dark-mode .table-light tr {
+  background-color: #3d3d3d !important;
+}
+
+/* Select role page */
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+  color: #e0e0e0;
+}
+
+.dark-mode p {
+  color: #b0b0b0;
+}
+
+/* Auth pages */
+.dark-mode .card p-4 {
+  background-color: #2d2d2d;
+}
+
+/* ========== FIX SPECIFIC ISSUES ========== */
+/* Tiêu đề trang */
+.dark-mode h1, .dark-mode h2, .dark-mode h3, 
+.dark-mode h4, .dark-mode h5, .dark-mode h6 {
+  color: #e0e0e0 !important;
+}
+
+/* Container fluid */
+.dark-mode .container-fluid {
+  background-color: #1a1a1a;
+}
+
+/* Buttons màu vàng (warning) */
+.dark-mode .btn-warning {
+  background-color: #d39e00 !important;
+  border-color: #c28c00 !important;
+  color: #000 !important;
+}
+
+.dark-mode .btn-warning:hover {
+  background-color: #c28c00 !important;
+  border-color: #b07e00 !important;
+}
+
+/* Buttons info */
+.dark-mode .btn-info {
+  background-color: #0dcaf0 !important;
+  border-color: #0dcaf0 !important;
+  color: #000 !important;
+}
+
+.dark-mode .text-primary {
+  color: #6cb2eb !important;
+}
+
+/* Table header vàng */
+.dark-mode thead {
+  background-color: #3d3d3d !important;
+}
+
+.dark-mode thead th {
+  color: #e0e0e0 !important;
+  background-color: #3d3d3d !important;
+}
+
+/* Fix cho table trong manage_houses */
+.dark-mode .custom-header th {
+  background-color: #d39e00 !important;
+  color: #000 !important;
+}
+
+/* Page content wrapper */
+.dark-mode #page-content-wrapper {
+  background-color: #1a1a1a;
+}
+
+/* Strong tags */
+.dark-mode strong {
+  color: #e0e0e0;
+}
+
+/* Links */
+.dark-mode a:not(.btn):not(.nav-link):not(.dropdown-item) {
+  color: #6cb2eb;
+}
+
+.dark-mode a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
+  color: #8cc5f0;
+}
+
+/* Rounded elements */
+.dark-mode .rounded,
+.dark-mode .rounded-3 {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+/* Labels in forms */
+.dark-mode label {
+  color: #e0e0e0;
+}
+
+/* D-flex containers */
+.dark-mode .d-flex {
+  color: #e0e0e0;
+}
+
+/* Justify content end */
+.dark-mode .justify-content-end {
+  color: #e0e0e0;
+}
+
+/* Text colors override */
+.dark-mode .text-white {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .fw-bold,
+.dark-mode .fw-semibold {
+  color: #e0e0e0;
+}
+
+/* Small text */
+.dark-mode small,
+.dark-mode .small {
+  color: #b0b0b0;
+}
+
+/* Div với background tùy chỉnh */
+.dark-mode div[style*="background:#0A0F24"],
+.dark-mode div[style*="background: #0A0F24"] {
+  background: #2d2d2d !important;
+}
+
+.dark-mode div[style*="background:#0F162E"],
+.dark-mode div[style*="background: #0F162E"] {
+  background: #3d3d3d !important;
+}
+
+/* Input với style inline */
+.dark-mode textarea[style*="background:#0F162E"],
+.dark-mode input[style*="background:#0F162E"] {
+  background: #3d3d3d !important;
+  color: #e0e0e0 !important;
+  border-color: #404040 !important;
+}
+
+/* Button với background vàng */
+.dark-mode button[style*="background:#FFD54F"],
+.dark-mode .btn[style*="background:#FFD54F"] {
+  background: #d39e00 !important;
+  color: #000 !important;
+}
+
+/* Headings trong card */
+.dark-mode .card h1,
+.dark-mode .card h2,
+.dark-mode .card h3,
+.dark-mode .card h4,
+.dark-mode .card h5,
+.dark-mode .card h6 {
+  color: #e0e0e0 !important;
+}
+
+/* P tags */
+.dark-mode p {
+  color: #b0b0b0;
+}
+
+.dark-mode .card p {
+  color: #b0b0b0;
+}
+
+/* Wrapper divs */
+.dark-mode #wrapper {
+  background-color: #1a1a1a;
+}
+
+/* Em tags */
+.dark-mode em {
+  color: #888;
+}
+
+/* Table striped */
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Blockquote */
+.dark-mode blockquote {
+  border-color: #404040;
+  color: #b0b0b0;
+}
+
+/* Code blocks */
+.dark-mode code,
+.dark-mode pre {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+/* Select options */
+.dark-mode select option {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+}
+
+/* Placeholder text */
+.dark-mode ::placeholder {
+  color: #888 !important;
+  opacity: 1;
+}
+
+.dark-mode ::-webkit-input-placeholder {
+  color: #888 !important;
+}
+
+.dark-mode :-ms-input-placeholder {
+  color: #888 !important;
+}
+
+.dark-mode ::-ms-input-placeholder {
+  color: #888 !important;
+}
+
+/* Fix cho wrapper divs với class p-3, p-4, etc */
+.dark-mode .p-3,
+.dark-mode .p-4,
+.dark-mode .p-5 {
+  background-color: inherit;
+}
+
+/* Row elements */
+.dark-mode .row {
+  color: #e0e0e0;
+}
+
+/* Col elements */
+.dark-mode [class*="col-"] {
+  color: #e0e0e0;
+}
+
+/* Display elements */
+.dark-mode .d-block,
+.dark-mode .d-inline,
+.dark-mode .d-inline-block {
+  color: inherit;
+}
+
+/* Span elements */
+.dark-mode span:not(.badge):not(.input-group-text) {
+  color: inherit;
+}
+
+/* I tags (icons) */
+.dark-mode i {
+  color: inherit;
+}
+
+/* Fix cho các div có border */
+.dark-mode div[class*="border"] {
+  border-color: #404040 !important;
+}
+
+/* Fix cho shadow */
+.dark-mode [class*="shadow"] {
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .5) !important;
+}
+
+/* Textarea */
+.dark-mode textarea {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+.dark-mode textarea:focus {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+  border-color: #4da6ff;
+}
+
+/* Legend */
+.dark-mode legend {
+  color: #e0e0e0;
+}
+
+/* Fieldset */
+.dark-mode fieldset {
+  border-color: #404040;
+}
+
+/* Figure */
+.dark-mode figure {
+  color: #b0b0b0;
+}
+
+.dark-mode figcaption {
+  color: #888;
+}
+
+/* Mark/Highlight */
+.dark-mode mark {
+  background-color: #5a4a2d;
+  color: #ffd54f;
+}
+
+/* Kbd */
+.dark-mode kbd {
+  background-color: #3d3d3d;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+/* Samp */
+.dark-mode samp {
+  color: #e0e0e0;
+}
+
+/* Var */
+.dark-mode var {
+  color: #e0e0e0;
+}
+
+/* Time */
+.dark-mode time {
+  color: #b0b0b0;
+}
+
+/* Address */
+.dark-mode address {
+  color: #b0b0b0;
+}
+
+/* DL, DT, DD */
+.dark-mode dl,
+.dark-mode dt,
+.dark-mode dd {
+  color: #e0e0e0;
+}
+
+/* Caption */
+.dark-mode caption {
+  color: #b0b0b0;
+}
+
+/* Summary */
+.dark-mode summary {
+  color: #e0e0e0;
+}
+
+/* Details */
+.dark-mode details {
+  color: #b0b0b0;
+}
+
+/* ========== SPECIFIC PAGE FIXES ========== */
+
+/* Manage Houses Page - Yellow Header Table */
+.dark-mode table.table-bordered thead.custom-header {
+  background-color: #d39e00 !important;
+}
+
+.dark-mode table.table-bordered thead.custom-header th {
+  background-color: #d39e00 !important;
+  color: #000 !important;
+  border-color: #b07e00 !important;
+}
+
+/* Manage Houses Page - Table Body */
+.dark-mode table.table-bordered tbody td {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+.dark-mode table.table-bordered tbody tr:hover td {
+  background-color: #3d3d3d;
+}
+
+/* Button "Xem nhà" style */
+.dark-mode .btn.btn-light.btn-sm {
+  background-color: #3d3d3d;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+.dark-mode .btn.btn-light.btn-sm:hover {
+  background-color: #4d4d4d;
+  color: #e0e0e0;
+}
+
+/* Nút "Thêm nhà" màu vàng */
+.dark-mode .btn.btn-warning {
+  background-color: #d39e00 !important;
+  border-color: #c28c00 !important;
+  color: #000 !important;
+}
+
+.dark-mode .btn.btn-warning:hover {
+  background-color: #c28c00 !important;
+  border-color: #b07e00 !important;
+  color: #000 !important;
+}
+
+.dark-mode .btn.btn-warning i {
+  color: #000 !important;
+}
+
+/* Electric/Water Readings & Other Services Pages */
+.dark-mode .custom-header th {
+  background-color: #d39e00 !important;
+  color: #000 !important;
+}
+
+/* Nhắc thanh toán button */
+.dark-mode .btn-info.text-primary {
+  background-color: #0dcaf0 !important;
+  border-color: #0dcaf0 !important;
+  color: #000 !important;
+}
+
+.dark-mode .btn-info.text-primary:hover {
+  background-color: #31d2f2 !important;
+  border-color: #31d2f2 !important;
+  color: #000 !important;
+}
+
+.dark-mode .btn-info.text-primary i {
+  color: #000 !important;
+}
+
+/* Title với blue highlight */
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5 {
+  color: #e0e0e0 !important;
+}
+
+/* Override cho text trong button info */
+.dark-mode .btn-info * {
+  color: #000 !important;
+}
+
+/* Reports page - colored cards */
+.dark-mode .card.bg-primary,
+.dark-mode .card.bg-success,
+.dark-mode .card.bg-warning,
+.dark-mode .card.bg-info,
+.dark-mode .card.bg-danger {
+  color: #fff !important;
+}
+
+.dark-mode .card.bg-primary *,
+.dark-mode .card.bg-success *,
+.dark-mode .card.bg-danger * {
+  color: #fff !important;
+}
+
+.dark-mode .card.bg-warning *,
+.dark-mode .card.bg-info * {
+  color: #000 !important;
+}
+
+/* Contract page - table backgrounds */
+.dark-mode .table.table-bordered {
+  background-color: #2d2d2d;
+}
+
+/* Booking page - status badges stay colorful */
+.dark-mode .badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.dark-mode .badge.bg-success {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
+
+.dark-mode .badge.bg-danger {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
+
+.dark-mode .badge.bg-info {
+  background-color: #0dcaf0 !important;
+  color: #000 !important;
+}
+
+.dark-mode .badge.bg-primary {
+  background-color: #0d6efd !important;
+  color: #fff !important;
+}
+
+/* Support page specific */
+.dark-mode .text-yellow {
+  color: #ffd54f !important;
+}
+
+/* Ensure all text in dark cards is visible */
+.dark-mode .card.shadow-sm p,
+.dark-mode .card.shadow-sm div,
+.dark-mode .card.shadow-sm span:not(.badge) {
+  color: #e0e0e0;
+}
+
+/* Revenue detail - colored cards with borders */
+.dark-mode .card.border-primary {
+  border-color: #0d6efd !important;
+  background-color: #2d2d2d !important;
+}
+
+.dark-mode .card.border-success {
+  border-color: #198754 !important;
+  background-color: #2d2d2d !important;
+}
+
+.dark-mode .card.border-warning {
+  border-color: #ffc107 !important;
+  background-color: #2d2d2d !important;
+}
+
+.dark-mode .card.border-info {
+  border-color: #0dcaf0 !important;
+  background-color: #2d2d2d !important;
+}
+
+.dark-mode .card.border-danger {
+  border-color: #dc3545 !important;
+  background-color: #2d2d2d !important;
+}
+
+/* Home page - listing cards */
+.dark-mode .listing-card {
+  background-color: #2d2d2d !important;
+  border-color: #404040 !important;
+}
+
+.dark-mode .listing-card .card-title {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .listing-card .card-text {
+  color: #b0b0b0 !important;
+}
+
+/* Select role page */
+.dark-mode .text-center h2 {
+  color: #4da6ff !important;
+}
+
+.dark-mode .text-center p {
+  color: #b0b0b0 !important;
+}
+
+/* Forgot password steps */
+.dark-mode .card h4 {
+  color: #e0e0e0 !important;
+}
