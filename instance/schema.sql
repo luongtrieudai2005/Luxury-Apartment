@@ -55,6 +55,17 @@ CREATE TABLE NHANVIEN (
     FOREIGN KEY (MaTK) REFERENCES TAIKHOAN (MaTK)
 );
 
+-- Thêm sau bảng NHANVIEN là hợp lý
+CREATE TABLE CHUNHA (
+    MaCN   INTEGER PRIMARY KEY AUTOINCREMENT,
+    TenCN  TEXT NOT NULL,
+    SDT    TEXT,
+    Email  TEXT,
+    MaTK   INTEGER UNIQUE,
+    FOREIGN KEY (MaTK) REFERENCES TAIKHOAN (MaTK)
+);
+
+
 -- =====================================
 -- 3. PHÒNG, HỢP ĐỒNG, LỊCH SỬ THUÊ
 -- =====================================

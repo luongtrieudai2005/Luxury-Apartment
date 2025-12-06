@@ -5,25 +5,41 @@
     <div class="col-md-6 col-lg-5">
       <div class="card p-4 shadow-sm">
         <a href="{{ url_for('login') }}" class="text-decoration-none text-secondary mb-3 d-inline-flex align-items-center">
-        <i class="bi bi-arrow-left"></i> <span class="ms-1"></span>
-      </a>
+          <i class="bi bi-arrow-left"></i> 
+          <span class="ms-1"></span>
+        </a>
         <h4 class="mb-3">Tạo tài khoản mới</h4>
+
         <form method="post" action="{{ url_for('signup') }}">
+          
           <div class="mb-3">
             <label class="form-label">Họ và tên</label>
             <input name="name" type="text" class="form-control" required>
           </div>
+
           <div class="mb-3">
             <label class="form-label">Email</label>
             <input name="email" type="email" class="form-control" required>
           </div>
+
+          <!-- Thêm SĐT -->
+          <div class="mb-3">
+            <label class="form-label">Số điện thoại</label>
+            <input name="phone" type="tel" class="form-control" 
+                   pattern="[0-9]{10,11}" 
+                   placeholder="Ví dụ: 0901234567"
+                   required>
+          </div>
+
           <div class="mb-3">
             <label class="form-label">Mật khẩu</label>
             <input name="password" type="password" class="form-control" required>
           </div>
+
           <div class="d-grid">
             <button class="btn btn-success" type="submit">Đăng ký</button>
           </div>
+
         </form>
       </div>
     </div>

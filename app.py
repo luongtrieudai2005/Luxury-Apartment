@@ -1,5 +1,24 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
+import os, sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "databases", "database.db")
+
+def get_db():
+    db = sqlite3.connect(DB_PATH)
+    db.row_factory = sqlite3.Row
+    db.execute("PRAGMA foreign_keys = ON;")
+    return db
+
+def form_any(*names, default=""):
+    for n in names:
+        v = request.form.get(n)
+        if v is not None and str(v).strip() != "":
+            return str(v).strip()
+    return default
+
 app = Flask(__name__, static_folder="static", template_folder="app/templates")
 app.config['SECRET_KEY'] = 'dev-secret-key'
 
@@ -11,25 +30,90 @@ listings = [
 
 @app.route('/')
 def home():
+    # CHƯA đăng nhập -> đi chọn vai trò
+    if "user_id" not in session:
+        return redirect(url_for('select_role'))
+
+    # ĐÃ đăng nhập -> vào trang home bình thường
     return render_template('home.html', listings=listings)
 
 # ============== AUTH ROUTES ==============
 @app.route('/login', methods=['GET','POST'])
 def login():
+    role = request.args.get("role")  # optional, bạn chưa cần phân quyền
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        if email and password:
-            flash('Đăng nhập thành công (demo)', 'success')
-            return redirect(url_for('home'))
-        flash('Vui lòng nhập đầy đủ thông tin', 'danger')
-    return render_template('login.html')
+        username = form_any('email', 'username', 'TenDangNhap').lower()
+        password = form_any('password', 'MatKhau')
+
+        db = get_db()
+        user = db.execute(
+            "SELECT MaTK, TenDangNhap, MatKhau, VaiTro FROM TAIKHOAN WHERE TenDangNhap = ?",
+            (username,)
+        ).fetchone()
+        db.close()
+
+        if user and check_password_hash(user["MatKhau"], password):
+            session.clear()
+            session["user_id"] = user["MaTK"]
+            session["username"] = user["TenDangNhap"]
+            session["role"] = user["VaiTro"]
+            flash("Đăng nhập thành công!", "success")
+            
+            
+            return redirect(url_for("home"))
+
+        flash("Sai tài khoản hoặc mật khẩu.", "danger")
+
+    return render_template('login.html', role=role)
 
 @app.route('/signup', methods=['GET','POST'])
 def signup():
+    """
+    Tạm thời: signup này dùng để tạo tài khoản CHỦ NHÀ.
+    Lưu vào: TAIKHOAN + CHUNHA
+    """
     if request.method == 'POST':
-        flash('Đăng ký thành công (demo). Vui lòng đăng nhập.', 'success')
+        ten_cn  = form_any('name', 'TenCN', default="Chủ nhà")
+        sdt     = form_any('phone', 'SDT', default=None)
+        email   = form_any('email', 'TenDangNhap').lower()
+        pw      = form_any('password', 'MatKhau')
+
+        if not email or not pw:
+            flash("Vui lòng nhập email & mật khẩu.", "danger")
+            return render_template('signup.html')
+
+        db = get_db()
+
+        existed = db.execute(
+            "SELECT 1 FROM TAIKHOAN WHERE TenDangNhap = ?",
+            (email,)
+        ).fetchone()
+        if existed:
+            db.close()
+            flash("Email đã tồn tại.", "warning")
+            return render_template('signup.html')
+
+        pw_hash = generate_password_hash(pw)
+
+        cur = db.cursor()
+        # Chủ nhà: tạm map vào VaiTro='admin' theo schema hiện có
+        cur.execute(
+            "INSERT INTO TAIKHOAN (TenDangNhap, MatKhau, VaiTro) VALUES (?, ?, ?)",
+            (email, pw_hash, "admin")
+        )
+        ma_tk = cur.lastrowid
+
+        cur.execute(
+            "INSERT INTO CHUNHA (TenCN, SDT, Email, MaTK) VALUES (?, ?, ?, ?)",
+            (ten_cn, sdt, email, ma_tk)
+        )
+
+        db.commit()
+        db.close()
+
+        flash("Đăng ký chủ nhà thành công. Vui lòng đăng nhập.", "success")
         return redirect(url_for('login'))
+
     return render_template('signup.html')
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -68,10 +152,13 @@ def forgot_password():
 
 @app.route('/logout')
 def logout():
+    session.clear()
+    flash("Đã đăng xuất.", "info")
     return redirect(url_for('login'))
-
 @app.route('/select-role')
 def select_role():
+    if "user_id" in session:
+        return redirect(url_for('home'))
     return render_template('select_role.html')
 
 @app.route('/login/<role>')
