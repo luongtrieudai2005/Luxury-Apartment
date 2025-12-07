@@ -2,6 +2,7 @@ from flask import Flask
 from .config import DevConfig
 from .extensions.db import init_app as init_db
 
+
 def create_app(config_object=DevConfig):
     app = Flask(
         __name__,
@@ -21,7 +22,9 @@ def create_app(config_object=DevConfig):
     from .route.reports import bp as reports_bp
     from .route.admin import bp as admin_bp
     from .route.support import bp as support_bp
-
+    from .route.profile import bp as profile_bp
+    
+    app.register_blueprint(profile_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(core_bp)
@@ -30,5 +33,6 @@ def create_app(config_object=DevConfig):
     app.register_blueprint(reports_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(support_bp)
+
 
     return app

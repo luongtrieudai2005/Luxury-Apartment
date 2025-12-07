@@ -1,9 +1,11 @@
-<div class="sidebar bg-white border-end d-flex flex-column" style="height: 100vh; position: sticky; top: 0;">
+<div class="sidebar bg-white border-end d-flex flex-column" style="height: 100vh;">
   <!-- User Info - Fixed top -->
   <div class="flex-shrink-0">
     <div class="text-center py-3 border-bottom">
-      <img src="{{ url_for('static', filename='../../static/img/avt.png') }}" class="rounded-circle mb-2" width="60" height="60" alt="Avatar">
-      <h6 class="mb-0">{{ session.get('username') or 'Username' }}</h6>
+      <!-- <img src="{{ url_for('static', filename='../../static/img/lenhuthao.jpg') }}" class="rounded-circle mb-2" width="60" height="60" alt="Avatar"> -->
+      <img src="{{ url_for('profile.avatar_me') }}" class="rounded-circle mb-2" width="60" height="60" alt="Avatar">
+
+      <h6 class="mb-0">{{ session.get('full_name') or 'Username' }}</h6>
       <small class="text-muted">{{ session.get('role') or 'admin' }}</small>
     </div>
 
@@ -16,9 +18,17 @@
     </div>
   </div>
 
+
   <!-- Menu - Scrollable area -->
   <div class="flex-grow-1 overflow-auto" style="scrollbar-width: thin;">
     <ul class="nav flex-column px-2 pb-3">
+
+<li class="nav-item">
+  <a class="nav-link" href="{{ url_for('profile.profile') }}">
+    <i class="bi bi-person-circle"></i> Hồ sơ cá nhân
+  </a>
+</li>
+
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('main.home') }}">
           <i class="bi bi-house-door"></i> Trang chủ

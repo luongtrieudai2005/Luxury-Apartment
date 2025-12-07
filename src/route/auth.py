@@ -34,6 +34,11 @@ def login():
             session["user_id"] = user["MaTK"]
             session["username"] = user["TenDangNhap"]
             session["role"] = user["VaiTro"]
+            row = db.execute(
+        "SELECT TenCN FROM CHUNHA WHERE MaTK = ?",
+        (user["MaTK"],)
+        ).fetchone()
+            session["full_name"] = row["TenCN"] if row else user["TenDangNhap"]
             flash("Đăng nhập thành công!", "success")
             return redirect(url_for("main.home"))
 
