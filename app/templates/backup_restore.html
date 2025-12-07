@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+{% block title %}Sao lưu & Phục hồi dữ liệu{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Sao lưu & Phục hồi dữ liệu</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('system_config') }}">Quản trị hệ thống</a></li>
+        <li class="breadcrumb-item active">Sao lưu</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<!-- Thống kê -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card border-primary">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Tổng bản sao lưu</h6>
+        <h3 class="text-primary mb-0">24</h3>
+        <small class="text-muted">Trong 30 ngày qua</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-success">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Sao lưu cuối</h6>
+        <h3 class="text-success mb-0">Hôm nay</h3>
+        <small class="text-muted">09:00 AM</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Dung lượng</h6>
+        <h3 class="text-warning mb-0">2.3 GB</h3>
+        <small class="text-muted">/ 10 GB</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-info">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Tự động</h6>
+        <h3 class="text-info mb-0">Bật</h3>
+        <small class="text-muted">Hàng ngày 03:00</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-bs-toggle="tab" href="#backup">
+      <i class="bi bi-cloud-arrow-up"></i> Sao lưu
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#restore">
+      <i class="bi bi-cloud-arrow-down"></i> Phục hồi
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#schedule">
+      <i class="bi bi-clock"></i> Lịch tự động
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#history">
+      <i class="bi bi-journal-text"></i> Lịch sử
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- Tab Sao lưu -->
+  <div id="backup" class="tab-pane fade show active">
+    <div class="row g-4">
+      <!-- Tạo bản sao lưu -->
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-cloud-plus"></i> Tạo bản sao lưu mới</h5>
+          </div>
+          <div class="card-body">
+            <form id="backupForm">
+              <div class="mb-3">
+                <label class="form-label">Tên bản sao lưu</label>
+                <input type="text" class="form-control" id="backupName" placeholder="Tự động: backup_YYYYMMDD_HHMMSS">
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Loại dữ liệu</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="backupDatabase" checked>
+                  <label class="form-check-label" for="backupDatabase">
+                    <i class="bi bi-database"></i> Cơ sở dữ liệu (Database)
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="backupFiles" checked>
+                  <label class="form-check-label" for="backupFiles">
+                    <i class="bi bi-file-earmark"></i> File uploads (Hình ảnh, tài liệu)
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="backupConfig" checked>
+                  <label class="form-check-label" for="backupConfig">
+                    <i class="bi bi-gear"></i> Cấu hình hệ thống
+                  </label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Nén dữ liệu</label>
+                <select class="form-select">
+                  <option value="zip" selected>ZIP (Nhanh)</option>
+                  <option value="gzip">GZIP (Tốc độ trung bình)</option>
+                  <option value="7z">7-Zip (Nén tốt nhất)</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <textarea class="form-control" rows="2" placeholder="Ghi chú về bản sao lưu này..."></textarea>
+              </div>
+              
+              <button type="button" class="btn btn-primary w-100" onclick="createBackup()">
+                <i class="bi bi-cloud-arrow-up"></i> Tạo bản sao lưu ngay
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Hướng dẫn -->
+      <div class="col-md-6">
+        <div class="card shadow-sm bg-light h-100">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Hướng dẫn & Lưu ý</h5>
+          </div>
+          <div class="card-body">
+            <h6 class="fw-bold">Khuyến nghị:</h6>
+            <ul class="mb-3">
+              <li>Sao lưu định kỳ ít nhất 1 lần/tuần</li>
+              <li>Lưu trữ bản backup ở nhiều nơi khác nhau</li>
+              <li>Kiểm tra tính toàn vẹn của backup sau khi tạo</li>
+              <li>Không xóa backup cũ khi chưa có backup mới thành công</li>
+            </ul>
+            
+            <h6 class="fw-bold">Nội dung bao gồm:</h6>
+            <ul class="mb-3">
+              <li><strong>Database:</strong> Tất cả bảng dữ liệu trong hệ thống</li>
+              <li><strong>Files:</strong> Hình ảnh, tài liệu đã upload</li>
+              <li><strong>Config:</strong> Cấu hình ứng dụng, biểu giá</li>
+            </ul>
+            
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle"></i>
+              <strong>Lưu ý:</strong> Quá trình sao lưu có thể mất vài phút. Không tắt trình duyệt trong lúc đang backup.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Danh sách backup -->
+    <div class="card shadow-sm mt-4">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-archive"></i> Danh sách bản sao lưu</h5>
+        <button class="btn btn-sm btn-outline-danger" onclick="cleanupBackups()">
+          <i class="bi bi-trash"></i> Dọn dẹp cũ
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Tên file</th>
+              <th>Kích thước</th>
+              <th>Nội dung</th>
+              <th>Ngày tạo</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><i class="bi bi-file-zip"></i> backup_20251207_090000.zip</td>
+              <td>145 MB</td>
+              <td>
+                <span class="badge bg-primary">DB</span>
+                <span class="badge bg-success">Files</span>
+                <span class="badge bg-warning">Config</span>
+              </td>
+              <td>07/12/2025 09:00</td>
+              <td><span class="badge bg-success">Hoàn tất</span></td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-info" onclick="downloadBackup('backup_20251207_090000.zip')" title="Tải về">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button class="btn btn-warning" onclick="restoreBackup('backup_20251207_090000.zip')" title="Phục hồi">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                  <button class="btn btn-danger" onclick="deleteBackup('backup_20251207_090000.zip')" title="Xóa">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td><i class="bi bi-file-zip"></i> backup_20251206_030000.zip</td>
+              <td>142 MB</td>
+              <td>
+                <span class="badge bg-primary">DB</span>
+                <span class="badge bg-success">Files</span>
+                <span class="badge bg-warning">Config</span>
+              </td>
+              <td>06/12/2025 03:00</td>
+              <td><span class="badge bg-success">Hoàn tất</span></td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-info" onclick="downloadBackup('backup_20251206_030000.zip')">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button class="btn btn-warning" onclick="restoreBackup('backup_20251206_030000.zip')">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                  <button class="btn btn-danger" onclick="deleteBackup('backup_20251206_030000.zip')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td><i class="bi bi-file-zip"></i> backup_20251205_030000.zip</td>
+              <td>138 MB</td>
+              <td>
+                <span class="badge bg-primary">DB</span>
+                <span class="badge bg-success">Files</span>
+              </td>
+              <td>05/12/2025 03:00</td>
+              <td><span class="badge bg-success">Hoàn tất</span></td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-info" onclick="downloadBackup('backup_20251205_030000.zip')">
+                    <i class="bi bi-download"></i>
+                  </button>
+                  <button class="btn btn-warning" onclick="restoreBackup('backup_20251205_030000.zip')">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                  <button class="btn btn-danger" onclick="deleteBackup('backup_20251205_030000.zip')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Phục hồi -->
+  <div id="restore" class="tab-pane fade">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Phục hồi dữ liệu</h5>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-danger">
+              <h6 class="alert-heading"><i class="bi bi-exclamation-octagon"></i> Cảnh báo quan trọng!</h6>
+              <p class="mb-0">
+                Phục hồi dữ liệu sẽ ghi đè toàn bộ dữ liệu hiện tại. 
+                Hãy đảm bảo đã sao lưu dữ liệu hiện tại trước khi thực hiện.
+              </p>
+            </div>
+            
+            <h6 class="fw-bold mb-3">Chọn phương thức phục hồi:</h6>
+            
+            <!-- Phục hồi từ backup có sẵn -->
+            <div class="card mb-3">
+              <div class="card-body">
+                <h6><i class="bi bi-archive"></i> Từ bản sao lưu có sẵn</h6>
+                <p class="text-muted">Chọn một bản backup từ danh sách có sẵn trong hệ thống</p>
+                <select class="form-select mb-3">
+                  <option>backup_20251207_090000.zip (145 MB - 07/12/2025)</option>
+                  <option>backup_20251206_030000.zip (142 MB - 06/12/2025)</option>
+                  <option>backup_20251205_030000.zip (138 MB - 05/12/2025)</option>
+                </select>
+                <button class="btn btn-warning" onclick="confirmRestore('existing')">
+                  <i class="bi bi-arrow-counterclockwise"></i> Phục hồi từ backup này
+                </button>
+              </div>
+            </div>
+            
+            <!-- Upload file backup -->
+            <div class="card">
+              <div class="card-body">
+                <h6><i class="bi bi-cloud-upload"></i> Tải lên file backup</h6>
+                <p class="text-muted">Tải lên file .zip backup từ máy tính của bạn</p>
+                <div class="mb-3">
+                  <input type="file" class="form-control" accept=".zip" id="uploadBackupFile">
+                  <small class="text-muted">Chỉ chấp nhận file .zip, tối đa 500MB</small>
+                </div>
+                <button class="btn btn-warning" onclick="confirmRestore('upload')">
+                  <i class="bi bi-cloud-upload"></i> Tải lên và phục hồi
+                </button>
+              </div>
+            </div>
+            
+            <!-- Các bước phục hồi -->
+            <div class="mt-4">
+              <h6 class="fw-bold">Quy trình phục hồi:</h6>
+              <ol>
+                <li>Hệ thống sẽ tạm dừng tất cả các tác vụ đang chạy</li>
+                <li>Kiểm tra tính toàn vẹn của file backup</li>
+                <li>Xóa dữ liệu hiện tại (nếu được chọn)</li>
+                <li>Giải nén và import dữ liệu từ backup</li>
+                <li>Khởi động lại hệ thống</li>
+              </ol>
+              <p class="text-warning">
+                <i class="bi bi-clock"></i> Thời gian phục hồi: khoảng 5-15 phút tùy kích thước dữ liệu
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Lịch tự động -->
+  <div id="schedule" class="tab-pane fade">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Cấu hình sao lưu tự động</h5>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="mb-4">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="autoBackupEnabled" checked>
+                  <label class="form-check-label" for="autoBackupEnabled">
+                    <strong>Bật sao lưu tự động</strong>
+                  </label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Tần suất sao lưu</label>
+                <select class="form-select">
+                  <option value="daily" selected>Hàng ngày</option>
+                  <option value="weekly">Hàng tuần</option>
+                  <option value="monthly">Hàng tháng</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Thời gian chạy</label>
+                <input type="time" class="form-control" value="03:00">
+                <small class="text-muted">Nên chọn giờ ít người dùng (2-4 giờ sáng)</small>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Giữ lại bản backup</label>
+                <select class="form-select">
+                  <option value="7">7 ngày gần nhất</option>
+                  <option value="14">14 ngày gần nhất</option>
+                  <option value="30" selected>30 ngày gần nhất</option>
+                  <option value="60">60 ngày gần nhất</option>
+                  <option value="90">90 ngày gần nhất</option>
+                  <option value="all">Giữ tất cả</option>
+                </select>
+                <small class="text-muted">Backup cũ hơn sẽ tự động bị xóa</small>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Nội dung sao lưu</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="autoBackupDB" checked>
+                  <label class="form-check-label" for="autoBackupDB">
+                    Cơ sở dữ liệu
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="autoBackupFiles" checked>
+                  <label class="form-check-label" for="autoBackupFiles">
+                    Files uploads
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="autoBackupConfig" checked>
+                  <label class="form-check-label" for="autoBackupConfig">
+                    Cấu hình hệ thống
+                  </label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Thông báo kết quả</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="notifyEmail" checked>
+                  <label class="form-check-label" for="notifyEmail">
+                    Gửi email thông báo
+                  </label>
+                </div>
+                <input type="email" class="form-control mt-2" placeholder="admin@example.com" value="admin@system.com">
+              </div>
+              
+              <button type="button" class="btn btn-success" onclick="saveSchedule()">
+                <i class="bi bi-save"></i> Lưu cấu hình
+              </button>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Lịch backup tiếp theo -->
+        <div class="card shadow-sm mt-3">
+          <div class="card-header bg-info text-white">
+            <h6 class="mb-0"><i class="bi bi-calendar2-week"></i> Lịch backup sắp tới</h6>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="bi bi-clock"></i> <strong>Hôm nay:</strong> 07/12/2025 03:00 
+                <span class="badge bg-warning">Đã hoàn tất</span>
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-clock"></i> <strong>Ngày mai:</strong> 08/12/2025 03:00 
+                <span class="badge bg-primary">Đã lên lịch</span>
+              </li>
+              <li class="list-group-item">
+                <i class="bi bi-clock"></i> <strong>09/12/2025:</strong> 03:00 
+                <span class="badge bg-primary">Đã lên lịch</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Lịch sử -->
+  <div id="history" class="tab-pane fade">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-journal-text"></i> Lịch sử backup & restore</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Thời gian</th>
+              <th>Người thực hiện</th>
+              <th>Hành động</th>
+              <th>File</th>
+              <th>Kết quả</th>
+              <th>Chi tiết</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>07/12/2025 09:00</td>
+              <td>admin@system.com</td>
+              <td><span class="badge bg-primary">Backup</span></td>
+              <td>backup_20251207_090000.zip</td>
+              <td><span class="badge bg-success">Thành công</span></td>
+              <td>Thời gian: 3m 25s, Kích thước: 145 MB</td>
+            </tr>
+            <tr>
+              <td>06/12/2025 03:00</td>
+              <td>System (Auto)</td>
+              <td><span class="badge bg-primary">Backup</span></td>
+              <td>backup_20251206_030000.zip</td>
+              <td><span class="badge bg-success">Thành công</span></td>
+              <td>Thời gian: 3m 18s, Kích thước: 142 MB</td>
+            </tr>
+            <tr>
+              <td>05/12/2025 14:30</td>
+              <td>admin@system.com</td>
+              <td><span class="badge bg-warning">Restore</span></td>
+              <td>backup_20251204_030000.zip</td>
+              <td><span class="badge bg-success">Thành công</span></td>
+              <td>Thời gian: 8m 42s, Phục hồi DB + Files</td>
+            </tr>
+            <tr>
+              <td>05/12/2025 03:00</td>
+              <td>System (Auto)</td>
+              <td><span class="badge bg-primary">Backup</span></td>
+              <td>backup_20251205_030000.zip</td>
+              <td><span class="badge bg-success">Thành công</span></td>
+              <td>Thời gian: 3m 12s, Kích thước: 138 MB</td>
+            </tr>
+            <tr>
+              <td>04/12/2025 03:00</td>
+              <td>System (Auto)</td>
+              <td><span class="badge bg-primary">Backup</span></td>
+              <td>backup_20251204_030000.zip</td>
+              <td><span class="badge bg-danger">Thất bại</span></td>
+              <td>Lỗi: Không đủ dung lượng ổ đĩa</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function createBackup() {
+  if (confirm('Bắt đầu tạo bản sao lưu?')) {
+    alert('Đang tạo backup...\n\nQuá trình này có thể mất vài phút. (Demo)');
+    setTimeout(() => {
+      alert('✅ Tạo backup thành công!\nFile: backup_20251207_100000.zip\nKích thước: 145 MB');
+      location.reload();
+    }, 2000);
+  }
+}
+
+function downloadBackup(filename) {
+  alert(`Đang tải xuống: ${filename} (Demo)`);
+}
+
+function restoreBackup(filename) {
+  if (confirm(`⚠️ CẢNH BÁO!\n\nPhục hồi từ: ${filename}\nDữ liệu hiện tại sẽ bị ghi đè!\n\nBạn có chắc chắn?`)) {
+    alert('Đang phục hồi dữ liệu... (Demo)');
+    setTimeout(() => {
+      alert('✅ Phục hồi thành công!\nHệ thống sẽ khởi động lại.');
+    }, 2000);
+  }
+}
+
+function deleteBackup(filename) {
+  if (confirm(`Xóa backup: ${filename}?`)) {
+    alert(`Đã xóa ${filename} (Demo)`);
+    location.reload();
+  }
+}
+
+function cleanupBackups() {
+  if (confirm('Xóa các backup cũ hơn 30 ngày?')) {
+    alert('Đã dọn dẹp 5 backup cũ (Demo)');
+    location.reload();
+  }
+}
+
+function confirmRestore(type) {
+  if (type === 'existing') {
+    if (confirm('⚠️ Phục hồi từ backup đã chọn?\n\nDữ liệu hiện tại sẽ bị mất!')) {
+      alert('Đang phục hồi... (Demo)');
+    }
+  } else {
+    const file = document.getElementById('uploadBackupFile').files[0];
+    if (!file) {
+      alert('Vui lòng chọn file backup!');
+      return;
+    }
+    if (confirm(`⚠️ Phục hồi từ: ${file.name}?\n\nDữ liệu hiện tại sẽ bị mất!`)) {
+      alert('Đang tải lên và phục hồi... (Demo)');
+    }
+  }
+}
+
+function saveSchedule() {
+  alert('Đã lưu cấu hình sao lưu tự động! (Demo)');
+}
+</script>
+
+{% endblock %}

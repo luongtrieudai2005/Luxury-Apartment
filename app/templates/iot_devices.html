@@ -1,0 +1,581 @@
+{% extends "base.html" %}
+{% block title %}Quản lý Thiết bị IoT{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Quản lý Thiết bị IoT</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('iot_dashboard') }}">IoT Dashboard</a></li>
+        <li class="breadcrumb-item active">Thiết bị</li>
+      </ol>
+    </nav>
+  </div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeviceModal">
+    <i class="bi bi-plus-lg"></i> Thêm thiết bị
+  </button>
+</div>
+
+<!-- Thống kê -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card border-success">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Online</h6>
+        <h3 class="text-success mb-0">42</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Offline</h6>
+        <h3 class="text-warning mb-0">6</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-danger">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Lỗi</h6>
+        <h3 class="text-danger mb-0">2</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-info">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Tổng thiết bị</h6>
+        <h3 class="text-info mb-0">50</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tìm kiếm và lọc -->
+<div class="card p-3 shadow-sm mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <input type="text" class="form-control" id="searchDevice" placeholder="Tìm thiết bị, phòng...">
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" id="filterType">
+        <option value="">Tất cả loại</option>
+        <option value="electric">Cảm biến điện</option>
+        <option value="water">Cảm biến nước</option>
+        <option value="temp">Nhiệt độ</option>
+        <option value="switch">Công tắc</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" id="filterStatus">
+        <option value="">Tất cả trạng thái</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+        <option value="error">Lỗi</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" id="filterRoom">
+        <option value="">Tất cả phòng</option>
+        <option value="101">Phòng 101</option>
+        <option value="102">Phòng 102</option>
+        <option value="201">Phòng 201</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-outline-secondary w-100" onclick="refreshDevices()">
+        <i class="bi bi-arrow-clockwise"></i> Làm mới
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Danh sách thiết bị dạng grid -->
+<div class="row g-3" id="deviceGrid">
+  <!-- Thiết bị 1 - Online -->
+  <div class="col-md-4" data-type="electric" data-status="online" data-room="101">
+    <div class="card shadow-sm device-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 class="mb-0">
+              <i class="bi bi-lightning-charge text-warning"></i> Cảm biến điện #01
+            </h6>
+            <small class="text-muted">Phòng 101</small>
+          </div>
+          <span class="badge bg-success">Online</span>
+        </div>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Device ID:</span>
+            <strong>ESP32-E001</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Giá trị hiện tại:</span>
+            <strong>2.5 kW</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Cập nhật:</span>
+            <span>2 phút trước</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Tín hiệu:</span>
+            <span class="text-success"><i class="bi bi-wifi"></i> -45 dBm</span>
+          </div>
+        </div>
+        
+        <div class="btn-group w-100">
+          <button class="btn btn-sm btn-outline-primary" onclick="viewDevice('ESP32-E001')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-success" onclick="controlDevice('ESP32-E001')">
+            <i class="bi bi-sliders"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-warning" onclick="resetDevice('ESP32-E001')">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" onclick="deleteDevice('ESP32-E001')">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thiết bị 2 - Online -->
+  <div class="col-md-4" data-type="water" data-status="online" data-room="101">
+    <div class="card shadow-sm device-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 class="mb-0">
+              <i class="bi bi-droplet text-primary"></i> Cảm biến nước #01
+            </h6>
+            <small class="text-muted">Phòng 101</small>
+          </div>
+          <span class="badge bg-success">Online</span>
+        </div>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Device ID:</span>
+            <strong>WF-S001</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Lưu lượng:</span>
+            <strong>0.8 m³/h</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Cập nhật:</span>
+            <span>1 phút trước</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Tín hiệu:</span>
+            <span class="text-success"><i class="bi bi-wifi"></i> -52 dBm</span>
+          </div>
+        </div>
+        
+        <div class="btn-group w-100">
+          <button class="btn btn-sm btn-outline-primary" onclick="viewDevice('WF-S001')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" onclick="toggleValve('WF-S001')">
+            <i class="bi bi-lock"></i> Khóa
+          </button>
+          <button class="btn btn-sm btn-outline-warning" onclick="resetDevice('WF-S001')">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thiết bị 3 - Offline -->
+  <div class="col-md-4" data-type="electric" data-status="offline" data-room="102">
+    <div class="card shadow-sm device-card border-warning">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 class="mb-0">
+              <i class="bi bi-lightning-charge text-warning"></i> Cảm biến điện #42
+            </h6>
+            <small class="text-muted">Phòng 108</small>
+          </div>
+          <span class="badge bg-warning">Offline</span>
+        </div>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Device ID:</span>
+            <strong>ESP32-E042</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Giá trị cuối:</span>
+            <strong>1.8 kW</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Mất kết nối:</span>
+            <span class="text-warning">30 phút trước</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Tín hiệu:</span>
+            <span class="text-danger"><i class="bi bi-wifi-off"></i> N/A</span>
+          </div>
+        </div>
+        
+        <div class="btn-group w-100">
+          <button class="btn btn-sm btn-outline-primary" onclick="viewDevice('ESP32-E042')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-success" onclick="pingDevice('ESP32-E042')">
+            <i class="bi bi-broadcast"></i> Ping
+          </button>
+          <button class="btn btn-sm btn-outline-warning" onclick="resetDevice('ESP32-E042')">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thiết bị 4 - Nhiệt độ -->
+  <div class="col-md-4" data-type="temp" data-status="online" data-room="201">
+    <div class="card shadow-sm device-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 class="mb-0">
+              <i class="bi bi-thermometer text-danger"></i> Cảm biến nhiệt độ #01
+            </h6>
+            <small class="text-muted">Phòng 201</small>
+          </div>
+          <span class="badge bg-success">Online</span>
+        </div>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Device ID:</span>
+            <strong>DHT22-T001</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Nhiệt độ:</span>
+            <strong>28.5°C</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Độ ẩm:</span>
+            <strong>65%</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Cập nhật:</span>
+            <span>30 giây trước</span>
+          </div>
+        </div>
+        
+        <div class="btn-group w-100">
+          <button class="btn btn-sm btn-outline-primary" onclick="viewDevice('DHT22-T001')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-info" onclick="showChart('DHT22-T001')">
+            <i class="bi bi-graph-up"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-warning" onclick="resetDevice('DHT22-T001')">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thiết bị 5 - Công tắc thông minh -->
+  <div class="col-md-4" data-type="switch" data-status="online" data-room="201">
+    <div class="card shadow-sm device-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 class="mb-0">
+              <i class="bi bi-toggle-on text-success"></i> Công tắc thông minh #01
+            </h6>
+            <small class="text-muted">Phòng 201 - Đèn chính</small>
+          </div>
+          <span class="badge bg-success">Online</span>
+        </div>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Device ID:</span>
+            <strong>SW-001</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Trạng thái:</span>
+            <span class="badge bg-success">BẬT</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Công suất:</span>
+            <strong>45W</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Thời gian BẬT:</span>
+            <span>2.5 giờ</span>
+          </div>
+        </div>
+        
+        <div class="btn-group w-100">
+          <button class="btn btn-sm btn-success" onclick="toggleSwitch('SW-001')">
+            <i class="bi bi-power"></i> TẮT
+          </button>
+          <button class="btn btn-sm btn-outline-primary" onclick="viewDevice('SW-001')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-info" onclick="scheduleSwitch('SW-001')">
+            <i class="bi bi-clock"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thiết bị 6 - Lỗi -->
+  <div class="col-md-4" data-type="water" data-status="error" data-room="302">
+    <div class="card shadow-sm device-card border-danger">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 class="mb-0">
+              <i class="bi bi-droplet text-primary"></i> Cảm biến nước #15
+            </h6>
+            <small class="text-muted">Phòng 302</small>
+          </div>
+          <span class="badge bg-danger">Lỗi</span>
+        </div>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Device ID:</span>
+            <strong>WF-S015</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Lỗi:</span>
+            <span class="text-danger">Giá trị bất thường</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Lưu lượng:</span>
+            <strong class="text-danger">2.5 m³/h</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Phát hiện:</span>
+            <span class="text-danger">5 phút trước</span>
+          </div>
+        </div>
+        
+        <div class="btn-group w-100">
+          <button class="btn btn-sm btn-danger" onclick="emergencyStop('WF-S015')">
+            <i class="bi bi-exclamation-octagon"></i> Khẩn cấp
+          </button>
+          <button class="btn btn-sm btn-outline-primary" onclick="viewDevice('WF-S015')">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-warning" onclick="resetDevice('WF-S015')">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm thiết bị -->
+<div class="modal fade" id="addDeviceModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm thiết bị IoT mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addDeviceForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Loại thiết bị *</label>
+              <select class="form-select" name="device_type" required>
+                <option value="">Chọn loại</option>
+                <option value="electric">Cảm biến điện</option>
+                <option value="water">Cảm biến nước</option>
+                <option value="temp">Cảm biến nhiệt độ</option>
+                <option value="switch">Công tắc thông minh</option>
+                <option value="lock">Khóa thông minh</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Device ID *</label>
+              <input type="text" class="form-control" name="device_id" placeholder="ESP32-E001" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tên thiết bị *</label>
+              <input type="text" class="form-control" name="device_name" placeholder="Cảm biến điện phòng 101" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phòng *</label>
+              <select class="form-select" name="room" required>
+                <option value="">Chọn phòng</option>
+                <option value="101">Phòng 101</option>
+                <option value="102">Phòng 102</option>
+                <option value="201">Phòng 201</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">IP Address</label>
+              <input type="text" class="form-control" placeholder="192.168.1.100">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">MAC Address</label>
+              <input type="text" class="form-control" placeholder="AA:BB:CC:DD:EE:FF">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Mô tả</label>
+              <textarea class="form-control" rows="2" placeholder="Ghi chú về thiết bị..."></textarea>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="autoDetect">
+                <label class="form-check-label" for="autoDetect">
+                  Tự động phát hiện và kết nối
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="saveDevice()">
+          <i class="bi bi-save"></i> Thêm thiết bị
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function refreshDevices() {
+  alert('Đang làm mới danh sách thiết bị... (Demo)');
+  location.reload();
+}
+
+function viewDevice(id) {
+  alert(`Xem chi tiết thiết bị: ${id} (Demo)`);
+}
+
+function controlDevice(id) {
+  alert(`Điều khiển thiết bị: ${id} (Demo)`);
+}
+
+function resetDevice(id) {
+  if (confirm(`Reset thiết bị: ${id}?`)) {
+    alert('Đang reset thiết bị... (Demo)');
+  }
+}
+
+function deleteDevice(id) {
+  if (confirm(`Xóa thiết bị: ${id}? Hành động không thể hoàn tác!`)) {
+    alert('Đã xóa thiết bị (Demo)');
+  }
+}
+
+function toggleValve(id) {
+  if (confirm(`Khóa van nước của thiết bị: ${id}?`)) {
+    alert('Đã khóa van nước (Demo)');
+  }
+}
+
+function pingDevice(id) {
+  alert(`Đang ping thiết bị: ${id}... (Demo)`);
+  setTimeout(() => {
+    alert('❌ Thiết bị không phản hồi');
+  }, 1000);
+}
+
+function toggleSwitch(id) {
+  alert(`Đang TẮT công tắc: ${id} (Demo)`);
+}
+
+function scheduleSwitch(id) {
+  alert(`Lên lịch bật/tắt cho: ${id} (Demo)`);
+}
+
+function showChart(id) {
+  alert(`Hiển thị biểu đồ nhiệt độ cho: ${id} (Demo)`);
+}
+
+function emergencyStop(id) {
+  if (confirm(`⚠️ KHÓA KHẨN CẤP thiết bị: ${id}?\nSẽ ngắt ngay lập tức!`)) {
+    alert('Đã khóa khẩn cấp! (Demo)');
+  }
+}
+
+function saveDevice() {
+  const form = document.getElementById('addDeviceForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  
+  alert('Đã thêm thiết bị IoT mới! (Demo)');
+  bootstrap.Modal.getInstance(document.getElementById('addDeviceModal')).hide();
+  form.reset();
+}
+
+// Search
+document.getElementById('searchDevice')?.addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const cards = document.querySelectorAll('.device-card');
+  
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.parentElement.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+});
+
+// Filter by type
+document.getElementById('filterType')?.addEventListener('change', function(e) {
+  const type = e.target.value;
+  const items = document.querySelectorAll('#deviceGrid > div');
+  
+  items.forEach(item => {
+    if (!type || item.dataset.type === type) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+});
+
+// Filter by status
+document.getElementById('filterStatus')?.addEventListener('change', function(e) {
+  const status = e.target.value;
+  const items = document.querySelectorAll('#deviceGrid > div');
+  
+  items.forEach(item => {
+    if (!status || item.dataset.status === status) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+});
+</script>
+
+<style>
+.device-card {
+  transition: all 0.3s ease;
+}
+
+.device-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+}
+</style>
+
+{% endblock %}

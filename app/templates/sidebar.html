@@ -3,8 +3,8 @@
   <div class="flex-shrink-0">
     <div class="text-center py-3 border-bottom">
       <img src="{{ url_for('static', filename='../../static/img/avt.png') }}" class="rounded-circle mb-2" width="60" height="60" alt="Avatar">
-      <h6 class="mb-0">{{ username or 'Username' }}</h6>
-      <small class="text-muted">{{ email or 'vidu@email.com' }}</small>
+      <h6 class="mb-0">{{ session.get('username') or 'Username' }}</h6>
+      <small class="text-muted">{{ session.get('role') or 'admin' }}</small>
     </div>
 
     <!-- Search -->
@@ -20,7 +20,7 @@
   <div class="flex-grow-1 overflow-auto" style="scrollbar-width: thin;">
     <ul class="nav flex-column px-2 pb-3">
       <li class="nav-item">
-        <a class="nav-link active" href="{{ url_for('home') }}">
+        <a class="nav-link" href="{{ url_for('home') }}">
           <i class="bi bi-house-door"></i> Trang chủ
         </a>
       </li>
@@ -71,6 +71,22 @@
         </div>
       </li>
 
+      <!-- QUẢN TRỊ HỆ THỐNG & CẤU HÌNH - MỚI -->
+      <li class="nav-item">
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuQuantri">
+          <span><i class="bi bi-gear-fill"></i> Quản trị hệ thống</span>
+          <i class="bi bi-chevron-down small"></i>
+        </a>
+        <div class="collapse ps-3" id="menuQuantri">
+          <div class="nav flex-column">
+            <a href="{{ url_for('system_config') }}" class="nav-link py-1">Cấu hình hệ thống</a>
+            <a href="{{ url_for('user_management') }}" class="nav-link py-1">Quản lý người dùng</a>
+            <a href="{{ url_for('price_config') }}" class="nav-link py-1">Biểu giá điện/nước</a>
+            <a href="{{ url_for('backup_restore') }}" class="nav-link py-1">Sao lưu & Phục hồi</a>
+          </div>
+        </div>
+      </li>
+
       <!-- Công cụ tiện ích -->
       <li class="nav-item">
         <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuTienich">
@@ -97,266 +113,3 @@
     </a>
   </div>
 </div>
-
-<!-- Script cho Dark Mode -->
-<script>
-  // Load dark mode setting khi trang load
-  document.addEventListener('DOMContentLoaded', function() {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-      updateDarkModeIcon(true);
-    }
-  });
-
-  function toggleDarkMode() {
-    const isDark = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-    updateDarkModeIcon(isDark);
-  }
-
-  function updateDarkModeIcon(isDark) {
-    const icon = document.querySelector('#darkModeToggle i');
-    if (icon) {
-      icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
-    }
-  }
-</script>
-
-<style>
-/* Custom scrollbar cho sidebar */
-.sidebar .overflow-auto::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar .overflow-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.sidebar .overflow-auto::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-.sidebar .overflow-auto::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Đảm bảo sidebar không bị overflow */
-.sidebar {
-  overflow: hidden;
-}
-
-/* Animation cho collapse menu */
-.collapse {
-  transition: all 0.3s ease-in-out;
-}
-
-/* Highlight active link */
-.nav-link.active {
-  background-color: #e7f3ff;
-  color: #0d6efd;
-  border-radius: 5px;
-}
-
-.nav-link:hover {
-  background-color: #f8f9fa;
-  border-radius: 5px;
-}
-
-/* ========== DARK MODE STYLES ========== */
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Dark mode cho body và containers */
-.dark-mode {
-  background-color: #1a1a1a;
-  color: #e0e0e0;
-}
-
-.dark-mode .bg-light {
-  background-color: #2d2d2d !important;
-  color: #e0e0e0;
-}
-
-.dark-mode .bg-white {
-  background-color: #2d2d2d !important;
-  color: #e0e0e0;
-}
-
-.dark-mode .text-muted {
-  color: #b0b0b0 !important;
-}
-
-/* Dark mode cho sidebar */
-.dark-mode .sidebar {
-  background-color: #2d2d2d !important;
-  border-color: #404040 !important;
-}
-
-.dark-mode .sidebar .border-bottom,
-.dark-mode .sidebar .border-top {
-  border-color: #404040 !important;
-}
-
-/* Dark mode cho navigation links */
-.dark-mode .nav-link {
-  color: #e0e0e0;
-}
-
-.dark-mode .nav-link:hover {
-  background-color: #3d3d3d !important;
-}
-
-.dark-mode .nav-link.active {
-  background-color: #1e3a5f !important;
-  color: #4da6ff;
-}
-
-/* Dark mode cho navbar */
-.dark-mode .navbar {
-  background-color: #2d2d2d !important;
-  border-color: #404040 !important;
-}
-
-.dark-mode .navbar-light {
-  background-color: #2d2d2d !important;
-}
-
-/* Dark mode cho cards */
-.dark-mode .card {
-  background-color: #2d2d2d;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-.dark-mode .card-header {
-  background-color: #242424 !important;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-/* Dark mode cho tables */
-.dark-mode .table {
-  color: #e0e0e0;
-}
-
-.dark-mode .table-light {
-  background-color: #3d3d3d !important;
-  color: #e0e0e0;
-}
-
-.dark-mode .table-hover tbody tr:hover {
-  background-color: #3d3d3d;
-}
-
-.dark-mode .table-bordered {
-  border-color: #404040;
-}
-
-.dark-mode .table-bordered td,
-.dark-mode .table-bordered th {
-  border-color: #404040;
-}
-
-/* Dark mode cho forms */
-.dark-mode .form-control,
-.dark-mode .form-select {
-  background-color: #3d3d3d;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-.dark-mode .form-control:focus,
-.dark-mode .form-select:focus {
-  background-color: #3d3d3d;
-  border-color: #4da6ff;
-  color: #e0e0e0;
-}
-
-.dark-mode .input-group-text {
-  background-color: #3d3d3d !important;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-/* Dark mode cho buttons */
-.dark-mode .btn-light {
-  background-color: #3d3d3d;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-.dark-mode .btn-light:hover {
-  background-color: #4d4d4d;
-  border-color: #505050;
-  color: #e0e0e0;
-}
-
-.dark-mode .btn-outline-secondary {
-  color: #b0b0b0;
-  border-color: #404040;
-}
-
-.dark-mode .btn-outline-secondary:hover {
-  background-color: #3d3d3d;
-  border-color: #404040;
-  color: #e0e0e0;
-}
-
-/* Dark mode cho modals */
-.dark-mode .modal-content {
-  background-color: #2d2d2d;
-  color: #e0e0e0;
-}
-
-.dark-mode .modal-header,
-.dark-mode .modal-footer {
-  border-color: #404040;
-}
-
-/* Dark mode cho alerts */
-.dark-mode .alert {
-  border-color: #404040;
-}
-
-/* Dark mode cho scrollbar */
-.dark-mode .sidebar .overflow-auto::-webkit-scrollbar-track {
-  background: #2d2d2d;
-}
-
-.dark-mode .sidebar .overflow-auto::-webkit-scrollbar-thumb {
-  background: #555;
-}
-
-.dark-mode .sidebar .overflow-auto::-webkit-scrollbar-thumb:hover {
-  background: #777;
-}
-
-/* Dark mode cho badges */
-.dark-mode .badge.bg-warning {
-  background-color: #d39e00 !important;
-  color: #000;
-}
-
-.dark-mode .badge.bg-light {
-  background-color: #3d3d3d !important;
-  color: #e0e0e0;
-}
-
-/* Dark mode cho dropdowns */
-.dark-mode .dropdown-menu {
-  background-color: #2d2d2d;
-  border-color: #404040;
-}
-
-.dark-mode .dropdown-item {
-  color: #e0e0e0;
-}
-
-.dark-mode .dropdown-item:hover {
-  background-color: #3d3d3d;
-  color: #e0e0e0;
-}
-</style>

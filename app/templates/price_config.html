@@ -1,0 +1,487 @@
+{% extends "base.html" %}
+{% block title %}Cấu hình biểu giá điện/nước{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Cấu hình biểu giá điện/nước & Dịch vụ</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('system_config') }}">Quản trị hệ thống</a></li>
+        <li class="breadcrumb-item active">Biểu giá</li>
+      </ol>
+    </nav>
+  </div>
+  <button class="btn btn-success" onclick="saveAllPrices()">
+    <i class="bi bi-save"></i> Lưu tất cả
+  </button>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-bs-toggle="tab" href="#electric">
+      <i class="bi bi-lightning-charge"></i> Điện
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#water">
+      <i class="bi bi-droplet"></i> Nước
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#services">
+      <i class="bi bi-gear"></i> Dịch vụ khác
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#history">
+      <i class="bi bi-clock-history"></i> Lịch sử thay đổi
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- Tab Điện -->
+  <div id="electric" class="tab-pane fade show active">
+    <div class="card shadow-sm">
+      <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Biểu giá điện</h5>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i> Cấu hình đơn giá điện theo bậc hoặc đồng giá
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Loại biểu giá</label>
+            <select class="form-select" id="electricType" onchange="toggleElectricType()">
+              <option value="flat">Đồng giá</option>
+              <option value="tier">Theo bậc thang</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Áp dụng từ ngày</label>
+            <input type="date" class="form-control" value="2025-01-01">
+          </div>
+        </div>
+        
+        <!-- Đồng giá -->
+        <div id="electricFlat">
+          <div class="card bg-light">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label">Đơn giá (VNĐ/kWh) *</label>
+                  <input type="number" class="form-control" value="3500" step="100">
+                </div>
+                <div class="col-md-8">
+                  <label class="form-label">Ghi chú</label>
+                  <input type="text" class="form-control" placeholder="Ví dụ: Giá điện sinh hoạt">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Theo bậc thang -->
+        <div id="electricTier" style="display:none;">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Bậc</th>
+                  <th>Từ (kWh)</th>
+                  <th>Đến (kWh)</th>
+                  <th>Đơn giá (VNĐ/kWh)</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Bậc 1</td>
+                  <td><input type="number" class="form-control form-control-sm" value="0" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="50"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="1806"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 2</td>
+                  <td><input type="number" class="form-control form-control-sm" value="51" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="100"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="1866"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 3</td>
+                  <td><input type="number" class="form-control form-control-sm" value="101" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="200"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="2167"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 4</td>
+                  <td><input type="number" class="form-control form-control-sm" value="201" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="300"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="2729"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 5</td>
+                  <td><input type="number" class="form-control form-control-sm" value="301" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="400"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="3050"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 6</td>
+                  <td><input type="number" class="form-control form-control-sm" value="401" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm" value="Trở lên" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="3151"></td>
+                  <td><button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-sm btn-outline-primary" onclick="addTier('electric')">
+            <i class="bi bi-plus-lg"></i> Thêm bậc
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Nước -->
+  <div id="water" class="tab-pane fade">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-droplet"></i> Biểu giá nước</h5>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i> Cấu hình đơn giá nước theo bậc hoặc đồng giá
+        </div>
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <label class="form-label">Loại biểu giá</label>
+            <select class="form-select" id="waterType" onchange="toggleWaterType()">
+              <option value="flat">Đồng giá</option>
+              <option value="tier">Theo bậc thang</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Áp dụng từ ngày</label>
+            <input type="date" class="form-control" value="2025-01-01">
+          </div>
+        </div>
+        
+        <!-- Đồng giá -->
+        <div id="waterFlat">
+          <div class="card bg-light">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label">Đơn giá (VNĐ/m³) *</label>
+                  <input type="number" class="form-control" value="25000" step="1000">
+                </div>
+                <div class="col-md-8">
+                  <label class="form-label">Ghi chú</label>
+                  <input type="text" class="form-control" placeholder="Ví dụ: Giá nước sinh hoạt">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Theo bậc thang -->
+        <div id="waterTier" style="display:none;">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Bậc</th>
+                  <th>Từ (m³)</th>
+                  <th>Đến (m³)</th>
+                  <th>Đơn giá (VNĐ/m³)</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Bậc 1</td>
+                  <td><input type="number" class="form-control form-control-sm" value="0" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="10"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="6869"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 2</td>
+                  <td><input type="number" class="form-control form-control-sm" value="11" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="20"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="8110"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 3</td>
+                  <td><input type="number" class="form-control form-control-sm" value="21" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="30"></td>
+                  <td><input type="number" class="form-control form-control-sm" value="9969"></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Bậc 4</td>
+                  <td><input type="number" class="form-control form-control-sm" value="31" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm" value="Trở lên" readonly></td>
+                  <td><input type="number" class="form-control form-control-sm" value="11615"></td>
+                  <td><button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-sm btn-outline-primary" onclick="addTier('water')">
+            <i class="bi bi-plus-lg"></i> Thêm bậc
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Dịch vụ khác -->
+  <div id="services" class="tab-pane fade">
+    <div class="row g-3">
+      <!-- Internet -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-info text-white">
+            <h6 class="mb-0"><i class="bi bi-wifi"></i> Internet</h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Phí cố định (VNĐ/tháng)</label>
+              <input type="number" class="form-control" value="100000" step="10000">
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="internetRequired" checked>
+              <label class="form-check-label" for="internetRequired">
+                Bắt buộc
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Giữ xe -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-secondary text-white">
+            <h6 class="mb-0"><i class="bi bi-car-front"></i> Giữ xe</h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Xe máy (VNĐ/tháng)</label>
+              <input type="number" class="form-control" value="50000" step="10000">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Ô tô (VNĐ/tháng)</label>
+              <input type="number" class="form-control" value="500000" step="50000">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Vệ sinh -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+            <h6 class="mb-0"><i class="bi bi-brush"></i> Vệ sinh</h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Phí cố định (VNĐ/tháng)</label>
+              <input type="number" class="form-control" value="30000" step="10000">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Giặt ủi -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-warning text-dark">
+            <h6 class="mb-0"><i class="bi bi-moisture"></i> Giặt ủi</h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Giá (VNĐ/kg)</label>
+              <input type="number" class="form-control" value="15000" step="1000">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Phí quản lý -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-danger text-white">
+            <h6 class="mb-0"><i class="bi bi-building"></i> Phí quản lý</h6>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">Phí cố định (VNĐ/tháng)</label>
+              <input type="number" class="form-control" value="50000" step="10000">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Thêm dịch vụ tùy chỉnh -->
+      <div class="col-md-6">
+        <div class="card shadow-sm border-primary" style="border-style: dashed;">
+          <div class="card-body text-center">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+              <i class="bi bi-plus-circle fs-1 d-block mb-2"></i>
+              <span>Thêm dịch vụ mới</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tab Lịch sử -->
+  <div id="history" class="tab-pane fade">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Lịch sử thay đổi giá</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Thời gian</th>
+              <th>Người thay đổi</th>
+              <th>Loại</th>
+              <th>Nội dung</th>
+              <th>Giá cũ</th>
+              <th>Giá mới</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>07/12/2025 10:00</td>
+              <td>admin@system.com</td>
+              <td><span class="badge bg-warning">Điện</span></td>
+              <td>Thay đổi đơn giá đồng giá</td>
+              <td>3,000 đ/kWh</td>
+              <td>3,500 đ/kWh</td>
+            </tr>
+            <tr>
+              <td>01/12/2025 09:00</td>
+              <td>admin@system.com</td>
+              <td><span class="badge bg-primary">Nước</span></td>
+              <td>Cập nhật giá nước</td>
+              <td>20,000 đ/m³</td>
+              <td>25,000 đ/m³</td>
+            </tr>
+            <tr>
+              <td>15/11/2025 14:30</td>
+              <td>admin@system.com</td>
+              <td><span class="badge bg-info">Internet</span></td>
+              <td>Thêm phí internet</td>
+              <td>-</td>
+              <td>100,000 đ/tháng</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thêm dịch vụ mới -->
+<div class="modal fade" id="addServiceModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thêm dịch vụ mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addServiceForm">
+          <div class="mb-3">
+            <label class="form-label">Tên dịch vụ *</label>
+            <input type="text" class="form-control" placeholder="Ví dụ: Bảo vệ, An ninh" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Loại tính phí</label>
+            <select class="form-select">
+              <option>Cố định theo tháng</option>
+              <option>Theo đơn vị sử dụng</option>
+              <option>Theo lần sử dụng</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Đơn giá (VNĐ) *</label>
+            <input type="number" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Đơn vị</label>
+            <input type="text" class="form-control" placeholder="Ví dụ: tháng, lần, kg">
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="serviceRequired">
+            <label class="form-check-label" for="serviceRequired">
+              Dịch vụ bắt buộc
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="saveNewService()">
+          <i class="bi bi-save"></i> Lưu dịch vụ
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleElectricType() {
+  const type = document.getElementById('electricType').value;
+  document.getElementById('electricFlat').style.display = type === 'flat' ? 'block' : 'none';
+  document.getElementById('electricTier').style.display = type === 'tier' ? 'block' : 'none';
+}
+
+function toggleWaterType() {
+  const type = document.getElementById('waterType').value;
+  document.getElementById('waterFlat').style.display = type === 'flat' ? 'block' : 'none';
+  document.getElementById('waterTier').style.display = type === 'tier' ? 'block' : 'none';
+}
+
+function addTier(type) {
+  alert(`Thêm bậc giá ${type} mới (Demo)`);
+}
+
+function saveAllPrices() {
+  if (confirm('Lưu tất cả thay đổi giá?')) {
+    alert('Đã lưu cấu hình biểu giá! (Demo)');
+  }
+}
+
+function saveNewService() {
+  const form = document.getElementById('addServiceForm');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  
+  alert('Đã thêm dịch vụ mới! (Demo)');
+  bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
+  form.reset();
+}
+</script>
+
+{% endblock %}

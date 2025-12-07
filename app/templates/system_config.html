@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+{% block title %}Quản trị hệ thống & Cấu hình{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Quản trị hệ thống & Cấu hình</h3>
+
+<!-- Dashboard tổng quan -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Người dùng</h6>
+            <h4 class="mb-0">48</h4>
+            <small>Đang hoạt động</small>
+          </div>
+          <i class="bi bi-people fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Sao lưu cuối</h6>
+            <h4 class="mb-0">Hôm nay</h4>
+            <small>09:00 AM</small>
+          </div>
+          <i class="bi bi-shield-check fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Dung lượng</h6>
+            <h4 class="mb-0">2.3 GB</h4>
+            <small>/ 10 GB</small>
+          </div>
+          <i class="bi bi-hdd fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Cấu hình</h6>
+            <h4 class="mb-0">12</h4>
+            <small>Đã thiết lập</small>
+          </div>
+          <i class="bi bi-gear-fill fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Danh sách tính năng quản trị -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-white">
+    <h5 class="mb-0"><i class="bi bi-list-check"></i> Danh mục quản trị</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <!-- Quản lý người dùng & phân quyền -->
+      <div class="col-md-4">
+        <a href="{{ url_for('user_management') }}" class="text-decoration-none">
+          <div class="card h-100 border-primary hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-person-badge fs-1 text-primary mb-3"></i>
+              <h5 class="card-title">Quản lý người dùng</h5>
+              <p class="card-text text-muted">Thêm, sửa, xóa tài khoản và phân quyền</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Cấu hình cổng thanh toán -->
+      <div class="col-md-4">
+        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#paymentConfigModal">
+          <div class="card h-100 border-success hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-credit-card fs-1 text-success mb-3"></i>
+              <h5 class="card-title">Cổng thanh toán</h5>
+              <p class="card-text text-muted">Cấu hình VNPay, Momo, ZaloPay</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Cấu hình SMS/Email -->
+      <div class="col-md-4">
+        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#notificationConfigModal">
+          <div class="card h-100 border-warning hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-envelope fs-1 text-warning mb-3"></i>
+              <h5 class="card-title">SMS/Email</h5>
+              <p class="card-text text-muted">Cấu hình SMTP, API Key SMS</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Biểu giá điện/nước -->
+      <div class="col-md-4">
+        <a href="{{ url_for('price_config') }}" class="text-decoration-none">
+          <div class="card h-100 border-info hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-lightning-charge fs-1 text-info mb-3"></i>
+              <h5 class="card-title">Biểu giá điện/nước</h5>
+              <p class="card-text text-muted">Thiết lập đơn giá dịch vụ</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Cài đặt phí dịch vụ -->
+      <div class="col-md-4">
+        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#serviceFeeModal">
+          <div class="card h-100 border-danger hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-receipt fs-1 text-danger mb-3"></i>
+              <h5 class="card-title">Phí dịch vụ</h5>
+              <p class="card-text text-muted">Quản lý danh mục phí dịch vụ</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Template hóa đơn -->
+      <div class="col-md-4">
+        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#templateModal">
+          <div class="card h-100 border-secondary hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-file-earmark-text fs-1 text-secondary mb-3"></i>
+              <h5 class="card-title">Template</h5>
+              <p class="card-text text-muted">Hóa đơn, thông báo, email</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Sao lưu & Phục hồi -->
+      <div class="col-md-4">
+        <a href="{{ url_for('backup_restore') }}" class="text-decoration-none">
+          <div class="card h-100 border-primary hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3"></i>
+              <h5 class="card-title">Sao lưu & Phục hồi</h5>
+              <p class="card-text text-muted">Backup và restore dữ liệu</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Kiểm tra kết nối -->
+      <div class="col-md-4">
+        <a href="#" class="text-decoration-none" onclick="testConnection()">
+          <div class="card h-100 border-success hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-wifi fs-1 text-success mb-3"></i>
+              <h5 class="card-title">Kiểm tra kết nối</h5>
+              <p class="card-text text-muted">Test API và dịch vụ tích hợp</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Log hệ thống -->
+      <div class="col-md-4">
+        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#systemLogModal">
+          <div class="card h-100 border-warning hover-card">
+            <div class="card-body text-center">
+              <i class="bi bi-journal-text fs-1 text-warning mb-3"></i>
+              <h5 class="card-title">Log hệ thống</h5>
+              <p class="card-text text-muted">Xem lịch sử cấu hình</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cấu hình cổng thanh toán -->
+<div class="modal fade" id="paymentConfigModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cấu hình cổng thanh toán</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#vnpay">VNPay</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#momo">Momo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#zalopay">ZaloPay</a>
+          </li>
+        </ul>
+        
+        <div class="tab-content mt-3">
+          <!-- VNPay -->
+          <div id="vnpay" class="tab-pane fade show active">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Merchant ID</label>
+                <input type="text" class="form-control" placeholder="Nhập Merchant ID">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Hash Secret</label>
+                <input type="password" class="form-control" placeholder="Nhập Hash Secret">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">API URL</label>
+                <input type="text" class="form-control" value="https://sandbox.vnpayment.vn">
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="vnpayActive">
+                <label class="form-check-label" for="vnpayActive">
+                  Kích hoạt VNPay
+                </label>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Momo -->
+          <div id="momo" class="tab-pane fade">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Partner Code</label>
+                <input type="text" class="form-control" placeholder="Nhập Partner Code">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Access Key</label>
+                <input type="text" class="form-control" placeholder="Nhập Access Key">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Secret Key</label>
+                <input type="password" class="form-control" placeholder="Nhập Secret Key">
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="momoActive">
+                <label class="form-check-label" for="momoActive">
+                  Kích hoạt Momo
+                </label>
+              </div>
+            </form>
+          </div>
+          
+          <!-- ZaloPay -->
+          <div id="zalopay" class="tab-pane fade">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">App ID</label>
+                <input type="text" class="form-control" placeholder="Nhập App ID">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Key 1</label>
+                <input type="password" class="form-control" placeholder="Nhập Key 1">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Key 2</label>
+                <input type="password" class="form-control" placeholder="Nhập Key 2">
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="zalopayActive">
+                <label class="form-check-label" for="zalopayActive">
+                  Kích hoạt ZaloPay
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-success" onclick="testPaymentConnection()">
+          <i class="bi bi-plug"></i> Test kết nối
+        </button>
+        <button type="button" class="btn btn-primary" onclick="savePaymentConfig()">
+          <i class="bi bi-save"></i> Lưu cấu hình
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cấu hình SMS/Email -->
+<div class="modal fade" id="notificationConfigModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cấu hình SMS/Email</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#email">Email (SMTP)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#sms">SMS</a>
+          </li>
+        </ul>
+        
+        <div class="tab-content mt-3">
+          <!-- Email -->
+          <div id="email" class="tab-pane fade show active">
+            <form>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">SMTP Host</label>
+                  <input type="text" class="form-control" placeholder="smtp.gmail.com">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">SMTP Port</label>
+                  <input type="number" class="form-control" placeholder="587">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email gửi</label>
+                  <input type="email" class="form-control" placeholder="noreply@example.com">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Mật khẩu</label>
+                  <input type="password" class="form-control" placeholder="••••••">
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="emailSSL">
+                    <label class="form-check-label" for="emailSSL">
+                      Sử dụng SSL/TLS
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          
+          <!-- SMS -->
+          <div id="sms" class="tab-pane fade">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Nhà cung cấp</label>
+                <select class="form-select">
+                  <option>Chọn nhà cung cấp</option>
+                  <option>Twilio</option>
+                  <option>Nexmo</option>
+                  <option>ESMS</option>
+                  <option>SMS Brandname</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">API Key</label>
+                <input type="text" class="form-control" placeholder="Nhập API Key">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">API Secret</label>
+                <input type="password" class="form-control" placeholder="Nhập API Secret">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Brandname</label>
+                <input type="text" class="form-control" placeholder="RENTHOUSE">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-success" onclick="testNotificationConnection()">
+          <i class="bi bi-plug"></i> Test kết nối
+        </button>
+        <button type="button" class="btn btn-primary" onclick="saveNotificationConfig()">
+          <i class="bi bi-save"></i> Lưu cấu hình
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Log hệ thống -->
+<div class="modal fade" id="systemLogModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Log hệ thống</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead class="table-light">
+              <tr>
+                <th>Thời gian</th>
+                <th>Người thực hiện</th>
+                <th>Hành động</th>
+                <th>Nội dung</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>07/12/2025 09:00</td>
+                <td>admin@system.com</td>
+                <td>Cấu hình VNPay</td>
+                <td>Cập nhật Merchant ID</td>
+                <td><span class="badge bg-success">Thành công</span></td>
+              </tr>
+              <tr>
+                <td>06/12/2025 14:30</td>
+                <td>admin@system.com</td>
+                <td>Sao lưu dữ liệu</td>
+                <td>Backup tự động</td>
+                <td><span class="badge bg-success">Thành công</span></td>
+              </tr>
+              <tr>
+                <td>05/12/2025 10:15</td>
+                <td>admin@system.com</td>
+                <td>Thêm người dùng</td>
+                <td>Tạo tài khoản nhân viên mới</td>
+                <td><span class="badge bg-success">Thành công</span></td>
+              </tr>
+              <tr>
+                <td>04/12/2025 16:45</td>
+                <td>admin@system.com</td>
+                <td>Test Email</td>
+                <td>Kiểm tra SMTP connection</td>
+                <td><span class="badge bg-danger">Thất bại</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function testConnection() {
+  alert('Đang kiểm tra kết nối các dịch vụ... (Demo)');
+  setTimeout(() => {
+    alert('✅ VNPay: OK\n✅ Email SMTP: OK\n❌ SMS API: Failed\n✅ Database: OK');
+  }, 1000);
+}
+
+function savePaymentConfig() {
+  alert('Đã lưu cấu hình cổng thanh toán! (Demo)');
+  bootstrap.Modal.getInstance(document.getElementById('paymentConfigModal')).hide();
+}
+
+function testPaymentConnection() {
+  alert('Đang test kết nối cổng thanh toán... (Demo)');
+  setTimeout(() => {
+    alert('✅ Kết nối thành công!');
+  }, 1000);
+}
+
+function saveNotificationConfig() {
+  alert('Đã lưu cấu hình SMS/Email! (Demo)');
+  bootstrap.Modal.getInstance(document.getElementById('notificationConfigModal')).hide();
+}
+
+function testNotificationConnection() {
+  alert('Đang test gửi email/SMS thử nghiệm... (Demo)');
+  setTimeout(() => {
+    alert('✅ Đã gửi email test thành công!');
+  }, 1000);
+}
+</script>
+
+<style>
+.hover-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+</style>
+
+{% endblock %}

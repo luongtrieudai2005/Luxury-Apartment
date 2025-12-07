@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block title %}Dashboard IoT & Năng lượng{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Dashboard IoT & Quản lý Năng lượng</h3>
+
+<!-- Thống kê tổng quan -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Thiết bị Online</h6>
+            <h3 class="mb-0">42/48</h3>
+            <small>87.5% hoạt động</small>
+          </div>
+          <i class="bi bi-wifi fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Tiêu thụ điện hôm nay</h6>
+            <h3 class="mb-0">248 kWh</h3>
+            <small><i class="bi bi-arrow-down"></i> -12% vs hôm qua</small>
+          </div>
+          <i class="bi bi-lightning-charge fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Tiêu thụ nước hôm nay</h6>
+            <h3 class="mb-0">32 m³</h3>
+            <small><i class="bi bi-arrow-up"></i> +5% vs hôm qua</small>
+          </div>
+          <i class="bi bi-droplet fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card bg-danger text-white">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-1">Cảnh báo</h6>
+            <h3 class="mb-0">3</h3>
+            <small>Cần xử lý ngay</small>
+          </div>
+          <i class="bi bi-exclamation-triangle fs-1 opacity-50"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cảnh báo quan trọng -->
+<div class="card border-danger mb-4" id="alertsCard" style="display: block;">
+  <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+    <h6 class="mb-0"><i class="bi bi-bell-fill"></i> Cảnh báo cần xử lý (3)</h6>
+    <button class="btn btn-sm btn-light" onclick="document.getElementById('alertsCard').style.display='none'">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="alert alert-danger d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <strong><i class="bi bi-droplet-fill"></i> Phòng 302:</strong> Phát hiện rò rỉ nước! Lưu lượng bất thường: 2.5 m³/h
+        <br><small class="text-muted">5 phút trước</small>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="handleAlert(1)">Xử lý</button>
+    </div>
+    <div class="alert alert-warning d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <strong><i class="bi bi-lightning-fill"></i> Phòng 205:</strong> Tiêu thụ điện vượt ngưỡng: 85 kWh (ngưỡng: 50 kWh)
+        <br><small class="text-muted">15 phút trước</small>
+      </div>
+      <button class="btn btn-sm btn-warning" onclick="handleAlert(2)">Xem chi tiết</button>
+    </div>
+    <div class="alert alert-secondary d-flex justify-content-between align-items-center mb-0">
+      <div>
+        <strong><i class="bi bi-wifi-off"></i> Cảm biến #42:</strong> Mất kết nối - Phòng 108
+        <br><small class="text-muted">30 phút trước</small>
+      </div>
+      <button class="btn btn-sm btn-secondary" onclick="handleAlert(3)">Kiểm tra</button>
+    </div>
+  </div>
+</div>
+
+<!-- Biểu đồ tiêu thụ -->
+<div class="row g-4 mb-4">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Tiêu thụ năng lượng theo thời gian</h5>
+        <select class="form-select form-select-sm w-auto" id="chartPeriod" onchange="updateChart()">
+          <option value="day">Hôm nay</option>
+          <option value="week">7 ngày qua</option>
+          <option value="month" selected>30 ngày qua</option>
+        </select>
+      </div>
+      <div class="card-body">
+        <canvas id="energyChart" height="80"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-white">
+        <h6 class="mb-0"><i class="bi bi-pie-chart"></i> Phân bổ tiêu thụ điện</h6>
+      </div>
+      <div class="card-body">
+        <canvas id="distributionChart"></canvas>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span><i class="bi bi-square-fill text-primary"></i> Phòng cho thuê</span>
+            <strong>72%</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span><i class="bi bi-square-fill text-success"></i> Khu vực chung</span>
+            <strong>18%</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span><i class="bi bi-square-fill text-warning"></i> Hệ thống</span>
+            <strong>10%</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Danh sách phòng và thiết bị -->
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="bi bi-house-door"></i> Top 5 phòng tiêu thụ nhiều nhất</h6>
+        <a href="{{ url_for('energy_monitoring') }}" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Phòng</th>
+              <th>Điện (kWh)</th>
+              <th>Nước (m³)</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>P205</strong></td>
+              <td>85.2 <span class="text-danger"><i class="bi bi-arrow-up"></i></span></td>
+              <td>4.5</td>
+              <td><span class="badge bg-warning">Cao bất thường</span></td>
+            </tr>
+            <tr>
+              <td><strong>P302</strong></td>
+              <td>72.8</td>
+              <td>12.3 <span class="text-danger"><i class="bi bi-arrow-up"></i></span></td>
+              <td><span class="badge bg-danger">Rò rỉ</span></td>
+            </tr>
+            <tr>
+              <td><strong>P108</strong></td>
+              <td>68.5</td>
+              <td>5.2</td>
+              <td><span class="badge bg-success">Bình thường</span></td>
+            </tr>
+            <tr>
+              <td><strong>P401</strong></td>
+              <td>65.3</td>
+              <td>4.8</td>
+              <td><span class="badge bg-success">Bình thường</span></td>
+            </tr>
+            <tr>
+              <td><strong>P212</strong></td>
+              <td>62.1</td>
+              <td>5.0</td>
+              <td><span class="badge bg-success">Bình thường</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="bi bi-router"></i> Trạng thái thiết bị IoT</h6>
+        <a href="{{ url_for('iot_devices') }}" class="btn btn-sm btn-outline-primary">Quản lý</a>
+      </div>
+      <div class="card-body">
+        <div class="row text-center mb-3">
+          <div class="col-4">
+            <div class="p-3 bg-success bg-opacity-10 rounded">
+              <h4 class="text-success mb-0">42</h4>
+              <small class="text-muted">Online</small>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-3 bg-warning bg-opacity-10 rounded">
+              <h4 class="text-warning mb-0">6</h4>
+              <small class="text-muted">Offline</small>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-3 bg-danger bg-opacity-10 rounded">
+              <h4 class="text-danger mb-0">2</h4>
+              <small class="text-muted">Lỗi</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-lightning text-warning"></i> Cảm biến điện
+              <br><small class="text-muted">20 thiết bị</small>
+            </div>
+            <span class="badge bg-success">18 online</span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-droplet text-primary"></i> Cảm biến nước
+              <br><small class="text-muted">20 thiết bị</small>
+            </div>
+            <span class="badge bg-success">19 online</span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-thermometer text-danger"></i> Cảm biến nhiệt độ
+              <br><small class="text-muted">8 thiết bị</small>
+            </div>
+            <span class="badge bg-success">5 online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script cho biểu đồ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Biểu đồ tiêu thụ năng lượng
+const ctx1 = document.getElementById('energyChart');
+const energyChart = new Chart(ctx1, {
+  type: 'line',
+  data: {
+    labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', 
+             '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'],
+    datasets: [{
+      label: 'Điện (kWh)',
+      data: [220, 195, 240, 235, 228, 245, 250, 238, 255, 242, 248, 260, 235, 220, 240, 
+             250, 245, 238, 252, 248, 255, 242, 238, 245, 250, 240, 248, 255, 242, 248],
+      borderColor: 'rgb(255, 193, 7)',
+      backgroundColor: 'rgba(255, 193, 7, 0.1)',
+      tension: 0.4,
+      fill: true
+    }, {
+      label: 'Nước (m³)',
+      data: [28, 26, 32, 30, 29, 33, 35, 31, 34, 30, 32, 36, 30, 28, 32, 
+             33, 32, 31, 34, 32, 35, 30, 31, 33, 35, 32, 32, 35, 30, 32],
+      borderColor: 'rgb(13, 110, 253)',
+      backgroundColor: 'rgba(13, 110, 253, 0.1)',
+      tension: 0.4,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+
+// Biểu đồ phân bổ
+const ctx2 = document.getElementById('distributionChart');
+new Chart(ctx2, {
+  type: 'doughnut',
+  data: {
+    labels: ['Phòng cho thuê', 'Khu vực chung', 'Hệ thống'],
+    datasets: [{
+      data: [72, 18, 10],
+      backgroundColor: [
+        'rgba(13, 110, 253, 0.8)',
+        'rgba(25, 135, 84, 0.8)',
+        'rgba(255, 193, 7, 0.8)'
+      ],
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
+  }
+});
+
+function updateChart() {
+  const period = document.getElementById('chartPeriod').value;
+  alert(`Cập nhật biểu đồ cho kỳ: ${period} (Demo)`);
+}
+
+function handleAlert(id) {
+  alert(`Xử lý cảnh báo #${id} (Demo)`);
+}
+</script>
+
+{% endblock %}

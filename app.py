@@ -243,6 +243,51 @@ def export_report(format, report_type):
     flash(f'Đang xuất báo cáo {report_type} dạng {format.upper()}... (demo)', 'info')
     return redirect(url_for('reports'))
 
+
+# ============== ADMIN & SYSTEM CONFIG (QUẢN TRỊ HỆ THỐNG) ==============
+
+@app.route('/admin/system-config')
+def system_config():
+    """Dashboard quản trị hệ thống & cấu hình"""
+    if 'user_id' not in session:
+        flash('Vui lòng đăng nhập để truy cập', 'warning')
+        return redirect(url_for('login'))
+    
+    # Chỉ admin mới được truy cập
+    if session.get('role') != 'admin':
+        flash('Bạn không có quyền truy cập trang này', 'danger')
+        return redirect(url_for('home'))
+    
+    return render_template('system_config.html')
+
+@app.route('/admin/user-management')
+def user_management():
+    """Quản lý người dùng & phân quyền"""
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash('Bạn không có quyền truy cập', 'danger')
+        return redirect(url_for('home'))
+    
+    return render_template('user_management.html')
+
+@app.route('/admin/price-config')
+def price_config():
+    """Cấu hình biểu giá điện/nước"""
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash('Bạn không có quyền truy cập', 'danger')
+        return redirect(url_for('home'))
+    
+    return render_template('price_config.html')
+
+@app.route('/admin/backup-restore')
+def backup_restore():
+    """Sao lưu & phục hồi dữ liệu"""
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash('Bạn không có quyền truy cập', 'danger')
+        return redirect(url_for('home'))
+    
+    return render_template('backup_restore.html')
+
+
 # ============== SUPPORT (HỖ TRỢ) ==============
 @app.route('/support', methods=['GET', 'POST'])
 def support():
