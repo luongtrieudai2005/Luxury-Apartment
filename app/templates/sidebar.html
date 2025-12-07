@@ -20,7 +20,7 @@
   <div class="flex-grow-1 overflow-auto" style="scrollbar-width: thin;">
     <ul class="nav flex-column px-2 pb-3">
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('home') }}">
+        <a class="nav-link" href="{{ url_for('main.home') }}">
           <i class="bi bi-house-door"></i> Trang chủ
         </a>
       </li>
@@ -33,10 +33,10 @@
         </a>
         <div class="collapse ps-3" id="menuLuutru">
           <div class="nav flex-column">
-            <a href="{{ url_for('register_stay') }}" class="nav-link py-1">Đăng ký lưu trú</a>
-            <a href="{{ url_for('manage_houses') }}" class="nav-link py-1">Quản lý nhà</a>
-            <a href="{{ url_for('bookings') }}" class="nav-link py-1">Đặt phòng</a>
-            <a href="{{ url_for('contracts') }}" class="nav-link py-1">Hợp đồng thuê</a>
+            <a href="{{ url_for('core.register_stay') }}" class="nav-link py-1">Đăng ký lưu trú</a>
+            <a href="{{ url_for('core.manage_houses') }}" class="nav-link py-1">Quản lý nhà</a>
+            <a href="{{ url_for('core.bookings') }}" class="nav-link py-1">Đặt phòng</a>
+            <a href="{{ url_for('core.contracts') }}" class="nav-link py-1">Hợp đồng thuê</a>
           </div>
         </div>
       </li>
@@ -49,10 +49,10 @@
         </a>
         <div class="collapse ps-3" id="menuDichvu">
           <div class="nav flex-column">
-            <a href="{{ url_for('utilities') }}" class="nav-link py-1">Chỉ số điện nước</a>
-            <a href="{{ url_for('services') }}" class="nav-link py-1">Dịch vụ khác</a>
-            <a href="{{ url_for('parking') }}" class="nav-link py-1">Phương tiện</a>
-            <a href="{{ url_for('requests_feedback') }}" class="nav-link py-1">Yêu cầu/Phản ánh</a>
+            <a href="{{ url_for('core.utilities') }}" class="nav-link py-1">Chỉ số điện nước</a>
+            <a href="{{ url_for('core.services') }}" class="nav-link py-1">Dịch vụ khác</a>
+            <a href="{{ url_for('core.parking') }}" class="nav-link py-1">Phương tiện</a>
+            <a href="{{ url_for('core.requests_feedback') }}" class="nav-link py-1">Yêu cầu/Phản ánh</a>
           </div>
         </div>
       </li>
@@ -65,19 +65,19 @@
         </a>
         <div class="collapse ps-3" id="menuIoT">
           <div class="nav flex-column">
-            <a href="{{ url_for('iot_dashboard') }}" class="nav-link py-1">
+            <a href="{{ url_for('iot.dashboard') }}" class="nav-link py-1">
               <i class="bi bi-speedometer2"></i> Dashboard IoT
             </a>
-            <a href="{{ url_for('energy_monitoring') }}" class="nav-link py-1">
+            <a href="{{ url_for('iot.energy_monitoring') }}" class="nav-link py-1">
               <i class="bi bi-lightning"></i> Giám sát năng lượng
             </a>
-            <a href="{{ url_for('iot_devices') }}" class="nav-link py-1">
+            <a href="{{ url_for('iot.devices') }}" class="nav-link py-1">
               <i class="bi bi-cpu"></i> Thiết bị IoT
             </a>
-            <a href="{{ url_for('iot_alerts') }}" class="nav-link py-1">
+            <a href="{{ url_for('iot.alerts') }}" class="nav-link py-1">
               <i class="bi bi-bell"></i> Cảnh báo
             </a>
-            <a href="{{ url_for('iot_simulator') }}" class="nav-link py-1 text-warning">
+            <a href="{{ url_for('iot.simulator') }}" class="nav-link py-1 text-warning">
               <i class="bi bi-terminal"></i> Simulator (Demo)
             </a>
           </div>
@@ -92,8 +92,8 @@
         </a>
         <div class="collapse ps-3" id="menuBaocao">
           <div class="nav flex-column">
-            <a href="{{ url_for('reports') }}" class="nav-link py-1">Dashboard báo cáo</a>
-            <a href="{{ url_for('revenue_report') }}" class="nav-link py-1">Báo cáo doanh thu</a>
+            <a href="{{ url_for('reports.index') }}" class="nav-link py-1">Dashboard báo cáo</a>
+            <a href="{{ url_for('reports.revenue_report') }}" class="nav-link py-1">Báo cáo doanh thu</a>
           </div>
         </div>
       </li>
@@ -106,10 +106,10 @@
         </a>
         <div class="collapse ps-3" id="menuQuantri">
           <div class="nav flex-column">
-            <a href="{{ url_for('system_config') }}" class="nav-link py-1">Cấu hình hệ thống</a>
-            <a href="{{ url_for('user_management') }}" class="nav-link py-1">Quản lý người dùng</a>
-            <a href="{{ url_for('price_config') }}" class="nav-link py-1">Biểu giá điện/nước</a>
-            <a href="{{ url_for('backup_restore') }}" class="nav-link py-1">Sao lưu & Phục hồi</a>
+            <a href="{{ url_for('admin.system_config') }}" class="nav-link py-1">Cấu hình hệ thống</a>
+            <a href="{{ url_for('admin.user_management') }}" class="nav-link py-1">Quản lý người dùng</a>
+            <a href="{{ url_for('admin.price_config') }}" class="nav-link py-1">Biểu giá điện/nước</a>
+            <a href="{{ url_for('admin.backup_restore') }}" class="nav-link py-1">Sao lưu & Phục hồi</a>
           </div>
         </div>
       </li>
@@ -126,7 +126,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('support') }}">
+        <a class="nav-link" href="{{ url_for('support.support') }}">
           <i class="bi bi-question-circle"></i> Cần hỗ trợ?
         </a>
       </li>
@@ -135,7 +135,7 @@
 
   <!-- Logout - Fixed bottom -->
   <div class="flex-shrink-0 p-3 border-top">
-    <a href="{{ url_for('logout') }}" class="btn btn-light w-100">
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-light w-100">
       <i class="bi bi-box-arrow-right"></i> Đăng xuất
     </a>
   </div>

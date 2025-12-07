@@ -76,7 +76,7 @@
     <div class="row g-3">
       <!-- Quản lý người dùng & phân quyền -->
       <div class="col-md-4">
-        <a href="{{ url_for('user_management') }}" class="text-decoration-none">
+        <a href="{{ url_for('admin.user_management') }}" class="text-decoration-none">
           <div class="card h-100 border-primary hover-card">
             <div class="card-body text-center">
               <i class="bi bi-person-badge fs-1 text-primary mb-3"></i>
@@ -115,7 +115,7 @@
 
       <!-- Biểu giá điện/nước -->
       <div class="col-md-4">
-        <a href="{{ url_for('price_config') }}" class="text-decoration-none">
+        <a href="{{ url_for('admin.price_config') }}" class="text-decoration-none">
           <div class="card h-100 border-info hover-card">
             <div class="card-body text-center">
               <i class="bi bi-lightning-charge fs-1 text-info mb-3"></i>
@@ -154,7 +154,7 @@
 
       <!-- Sao lưu & Phục hồi -->
       <div class="col-md-4">
-        <a href="{{ url_for('backup_restore') }}" class="text-decoration-none">
+        <a href="{{ url_for('admin.backup_restore') }}" class="text-decoration-none">
           <div class="card h-100 border-primary hover-card">
             <div class="card-body text-center">
               <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3"></i>

@@ -4,13 +4,13 @@
   <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
       <div class="card p-4 shadow-sm">
-        <a href="{{ url_for('login') }}" class="text-decoration-none text-secondary mb-3 d-inline-flex align-items-center">
+        <a href="{{ url_for('auth.login') }}" class="text-decoration-none text-secondary mb-3 d-inline-flex align-items-center">
           <i class="bi bi-arrow-left"></i> 
           <span class="ms-1"></span>
         </a>
         <h4 class="mb-3">Tạo tài khoản mới</h4>
 
-        <form method="post" action="{{ url_for('signup') }}">
+        <form method="post" action="{{ url_for('auth.signup') }}">
           
           <div class="mb-3">
             <label class="form-label">Họ và tên</label>

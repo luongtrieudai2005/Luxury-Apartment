@@ -6,13 +6,13 @@
   <p class="mb-4 fs-5">Xin hãy cho chúng tôi biết bạn là...</p>
 
   <div class="d-flex justify-content-center gap-4 flex-wrap">
-    <a href="{{ url_for('login', role='owner') }}" class="btn btn-outline-primary btn-lg px-4 py-3">
+    <a href="{{ url_for('auth.login', role='owner') }}" class="btn btn-outline-primary btn-lg px-4 py-3">
       🏠 Chủ nhà
     </a>
-    <a href="{{ url_for('login', role='customer') }}" class="btn btn-outline-success btn-lg px-4 py-3">
+    <a href="{{ url_for('auth.login', role='customer') }}" class="btn btn-outline-success btn-lg px-4 py-3">
       👤 Khách hàng
     </a>
-    <a href="{{ url_for('login', role='staff') }}" class="btn btn-outline-warning btn-lg px-4 py-3">
+    <a href="{{ url_for('auth.login', role='staff') }}" class="btn btn-outline-warning btn-lg px-4 py-3">
       💼 Nhân viên
     </a>
   </div>
