@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+{% block title %}IoT Simulator - Demo & Test{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">🔬 IoT Simulator - Demo & Testing</h3>
+    <p class="text-muted mb-0">Công cụ mô phỏng cảm biến IoT để test hệ thống</p>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-success" onclick="startAllSimulators()">
+      <i class="bi bi-play-fill"></i> Chạy tất cả
+    </button>
+    <button class="btn btn-danger" onclick="stopAllSimulators()">
+      <i class="bi bi-stop-fill"></i> Dừng tất cả
+    </button>
+  </div>
+</div>
+
+<div class="alert alert-info mb-4">
+  <i class="bi bi-info-circle"></i> 
+  <strong>Lưu ý:</strong> Đây là công cụ demo để test hệ thống IoT. 
+  Dữ liệu được tạo ngẫu nhiên và gửi đến API endpoint.
+</div>
+
+<div class="row g-4">
+  <!-- Simulator 1: Cảm biến điện -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-warning text-dark">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-lightning-charge"></i> Cảm biến Điện
+          </h5>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="electricSimulator" onchange="toggleSimulator('electric')">
+            <label class="form-check-label">Bật/Tắt</label>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label small">Device ID</label>
+            <input type="text" class="form-control form-control-sm" value="ESP32-E001" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Phòng</label>
+            <select class="form-select form-select-sm">
+              <option>Phòng 101</option>
+              <option>Phòng 102</option>
+              <option>Phòng 201</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Giá trị (kW)</label>
+            <input type="number" class="form-control form-control-sm" id="electricValue" value="2.5" step="0.1">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Tần suất (giây)</label>
+            <input type="number" class="form-control form-control-sm" id="electricInterval" value="5" min="1">
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label small">Chế độ mô phỏng</label>
+          <select class="form-select form-select-sm" id="electricMode">
+            <option value="normal">Bình thường</option>
+            <option value="increasing">Tăng dần</option>
+            <option value="spike">Tăng đột biến</option>
+            <option value="random">Ngẫu nhiên</option>
+          </select>
+        </div>
+        
+        <div class="bg-light p-3 rounded mb-3">
+          <div class="d-flex justify-content-between mb-1">
+            <small class="text-muted">Giá trị hiện tại:</small>
+            <strong id="electricCurrent">0 kW</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <small class="text-muted">Số lần gửi:</small>
+            <strong id="electricCount">0</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Lần cuối:</small>
+            <strong id="electricLast">-</strong>
+          </div>
+        </div>
+        
+        <canvas id="electricChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulator 2: Cảm biến nước -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-droplet"></i> Cảm biến Nước
+          </h5>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="waterSimulator" onchange="toggleSimulator('water')">
+            <label class="form-check-label text-white">Bật/Tắt</label>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label small">Device ID</label>
+            <input type="text" class="form-control form-control-sm" value="WF-S001" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Phòng</label>
+            <select class="form-select form-select-sm">
+              <option>Phòng 101</option>
+              <option>Phòng 102</option>
+              <option>Phòng 201</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Lưu lượng (L/h)</label>
+            <input type="number" class="form-control form-control-sm" id="waterValue" value="150" step="10">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Tần suất (giây)</label>
+            <input type="number" class="form-control form-control-sm" id="waterInterval" value="5" min="1">
+          </div>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label small">Chế độ mô phỏng</label>
+          <select class="form-select form-select-sm" id="waterMode">
+            <option value="normal">Bình thường</option>
+            <option value="leak">Rò rỉ (2500 L/h)</option>
+            <option value="high">Tiêu thụ cao</option>
+            <option value="random">Ngẫu nhiên</option>
+          </select>
+        </div>
+        
+        <div class="bg-light p-3 rounded mb-3">
+          <div class="d-flex justify-content-between mb-1">
+            <small class="text-muted">Lưu lượng hiện tại:</small>
+            <strong id="waterCurrent">0 L/h</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <small class="text-muted">Số lần gửi:</small>
+            <strong id="waterCount">0</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Lần cuối:</small>
+            <strong id="waterLast">-</strong>
+          </div>
+        </div>
+        
+        <canvas id="waterChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulator 3: Cảm biến nhiệt độ -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-danger text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-thermometer"></i> Cảm biến Nhiệt độ
+          </h5>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="tempSimulator" onchange="toggleSimulator('temp')">
+            <label class="form-check-label text-white">Bật/Tắt</label>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label small">Device ID</label>
+            <input type="text" class="form-control form-control-sm" value="DHT22-T001" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Phòng</label>
+            <select class="form-select form-select-sm">
+              <option>Phòng 101</option>
+              <option>Phòng 102</option>
+              <option>Phòng 201</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Nhiệt độ (°C)</label>
+            <input type="number" class="form-control form-control-sm" id="tempValue" value="28" step="0.5">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">Độ ẩm (%)</label>
+            <input type="number" class="form-control form-control-sm" id="humidityValue" value="65" step="1">
+          </div>
+        </div>
+        
+        <div class="bg-light p-3 rounded mb-3">
+          <div class="d-flex justify-content-between mb-1">
+            <small class="text-muted">Nhiệt độ:</small>
+            <strong id="tempCurrent">0°C</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <small class="text-muted">Độ ẩm:</small>
+            <strong id="humidityCurrent">0%</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Số lần gửi:</small>
+            <strong id="tempCount">0</strong>
+          </div>
+        </div>
+        
+        <canvas id="tempChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log console -->
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="bi bi-terminal"></i> Console Log
+        </h5>
+        <button class="btn btn-sm btn-outline-light" onclick="clearLog()">
+          <i class="bi bi-trash"></i> Clear
+        </button>
+      </div>
+      <div class="card-body p-0">
+        <div id="logConsole" class="p-3 bg-dark text-light font-monospace" style="height: 400px; overflow-y: auto; font-size: 12px;">
+          <div class="text-success">IoT Simulator ready...</div>
+          <div class="text-muted">Waiting for commands...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Simulators state
+const simulators = {
+  electric: { active: false, interval: null, count: 0, data: [] },
+  water: { active: false, interval: null, count: 0, data: [] },
+  temp: { active: false, interval: null, count: 0, data: [] }
+};
+
+// Charts
+let electricChart, waterChart, tempChart;
+
+// Initialize charts
+document.addEventListener('DOMContentLoaded', function() {
+  electricChart = createChart('electricChart', 'Điện (kW)', 'rgba(255, 193, 7, 0.7)');
+  waterChart = createChart('waterChart', 'Nước (L/h)', 'rgba(13, 110, 253, 0.7)');
+  tempChart = createChart('tempChart', 'Nhiệt độ (°C)', 'rgba(220, 53, 69, 0.7)');
+});
+
+function createChart(canvasId, label, color) {
+  const ctx = document.getElementById(canvasId);
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: label,
+        data: [],
+        borderColor: color,
+        backgroundColor: color,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        x: { display: false },
+        y: { beginAtZero: true }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}
+
+function toggleSimulator(type) {
+  const checkbox = document.getElementById(`${type}Simulator`);
+  
+  if (checkbox.checked) {
+    startSimulator(type);
+  } else {
+    stopSimulator(type);
+  }
+}
+
+function startSimulator(type) {
+  if (simulators[type].active) return;
+  
+  simulators[type].active = true;
+  log(`✅ Started ${type} simulator`, 'success');
+  
+  const interval = document.getElementById(`${type}Interval`)?.value || 5;
+  
+  simulators[type].interval = setInterval(() => {
+    sendData(type);
+  }, interval * 1000);
+  
+  // Send first data immediately
+  sendData(type);
+}
+
+function stopSimulator(type) {
+  if (!simulators[type].active) return;
+  
+  simulators[type].active = false;
+  clearInterval(simulators[type].interval);
+  log(`⏹️ Stopped ${type} simulator`, 'warning');
+}
+
+function sendData(type) {
+  let value, unit, deviceId;
+  
+  switch(type) {
+    case 'electric':
+      const eMode = document.getElementById('electricMode').value;
+      const eBase = parseFloat(document.getElementById('electricValue').value);
+      
+      if (eMode === 'spike') {
+        value = eBase * (Math.random() * 3 + 1); // 1x to 4x
+      } else if (eMode === 'increasing') {
+        value = eBase + (simulators[type].count * 0.1);
+      } else if (eMode === 'random') {
+        value = eBase * (Math.random() * 0.5 + 0.75); // 75% to 125%
+      } else {
+        value = eBase + (Math.random() * 0.5 - 0.25);
+      }
+      
+      unit = 'kW';
+      deviceId = 'ESP32-E001';
+      document.getElementById('electricCurrent').textContent = value.toFixed(2) + ' ' + unit;
+      updateChart(electricChart, value);
+      break;
+      
+    case 'water':
+      const wMode = document.getElementById('waterMode').value;
+      const wBase = parseFloat(document.getElementById('waterValue').value);
+      
+      if (wMode === 'leak') {
+        value = 2500; // Simulate leak
+      } else if (wMode === 'high') {
+        value = wBase * 2;
+      } else if (wMode === 'random') {
+        value = wBase * (Math.random() * 0.8 + 0.6);
+      } else {
+        value = wBase + (Math.random() * 50 - 25);
+      }
+      
+      unit = 'L/h';
+      deviceId = 'WF-S001';
+      document.getElementById('waterCurrent').textContent = value.toFixed(0) + ' ' + unit;
+      updateChart(waterChart, value);
+      break;
+      
+    case 'temp':
+      const tBase = parseFloat(document.getElementById('tempValue').value);
+      const hBase = parseFloat(document.getElementById('humidityValue').value);
+      
+      value = tBase + (Math.random() * 2 - 1);
+      const humidity = hBase + (Math.random() * 5 - 2.5);
+      
+      unit = '°C';
+      deviceId = 'DHT22-T001';
+      document.getElementById('tempCurrent').textContent = value.toFixed(1) + '°C';
+      document.getElementById('humidityCurrent').textContent = humidity.toFixed(0) + '%';
+      updateChart(tempChart, value);
+      break;
+  }
+  
+  // Update counter
+  simulators[type].count++;
+  document.getElementById(`${type}Count`).textContent = simulators[type].count;
+  document.getElementById(`${type}Last`).textContent = new Date().toLocaleTimeString();
+  
+  // Send to API (demo)
+  const data = {
+    device_id: deviceId,
+    type: type,
+    value: value,
+    unit: unit,
+    timestamp: new Date().toISOString()
+  };
+  
+  log(`📤 [${type.toUpperCase()}] Sent: ${value.toFixed(2)} ${unit}`, 'info');
+  
+  // Simulate API call
+  // fetch('/api/iot/readings', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(data)
+  // });
+}
+
+function updateChart(chart, value) {
+  chart.data.labels.push('');
+  chart.data.datasets[0].data.push(value);
+  
+  // Keep only last 20 points
+  if (chart.data.labels.length > 20) {
+    chart.data.labels.shift();
+    chart.data.datasets[0].data.shift();
+  }
+  
+  chart.update();
+}
+
+function startAllSimulators() {
+  document.getElementById('electricSimulator').checked = true;
+  document.getElementById('waterSimulator').checked = true;
+  document.getElementById('tempSimulator').checked = true;
+  
+  startSimulator('electric');
+  startSimulator('water');
+  startSimulator('temp');
+  
+  log('🚀 All simulators started', 'success');
+}
+
+function stopAllSimulators() {
+  document.getElementById('electricSimulator').checked = false;
+  document.getElementById('waterSimulator').checked = false;
+  document.getElementById('tempSimulator').checked = false;
+  
+  stopSimulator('electric');
+  stopSimulator('water');
+  stopSimulator('temp');
+  
+  log('🛑 All simulators stopped', 'warning');
+}
+
+function log(message, type = 'info') {
+  const console = document.getElementById('logConsole');
+  const time = new Date().toLocaleTimeString();
+  const colors = {
+    success: 'text-success',
+    warning: 'text-warning',
+    info: 'text-info',
+    error: 'text-danger'
+  };
+  
+  const line = `<div class="${colors[type]}">[${time}] ${message}</div>`;
+  console.innerHTML += line;
+  console.scrollTop = console.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById('logConsole').innerHTML = '<div class="text-success">Console cleared...</div>';
+}
+</script>
+
+<style>
+.form-check-input:checked {
+  background-color: #198754;
+  border-color: #198754;
+}
+</style>
+
+{% endblock %}

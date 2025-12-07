@@ -1,0 +1,572 @@
+{% extends "base.html" %}
+{% block title %}Giám sát Năng lượng{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Giám sát Năng lượng Chi tiết</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('iot_dashboard') }}">IoT Dashboard</a></li>
+        <li class="breadcrumb-item active">Giám sát năng lượng</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-outline-primary" onclick="exportEnergyData()">
+      <i class="bi bi-download"></i> Xuất dữ liệu
+    </button>
+    <button class="btn btn-primary" onclick="manualReadEntry()">
+      <i class="bi bi-plus-lg"></i> Nhập thủ công
+    </button>
+  </div>
+</div>
+
+<!-- Bộ lọc -->
+<div class="card p-3 shadow-sm mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <label class="form-label">Chọn nhà</label>
+      <select class="form-select" id="filterHouse" onchange="filterByHouse()">
+        <option value="">Tất cả nhà</option>
+        <option value="1">22L Quận 7</option>
+        <option value="2">223 Quận 1</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Loại năng lượng</label>
+      <select class="form-select" id="filterType">
+        <option value="">Tất cả</option>
+        <option value="electric">Điện</option>
+        <option value="water">Nước</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Kỳ đọc</label>
+      <select class="form-select" id="filterPeriod">
+        <option value="current">Tháng này</option>
+        <option value="last">Tháng trước</option>
+        <option value="custom">Tùy chỉnh</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Tìm kiếm</label>
+      <input type="text" class="form-control" id="searchRoom" placeholder="Tìm theo phòng...">
+    </div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-bs-toggle="tab" href="#byRoom">
+      <i class="bi bi-door-open"></i> Theo phòng
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#comparison">
+      <i class="bi bi-bar-chart"></i> So sánh
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#history">
+      <i class="bi bi-clock-history"></i> Lịch sử
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#anomaly">
+      <i class="bi bi-exclamation-triangle"></i> Bất thường
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- Tab Theo phòng -->
+  <div id="byRoom" class="tab-pane fade show active">
+    <div class="row g-3" id="roomEnergyGrid">
+      <!-- Phòng 101 -->
+      <div class="col-md-6 col-lg-4" data-house="1">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-door-open"></i> Phòng 101</span>
+            <span class="badge bg-light text-dark">22L Quận 7</span>
+          </div>
+          <div class="card-body">
+            <!-- Điện -->
+            <div class="mb-3 p-3 bg-warning bg-opacity-10 rounded">
+              <div class="d-flex justify-content-between mb-2">
+                <strong><i class="bi bi-lightning-charge text-warning"></i> Điện</strong>
+                <span class="badge bg-warning">Kỳ 12/2025</span>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6">Chỉ số đầu:</div>
+                <div class="col-6 text-end"><strong>1250 kWh</strong></div>
+                <div class="col-6">Chỉ số cuối:</div>
+                <div class="col-6 text-end"><strong>1380 kWh</strong></div>
+                <div class="col-6">Tiêu thụ:</div>
+                <div class="col-6 text-end text-primary"><strong>130 kWh</strong></div>
+                <div class="col-6">Thành tiền:</div>
+                <div class="col-6 text-end text-danger"><strong>455.000đ</strong></div>
+              </div>
+            </div>
+            
+            <!-- Nước -->
+            <div class="mb-3 p-3 bg-primary bg-opacity-10 rounded">
+              <div class="d-flex justify-content-between mb-2">
+                <strong><i class="bi bi-droplet text-primary"></i> Nước</strong>
+                <span class="badge bg-primary">Kỳ 12/2025</span>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6">Chỉ số đầu:</div>
+                <div class="col-6 text-end"><strong>85 m³</strong></div>
+                <div class="col-6">Chỉ số cuối:</div>
+                <div class="col-6 text-end"><strong>97 m³</strong></div>
+                <div class="col-6">Tiêu thụ:</div>
+                <div class="col-6 text-end text-primary"><strong>12 m³</strong></div>
+                <div class="col-6">Thành tiền:</div>
+                <div class="col-6 text-end text-danger"><strong>300.000đ</strong></div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">Cập nhật: 05/12/2025</small>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-info" onclick="viewRoomDetail(101)" title="Chi tiết">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-warning" onclick="updateReading(101)" title="Cập nhật">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phòng 102 -->
+      <div class="col-md-6 col-lg-4" data-house="1">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-door-open"></i> Phòng 102</span>
+            <span class="badge bg-light text-dark">22L Quận 7</span>
+          </div>
+          <div class="card-body">
+            <div class="mb-3 p-3 bg-warning bg-opacity-10 rounded">
+              <div class="d-flex justify-content-between mb-2">
+                <strong><i class="bi bi-lightning-charge text-warning"></i> Điện</strong>
+                <span class="badge bg-warning">Kỳ 12/2025</span>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6">Chỉ số đầu:</div>
+                <div class="col-6 text-end"><strong>980 kWh</strong></div>
+                <div class="col-6">Chỉ số cuối:</div>
+                <div class="col-6 text-end"><strong>1095 kWh</strong></div>
+                <div class="col-6">Tiêu thụ:</div>
+                <div class="col-6 text-end text-primary"><strong>115 kWh</strong></div>
+                <div class="col-6">Thành tiền:</div>
+                <div class="col-6 text-end text-danger"><strong>402.500đ</strong></div>
+              </div>
+            </div>
+            
+            <div class="mb-3 p-3 bg-primary bg-opacity-10 rounded">
+              <div class="d-flex justify-content-between mb-2">
+                <strong><i class="bi bi-droplet text-primary"></i> Nước</strong>
+                <span class="badge bg-primary">Kỳ 12/2025</span>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6">Chỉ số đầu:</div>
+                <div class="col-6 text-end"><strong>62 m³</strong></div>
+                <div class="col-6">Chỉ số cuối:</div>
+                <div class="col-6 text-end"><strong>72 m³</strong></div>
+                <div class="col-6">Tiêu thụ:</div>
+                <div class="col-6 text-end text-primary"><strong>10 m³</strong></div>
+                <div class="col-6">Thành tiền:</div>
+                <div class="col-6 text-end text-danger"><strong>250.000đ</strong></div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">Cập nhật: 05/12/2025</small>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-info" onclick="viewRoomDetail(102)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-warning" onclick="updateReading(102)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phòng 201 - Tiêu thụ cao bất thường -->
+      <div class="col-md-6 col-lg-4" data-house="2">
+        <div class="card shadow-sm h-100 border-danger">
+          <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-door-open"></i> Phòng 201</span>
+            <span class="badge bg-light text-dark">223 Quận 1</span>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-danger py-2 mb-3">
+              <small><i class="bi bi-exclamation-triangle"></i> Tiêu thụ điện bất thường!</small>
+            </div>
+            
+            <div class="mb-3 p-3 bg-warning bg-opacity-10 rounded">
+              <div class="d-flex justify-content-between mb-2">
+                <strong><i class="bi bi-lightning-charge text-warning"></i> Điện</strong>
+                <span class="badge bg-danger">Cao bất thường</span>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6">Chỉ số đầu:</div>
+                <div class="col-6 text-end"><strong>1450 kWh</strong></div>
+                <div class="col-6">Chỉ số cuối:</div>
+                <div class="col-6 text-end"><strong>1610 kWh</strong></div>
+                <div class="col-6">Tiêu thụ:</div>
+                <div class="col-6 text-end text-danger"><strong>160 kWh ⚠️</strong></div>
+                <div class="col-6">Thành tiền:</div>
+                <div class="col-6 text-end text-danger"><strong>560.000đ</strong></div>
+              </div>
+            </div>
+            
+            <div class="mb-3 p-3 bg-primary bg-opacity-10 rounded">
+              <div class="d-flex justify-content-between mb-2">
+                <strong><i class="bi bi-droplet text-primary"></i> Nước</strong>
+                <span class="badge bg-primary">Kỳ 12/2025</span>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6">Chỉ số đầu:</div>
+                <div class="col-6 text-end"><strong>105 m³</strong></div>
+                <div class="col-6">Chỉ số cuối:</div>
+                <div class="col-6 text-end"><strong>120 m³</strong></div>
+                <div class="col-6">Tiêu thụ:</div>
+                <div class="col-6 text-end text-primary"><strong>15 m³</strong></div>
+                <div class="col-6">Thành tiền:</div>
+                <div class="col-6 text-end text-danger"><strong>375.000đ</strong></div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-danger">Cảnh báo: 10 phút trước</small>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-danger" onclick="checkAnomaly(201)">
+                  <i class="bi bi-exclamation-octagon"></i>
+                </button>
+                <button class="btn btn-info" onclick="viewRoomDetail(201)">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab So sánh -->
+  <div id="comparison" class="tab-pane fade">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="bi bi-bar-chart"></i> So sánh tiêu thụ năng lượng</h5>
+      </div>
+      <div class="card-body">
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <canvas id="comparisonChartElectric" height="200"></canvas>
+          </div>
+          <div class="col-md-6">
+            <canvas id="comparisonChartWater" height="200"></canvas>
+          </div>
+        </div>
+        
+        <h6 class="border-bottom pb-2 mb-3">Bảng so sánh chi tiết</h6>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Phòng</th>
+                <th>Điện tháng này</th>
+                <th>Điện tháng trước</th>
+                <th>Chênh lệch</th>
+                <th>Nước tháng này</th>
+                <th>Nước tháng trước</th>
+                <th>Chênh lệch</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>P101</strong></td>
+                <td>130 kWh</td>
+                <td>125 kWh</td>
+                <td><span class="text-warning">+5 kWh (+4%)</span></td>
+                <td>12 m³</td>
+                <td>11 m³</td>
+                <td><span class="text-warning">+1 m³ (+9%)</span></td>
+              </tr>
+              <tr>
+                <td><strong>P102</strong></td>
+                <td>115 kWh</td>
+                <td>120 kWh</td>
+                <td><span class="text-success">-5 kWh (-4%)</span></td>
+                <td>10 m³</td>
+                <td>10 m³</td>
+                <td><span class="text-muted">0 m³ (0%)</span></td>
+              </tr>
+              <tr class="table-danger">
+                <td><strong>P201</strong></td>
+                <td>160 kWh</td>
+                <td>125 kWh</td>
+                <td><span class="text-danger">+35 kWh (+28%) ⚠️</span></td>
+                <td>15 m³</td>
+                <td>12 m³</td>
+                <td><span class="text-warning">+3 m³ (+25%)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Lịch sử -->
+  <div id="history" class="tab-pane fade">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Lịch sử ghi nhận chỉ số</h5>
+        <select class="form-select form-select-sm w-auto">
+          <option>Tất cả phòng</option>
+          <option>Phòng 101</option>
+          <option>Phòng 102</option>
+          <option>Phòng 201</option>
+        </select>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Thời gian</th>
+              <th>Phòng</th>
+              <th>Loại</th>
+              <th>Chỉ số đầu</th>
+              <th>Chỉ số cuối</th>
+              <th>Tiêu thụ</th>
+              <th>Nguồn</th>
+              <th>Người ghi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>05/12/2025 14:30</td>
+              <td><strong>P101</strong></td>
+              <td><span class="badge bg-warning">Điện</span></td>
+              <td>1250 kWh</td>
+              <td>1380 kWh</td>
+              <td><strong>130 kWh</strong></td>
+              <td><i class="bi bi-wifi text-success"></i> IoT</td>
+              <td>Tự động</td>
+            </tr>
+            <tr>
+              <td>05/12/2025 14:30</td>
+              <td><strong>P101</strong></td>
+              <td><span class="badge bg-primary">Nước</span></td>
+              <td>85 m³</td>
+              <td>97 m³</td>
+              <td><strong>12 m³</strong></td>
+              <td><i class="bi bi-wifi text-success"></i> IoT</td>
+              <td>Tự động</td>
+            </tr>
+            <tr>
+              <td>05/12/2025 09:00</td>
+              <td><strong>P102</strong></td>
+              <td><span class="badge bg-warning">Điện</span></td>
+              <td>980 kWh</td>
+              <td>1095 kWh</td>
+              <td><strong>115 kWh</strong></td>
+              <td><i class="bi bi-person text-info"></i> Thủ công</td>
+              <td>admin@system.com</td>
+            </tr>
+            <tr class="table-warning">
+              <td>05/12/2025 10:15</td>
+              <td><strong>P201</strong></td>
+              <td><span class="badge bg-warning">Điện</span></td>
+              <td>1450 kWh</td>
+              <td>1610 kWh</td>
+              <td><strong class="text-danger">160 kWh ⚠️</strong></td>
+              <td><i class="bi bi-wifi text-success"></i> IoT</td>
+              <td>Tự động</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Bất thường -->
+  <div id="anomaly" class="tab-pane fade">
+    <div class="alert alert-info mb-4">
+      <i class="bi bi-info-circle"></i> 
+      <strong>Phát hiện bất thường:</strong> Hệ thống tự động phát hiện các mức tiêu thụ vượt ngưỡng hoặc tăng đột biến so với kỳ trước.
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+          <div class="card-header bg-danger text-white">
+            <i class="bi bi-exclamation-triangle"></i> Cảnh báo nghiêm trọng (1)
+          </div>
+          <div class="card-body">
+            <h6 class="text-danger">Phòng 201 - Tiêu thụ điện cao bất thường</h6>
+            <ul class="mb-0">
+              <li>Tiêu thụ: <strong>160 kWh</strong> (tăng 28% so với tháng trước)</li>
+              <li>Ngưỡng cảnh báo: 140 kWh</li>
+              <li>Phát hiện: 05/12/2025 10:15</li>
+              <li>Trạng thái: <span class="badge bg-danger">Chưa xử lý</span></li>
+            </ul>
+            <div class="mt-3">
+              <button class="btn btn-sm btn-danger" onclick="handleAnomaly(201)">
+                <i class="bi bi-tools"></i> Xử lý ngay
+              </button>
+              <button class="btn btn-sm btn-outline-secondary" onclick="dismissAnomaly(201)">
+                Bỏ qua
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card border-warning shadow-sm">
+          <div class="card-header bg-warning text-dark">
+            <i class="bi bi-exclamation-circle"></i> Cần xem xét (0)
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-0">Không có cảnh báo mức độ trung bình</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Biểu đồ so sánh
+document.addEventListener('DOMContentLoaded', function() {
+  const tabComparison = document.querySelector('a[href="#comparison"]');
+  tabComparison?.addEventListener('shown.bs.tab', function() {
+    createComparisonCharts();
+  });
+});
+
+function createComparisonCharts() {
+  // Biểu đồ điện
+  const ctxE = document.getElementById('comparisonChartElectric');
+  if (ctxE) {
+    new Chart(ctxE, {
+      type: 'bar',
+      data: {
+        labels: ['P101', 'P102', 'P201', 'P202'],
+        datasets: [{
+          label: 'Tháng này',
+          data: [130, 115, 160, 125],
+          backgroundColor: 'rgba(255, 193, 7, 0.7)'
+        }, {
+          label: 'Tháng trước',
+          data: [125, 120, 125, 120],
+          backgroundColor: 'rgba(108, 117, 125, 0.7)'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'So sánh tiêu thụ điện (kWh)' }
+        }
+      }
+    });
+  }
+
+  // Biểu đồ nước
+  const ctxW = document.getElementById('comparisonChartWater');
+  if (ctxW) {
+    new Chart(ctxW, {
+      type: 'bar',
+      data: {
+        labels: ['P101', 'P102', 'P201', 'P202'],
+        datasets: [{
+          label: 'Tháng này',
+          data: [12, 10, 15, 11],
+          backgroundColor: 'rgba(13, 110, 253, 0.7)'
+        }, {
+          label: 'Tháng trước',
+          data: [11, 10, 12, 10],
+          backgroundColor: 'rgba(108, 117, 125, 0.7)'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'So sánh tiêu thụ nước (m³)' }
+        }
+      }
+    });
+  }
+}
+
+function filterByHouse() {
+  const houseId = document.getElementById('filterHouse').value;
+  const cards = document.querySelectorAll('#roomEnergyGrid > div');
+  
+  cards.forEach(card => {
+    if (!houseId || card.dataset.house === houseId) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function viewRoomDetail(roomId) {
+  alert(`Xem chi tiết năng lượng phòng ${roomId} (Demo)`);
+}
+
+function updateReading(roomId) {
+  alert(`Cập nhật chỉ số cho phòng ${roomId} (Demo)`);
+}
+
+function checkAnomaly(roomId) {
+  alert(`Kiểm tra bất thường phòng ${roomId} (Demo)`);
+}
+
+function handleAnomaly(roomId) {
+  if (confirm('Xử lý cảnh báo bất thường?')) {
+    alert('Đã gửi thông báo đến nhân viên kỹ thuật (Demo)');
+  }
+}
+
+function dismissAnomaly(roomId) {
+  if (confirm('Bỏ qua cảnh báo này?')) {
+    alert('Đã bỏ qua cảnh báo (Demo)');
+  }
+}
+
+function exportEnergyData() {
+  alert('Đang xuất dữ liệu năng lượng... (Demo)');
+}
+
+function manualReadEntry() {
+  alert('Mở form nhập chỉ số thủ công (Demo)');
+}
+
+// Search
+document.getElementById('searchRoom')?.addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const cards = document.querySelectorAll('#roomEnergyGrid > div');
+  
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+});
+</script>
+
+{% endblock %}

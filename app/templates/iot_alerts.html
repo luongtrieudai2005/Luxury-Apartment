@@ -1,0 +1,568 @@
+{% extends "base.html" %}
+{% block title %}Quản lý Cảnh báo IoT{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="mb-1">Quản lý Cảnh báo & Thông báo</h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('iot_dashboard') }}">IoT Dashboard</a></li>
+        <li class="breadcrumb-item active">Cảnh báo</li>
+      </ol>
+    </nav>
+  </div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#alertSettingsModal">
+    <i class="bi bi-gear"></i> Cấu hình cảnh báo
+  </button>
+</div>
+
+<!-- Thống kê cảnh báo -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card border-danger">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Nghiêm trọng</h6>
+        <h3 class="text-danger mb-0">3</h3>
+        <small>Cần xử lý ngay</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-warning">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Cảnh báo</h6>
+        <h3 class="text-warning mb-0">5</h3>
+        <small>Cần xem xét</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-info">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Thông tin</h6>
+        <h3 class="text-info mb-0">12</h3>
+        <small>Đã xử lý hôm nay</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-success">
+      <div class="card-body">
+        <h6 class="text-muted mb-1">Đã giải quyết</h6>
+        <h3 class="text-success mb-0">45</h3>
+        <small>Trong 7 ngày</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bộ lọc -->
+<div class="card p-3 shadow-sm mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <select class="form-select" id="filterPriority">
+        <option value="">Tất cả mức độ</option>
+        <option value="critical">Nghiêm trọng</option>
+        <option value="warning">Cảnh báo</option>
+        <option value="info">Thông tin</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" id="filterType">
+        <option value="">Tất cả loại</option>
+        <option value="leak">Rò rỉ nước</option>
+        <option value="overconsumption">Tiêu thụ vượt ngưỡng</option>
+        <option value="device_offline">Thiết bị offline</option>
+        <option value="anomaly">Bất thường</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" id="filterStatus">
+        <option value="">Tất cả trạng thái</option>
+        <option value="new">Mới</option>
+        <option value="inprogress">Đang xử lý</option>
+        <option value="resolved">Đã giải quyết</option>
+        <option value="dismissed">Đã bỏ qua</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" id="searchAlert" placeholder="Tìm kiếm...">
+    </div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-bs-toggle="tab" href="#activeAlerts">
+      <i class="bi bi-exclamation-circle"></i> Đang hoạt động
+      <span class="badge bg-danger ms-2">8</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#resolvedAlerts">
+      <i class="bi bi-check-circle"></i> Đã giải quyết
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#alertRules">
+      <i class="bi bi-sliders"></i> Quy tắc cảnh báo
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- Tab Cảnh báo đang hoạt động -->
+  <div id="activeAlerts" class="tab-pane fade show active">
+    <div class="row g-3">
+      <!-- Cảnh báo nghiêm trọng 1 -->
+      <div class="col-12">
+        <div class="alert alert-danger shadow-sm mb-0" role="alert">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-exclamation-octagon fs-4 me-2"></i>
+                <div>
+                  <h6 class="mb-0">Phát hiện rò rỉ nước - Phòng 302</h6>
+                  <small class="text-muted">ID: #ALT-001 • 5 phút trước</small>
+                </div>
+              </div>
+              <p class="mb-2">
+                <strong>Chi tiết:</strong> Lưu lượng nước bất thường: <strong class="text-danger">2.5 m³/h</strong> 
+                (ngưỡng bình thường: 0.3 m³/h). Nghi ngờ rò rỉ đường ống.
+              </p>
+              <div class="mb-2">
+                <span class="badge bg-danger">Nghiêm trọng</span>
+                <span class="badge bg-secondary">Rò rỉ nước</span>
+                <span class="badge bg-info">Phòng 302</span>
+                <span class="badge bg-warning">Chưa xử lý</span>
+              </div>
+              <div>
+                <strong>Thiết bị:</strong> Cảm biến nước #WF-S015 (Online)
+              </div>
+            </div>
+            <div class="btn-group-vertical ms-3">
+              <button class="btn btn-sm btn-danger" onclick="handleAlert(1, 'emergency')">
+                <i class="bi bi-exclamation-triangle"></i> Khẩn cấp
+              </button>
+              <button class="btn btn-sm btn-warning" onclick="handleAlert(1, 'assign')">
+                <i class="bi bi-person-plus"></i> Phân công
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewAlertDetail(1)">
+                <i class="bi bi-eye"></i> Chi tiết
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="dismissAlert(1)">
+                <i class="bi bi-x"></i> Bỏ qua
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cảnh báo nghiêm trọng 2 -->
+      <div class="col-12">
+        <div class="alert alert-danger shadow-sm mb-0" role="alert">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-exclamation-octagon fs-4 me-2"></i>
+                <div>
+                  <h6 class="mb-0">Thiết bị mất kết nối - Cảm biến điện #42</h6>
+                  <small class="text-muted">ID: #ALT-002 • 30 phút trước</small>
+                </div>
+              </div>
+              <p class="mb-2">
+                <strong>Chi tiết:</strong> Cảm biến điện ESP32-E042 (Phòng 108) không phản hồi. 
+                Mất kết nối từ 30 phút trước.
+              </p>
+              <div class="mb-2">
+                <span class="badge bg-danger">Nghiêm trọng</span>
+                <span class="badge bg-secondary">Thiết bị offline</span>
+                <span class="badge bg-info">Phòng 108</span>
+                <span class="badge bg-primary">Đang xử lý</span>
+              </div>
+              <div>
+                <strong>Giao cho:</strong> Nguyễn Văn A (kỹ thuật) - 10 phút trước
+              </div>
+            </div>
+            <div class="btn-group-vertical ms-3">
+              <button class="btn btn-sm btn-success" onclick="resolveAlert(2)">
+                <i class="bi bi-check-circle"></i> Đã xử lý
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewAlertDetail(2)">
+                <i class="bi bi-eye"></i> Chi tiết
+              </button>
+              <button class="btn btn-sm btn-warning" onclick="escalateAlert(2)">
+                <i class="bi bi-arrow-up-circle"></i> Leo thang
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cảnh báo nghiêm trọng 3 -->
+      <div class="col-12">
+        <div class="alert alert-danger shadow-sm mb-0" role="alert">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-lightning-charge fs-4 me-2"></i>
+                <div>
+                  <h6 class="mb-0">Tiêu thụ điện vượt ngưỡng - Phòng 205</h6>
+                  <small class="text-muted">ID: #ALT-003 • 15 phút trước</small>
+                </div>
+              </div>
+              <p class="mb-2">
+                <strong>Chi tiết:</strong> Tiêu thụ điện: <strong class="text-danger">85 kWh</strong> 
+                (ngưỡng cảnh báo: 50 kWh). Tăng đột biến so với ngày hôm qua.
+              </p>
+              <div class="mb-2">
+                <span class="badge bg-danger">Nghiêm trọng</span>
+                <span class="badge bg-secondary">Tiêu thụ vượt ngưỡng</span>
+                <span class="badge bg-info">Phòng 205</span>
+                <span class="badge bg-warning">Chưa xử lý</span>
+              </div>
+              <div>
+                <strong>Thiết bị:</strong> Cảm biến điện #ESP32-E005 (Online)
+              </div>
+            </div>
+            <div class="btn-group-vertical ms-3">
+              <button class="btn btn-sm btn-warning" onclick="handleAlert(3, 'notify')">
+                <i class="bi bi-bell"></i> Thông báo
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewAlertDetail(3)">
+                <i class="bi bi-eye"></i> Chi tiết
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="dismissAlert(3)">
+                <i class="bi bi-x"></i> Bỏ qua
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cảnh báo warning -->
+      <div class="col-12">
+        <div class="alert alert-warning shadow-sm mb-0" role="alert">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-exclamation-triangle fs-4 me-2"></i>
+                <div>
+                  <h6 class="mb-0">Tiêu thụ nước tăng cao - Phòng 101</h6>
+                  <small class="text-muted">ID: #ALT-004 • 1 giờ trước</small>
+                </div>
+              </div>
+              <p class="mb-2">
+                <strong>Chi tiết:</strong> Tiêu thụ nước tăng 25% so với tháng trước. 
+                Cần kiểm tra để xác nhận không có rò rỉ.
+              </p>
+              <div class="mb-2">
+                <span class="badge bg-warning text-dark">Cảnh báo</span>
+                <span class="badge bg-secondary">Bất thường</span>
+                <span class="badge bg-info">Phòng 101</span>
+                <span class="badge bg-warning">Chưa xử lý</span>
+              </div>
+            </div>
+            <div class="btn-group-vertical ms-3">
+              <button class="btn btn-sm btn-warning" onclick="handleAlert(4, 'inspect')">
+                <i class="bi bi-search"></i> Kiểm tra
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewAlertDetail(4)">
+                <i class="bi bi-eye"></i> Chi tiết
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="dismissAlert(4)">
+                <i class="bi bi-x"></i> Bỏ qua
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info alerts -->
+      <div class="col-12">
+        <div class="alert alert-info shadow-sm mb-0" role="alert">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-info-circle fs-4 me-2"></i>
+                <div>
+                  <h6 class="mb-0">Cảm biến cần bảo trì - Phòng 301</h6>
+                  <small class="text-muted">ID: #ALT-005 • 2 giờ trước</small>
+                </div>
+              </div>
+              <p class="mb-2">
+                <strong>Chi tiết:</strong> Cảm biến nhiệt độ DHT22-T003 đã hoạt động 180 ngày. 
+                Khuyến nghị kiểm tra và bảo trì.
+              </p>
+              <div class="mb-2">
+                <span class="badge bg-info">Thông tin</span>
+                <span class="badge bg-secondary">Bảo trì</span>
+                <span class="badge bg-info">Phòng 301</span>
+              </div>
+            </div>
+            <div class="btn-group-vertical ms-3">
+              <button class="btn btn-sm btn-primary" onclick="scheduleMaintenence(5)">
+                <i class="bi bi-calendar"></i> Lên lịch
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewAlertDetail(5)">
+                <i class="bi bi-eye"></i> Chi tiết
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="dismissAlert(5)">
+                <i class="bi bi-x"></i> Bỏ qua
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Đã giải quyết -->
+  <div id="resolvedAlerts" class="tab-pane fade">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-check-circle"></i> Cảnh báo đã giải quyết</h5>
+        <select class="form-select form-select-sm w-auto">
+          <option>7 ngày qua</option>
+          <option>30 ngày qua</option>
+          <option>Tất cả</option>
+        </select>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Loại</th>
+              <th>Nội dung</th>
+              <th>Mức độ</th>
+              <th>Phát hiện</th>
+              <th>Giải quyết</th>
+              <th>Người xử lý</th>
+              <th>Thời gian xử lý</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#ALT-099</strong></td>
+              <td><span class="badge bg-secondary">Rò rỉ</span></td>
+              <td>Rò rỉ nước - Phòng 205</td>
+              <td><span class="badge bg-danger">Nghiêm trọng</span></td>
+              <td>06/12/2025 14:20</td>
+              <td>06/12/2025 16:45</td>
+              <td>Trần Văn B</td>
+              <td>2h 25m</td>
+            </tr>
+            <tr>
+              <td><strong>#ALT-098</strong></td>
+              <td><span class="badge bg-secondary">Offline</span></td>
+              <td>Cảm biến mất kết nối - P103</td>
+              <td><span class="badge bg-warning">Cảnh báo</span></td>
+              <td>06/12/2025 10:00</td>
+              <td>06/12/2025 10:30</td>
+              <td>Nguyễn Văn A</td>
+              <td>30m</td>
+            </tr>
+            <tr>
+              <td><strong>#ALT-097</strong></td>
+              <td><span class="badge bg-secondary">Vượt ngưỡng</span></td>
+              <td>Tiêu thụ điện cao - P201</td>
+              <td><span class="badge bg-danger">Nghiêm trọng</span></td>
+              <td>05/12/2025 18:00</td>
+              <td>05/12/2025 19:15</td>
+              <td>Admin</td>
+              <td>1h 15m</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Quy tắc cảnh báo -->
+  <div id="alertRules" class="tab-pane fade">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-sliders"></i> Quy tắc cảnh báo</h5>
+        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addRuleModal">
+          <i class="bi bi-plus-lg"></i> Thêm quy tắc
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Tên quy tắc</th>
+              <th>Loại</th>
+              <th>Điều kiện</th>
+              <th>Mức độ</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Phát hiện rò rỉ nước</strong></td>
+              <td><span class="badge bg-primary">Nước</span></td>
+              <td>Lưu lượng > 2 m³/h trong 5 phút</td>
+              <td><span class="badge bg-danger">Nghiêm trọng</span></td>
+              <td><span class="badge bg-success">Đang hoạt động</span></td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-info" onclick="editRule(1)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-secondary" onclick="toggleRule(1)">
+                    <i class="bi bi-pause"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Tiêu thụ điện vượt ngưỡng</strong></td>
+              <td><span class="badge bg-warning">Điện</span></td>
+              <td>Tiêu thụ > 50 kWh/ngày</td>
+              <td><span class="badge bg-warning">Cảnh báo</span></td>
+              <td><span class="badge bg-success">Đang hoạt động</span></td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-info" onclick="editRule(2)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-secondary" onclick="toggleRule(2)">
+                    <i class="bi bi-pause"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Thiết bị mất kết nối</strong></td>
+              <td><span class="badge bg-secondary">Thiết bị</span></td>
+              <td>Không phản hồi > 15 phút</td>
+              <td><span class="badge bg-danger">Nghiêm trọng</span></td>
+              <td><span class="badge bg-success">Đang hoạt động</span></td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-info" onclick="editRule(3)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-secondary" onclick="toggleRule(3)">
+                    <i class="bi bi-pause"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal cấu hình cảnh báo -->
+<div class="modal fade" id="alertSettingsModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cấu hình cảnh báo chung</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Phương thức thông báo</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="notifyEmail" checked>
+              <label class="form-check-label" for="notifyEmail">Email</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="notifySMS" checked>
+              <label class="form-check-label" for="notifySMS">SMS</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="notifyApp" checked>
+              <label class="form-check-label" for="notifyApp">Thông báo ứng dụng</label>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Email nhận cảnh báo</label>
+            <input type="email" class="form-control" value="admin@system.com">
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Số điện thoại nhận SMS</label>
+            <input type="tel" class="form-control" value="0901234567">
+          </div>
+          
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="autoAssign" checked>
+            <label class="form-check-label" for="autoAssign">
+              Tự động phân công cảnh báo nghiêm trọng
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="saveAlertSettings()">
+          <i class="bi bi-save"></i> Lưu cấu hình
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function handleAlert(id, action) {
+  const actions = {
+    emergency: 'Đã gửi thông báo khẩn cấp đến quản lý',
+    assign: 'Đang mở form phân công nhân viên',
+    notify: 'Đã gửi thông báo đến khách thuê',
+    inspect: 'Đã lên lịch kiểm tra'
+  };
+  
+  alert(actions[action] + ' (Demo)');
+}
+
+function viewAlertDetail(id) {
+  alert(`Xem chi tiết cảnh báo #${id} (Demo)`);
+}
+
+function dismissAlert(id) {
+  if (confirm('Bỏ qua cảnh báo này?')) {
+    alert('Đã bỏ qua cảnh báo (Demo)');
+  }
+}
+
+function resolveAlert(id) {
+  if (confirm('Đánh dấu cảnh báo đã xử lý?')) {
+    alert('Đã đánh dấu hoàn thành (Demo)');
+  }
+}
+
+function escalateAlert(id) {
+  alert('Leo thang cảnh báo lên cấp cao hơn (Demo)');
+}
+
+function scheduleMaintenence(id) {
+  alert('Mở form lên lịch bảo trì (Demo)');
+}
+
+function editRule(id) {
+  alert(`Chỉnh sửa quy tắc #${id} (Demo)`);
+}
+
+function toggleRule(id) {
+  alert(`Tạm dừng/Kích hoạt quy tắc #${id} (Demo)`);
+}
+
+function saveAlertSettings() {
+  alert('Đã lưu cấu hình cảnh báo! (Demo)');
+  bootstrap.Modal.getInstance(document.getElementById('alertSettingsModal')).hide();
+}
+</script>
+
+{% endblock %}

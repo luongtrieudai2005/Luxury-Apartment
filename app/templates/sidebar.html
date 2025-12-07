@@ -57,6 +57,33 @@
         </div>
       </li>
 
+      <!-- QUẢN LÝ NĂNG LƯỢNG & IOT - MỚI -->
+      <li class="nav-item">
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuIoT">
+          <span><i class="bi bi-router"></i> Năng lượng & IoT</span>
+          <i class="bi bi-chevron-down small"></i>
+        </a>
+        <div class="collapse ps-3" id="menuIoT">
+          <div class="nav flex-column">
+            <a href="{{ url_for('iot_dashboard') }}" class="nav-link py-1">
+              <i class="bi bi-speedometer2"></i> Dashboard IoT
+            </a>
+            <a href="{{ url_for('energy_monitoring') }}" class="nav-link py-1">
+              <i class="bi bi-lightning"></i> Giám sát năng lượng
+            </a>
+            <a href="{{ url_for('iot_devices') }}" class="nav-link py-1">
+              <i class="bi bi-cpu"></i> Thiết bị IoT
+            </a>
+            <a href="{{ url_for('iot_alerts') }}" class="nav-link py-1">
+              <i class="bi bi-bell"></i> Cảnh báo
+            </a>
+            <a href="{{ url_for('iot_simulator') }}" class="nav-link py-1 text-warning">
+              <i class="bi bi-terminal"></i> Simulator (Demo)
+            </a>
+          </div>
+        </div>
+      </li>
+
       <!-- Báo cáo & Thống kê -->
       <li class="nav-item">
         <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuBaocao">
@@ -71,7 +98,7 @@
         </div>
       </li>
 
-      <!-- QUẢN TRỊ HỆ THỐNG & CẤU HÌNH - MỚI -->
+      <!-- QUẢN TRỊ HỆ THỐNG & CẤU HÌNH -->
       <li class="nav-item">
         <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuQuantri">
           <span><i class="bi bi-gear-fill"></i> Quản trị hệ thống</span>

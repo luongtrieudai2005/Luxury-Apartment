@@ -213,6 +213,56 @@ def requests_feedback():
     """Yêu cầu/Phản ánh - requests_feedback.html"""
     return render_template('requests_feedback.html')
 
+# ============== IOT & ENERGY MANAGEMENT (QUẢN LÝ NĂNG LƯỢNG & IOT) ==============
+@app.route('/iot/dashboard')
+def iot_dashboard():
+    """Dashboard IoT & Năng lượng"""
+    return render_template('iot_dashboard.html')
+
+@app.route('/iot/devices')
+def iot_devices():
+    """Quản lý thiết bị IoT"""
+    return render_template('iot_devices.html')
+
+@app.route('/iot/energy-monitoring')
+def energy_monitoring():
+    """Giám sát năng lượng chi tiết theo phòng"""
+    return render_template('energy_monitoring.html')
+
+@app.route('/iot/alerts')
+def iot_alerts():
+    """Quản lý cảnh báo IoT"""
+    return render_template('iot_alerts.html')
+
+@app.route('/iot/simulator')
+def iot_simulator():
+    """IoT Simulator - Demo & Testing tool"""
+    return render_template('iot_simulator.html')
+
+# API endpoints cho IoT (demo)
+@app.route('/api/iot/readings', methods=['POST'])
+def receive_iot_data():
+    """Nhận dữ liệu từ cảm biến IoT"""
+    data = request.get_json()
+    # TODO: Lưu vào database IOT_DULIEU
+    # db = get_db()
+    # db.execute(
+    #     "INSERT INTO IOT_DULIEU (MaThietBi, LoaiDuLieu, GiaTri, DonVi, ThoiGian) VALUES (?, ?, ?, ?, ?)",
+    #     (device_id, data_type, value, unit, timestamp)
+    # )
+    # db.commit()
+    return {"status": "success", "message": "Data received", "data": data}
+
+@app.route('/api/iot/control', methods=['POST'])
+def control_device():
+    """Điều khiển thiết bị IoT"""
+    device_id = request.form.get('device_id')
+    action = request.form.get('action')
+    # TODO: Gửi lệnh đến thiết bị qua MQTT/HTTP
+    # Lưu lịch sử vào IOT_LICHSUDIEUKHIEN
+    flash(f'Đã gửi lệnh {action} đến thiết bị {device_id}', 'success')
+    return redirect(request.referrer or url_for('iot_devices'))
+
 # ============== REPORTS & ANALYTICS (BÁO CÁO & THỐNG KÊ) ==============
 @app.route('/reports')
 def reports():
