@@ -1,0 +1,157 @@
+{% extends "base.html" %} {% block title %}Quản lý thanh toán & hóa đơn{%
+endblock %} {% block content %}
+<div class="container-fluid">
+  <h3 class="mb-4">
+    <i class="bi bi-receipt"></i> Quản lý thanh toán & hóa đơn
+  </h3>
+
+  <!-- Bộ lọc -->
+  <div class="card p-3 shadow-sm mb-4">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Tìm khách, phòng, mã hóa đơn..."
+        />
+      </div>
+      <div class="col-md-2">
+        <select class="form-select">
+          <option value="">Tất cả trạng thái</option>
+          <option value="unpaid">Chưa thanh toán</option>
+          <option value="paid">Đã thanh toán</option>
+          <option value="overdue">Quá hạn</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select">
+          <option value="">Tất cả kỳ</option>
+          <option>12/2024</option>
+          <option>11/2024</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary w-100">
+          <i class="bi bi-plus-circle"></i> Tạo hóa đơn
+        </button>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-success w-100">
+          <i class="bi bi-file-excel"></i> Xuất Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bảng hóa đơn -->
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Mã HĐ</th>
+            <th>Khách thuê</th>
+            <th>Phòng</th>
+            <th>Kỳ</th>
+            <th>Tổng tiền</th>
+            <th>Hạn thanh toán</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Hóa đơn chưa thanh toán -->
+          <tr>
+            <td><strong>#HD20241201</strong></td>
+            <td>Nguyễn Văn A</td>
+            <td>Phòng 101</td>
+            <td>12/2024</td>
+            <td><strong>6.250.000 VND</strong></td>
+            <td>15/12/2024</td>
+            <td><span class="badge bg-warning">Chưa thanh toán</span></td>
+            <td>
+              <button
+                class="btn btn-sm btn-info"
+                data-bs-toggle="modal"
+                data-bs-target="#invoiceDetailModal"
+              >
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-success">
+                <i class="bi bi-cash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Hóa đơn đã thanh toán -->
+          <tr>
+            <td><strong>#HD20241102</strong></td>
+            <td>Trần Thị B</td>
+            <td>Phòng 201</td>
+            <td>11/2024</td>
+            <td><strong>5.980.000 VND</strong></td>
+            <td>15/11/2024</td>
+            <td><span class="badge bg-success">Đã thanh toán</span></td>
+            <td>
+              <button
+                class="btn btn-sm btn-info"
+                data-bs-toggle="modal"
+                data-bs-target="#invoiceDetailModal"
+              >
+                <i class="bi bi-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-secondary">
+                <i class="bi bi-printer"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block modals %}
+<!-- Modal chi tiết hóa đơn -->
+<div class="modal fade" id="invoiceDetailModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-receipt"></i> Chi tiết hóa đơn
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <tr>
+            <th>Tiền thuê phòng</th>
+            <td>5.000.000 VND</td>
+          </tr>
+          <tr>
+            <th>Tiền điện</th>
+            <td>850.000 VND</td>
+          </tr>
+          <tr>
+            <th>Tiền nước</th>
+            <td>200.000 VND</td>
+          </tr>
+          <tr>
+            <th>Phí dịch vụ</th>
+            <td>200.000 VND</td>
+          </tr>
+          <tr class="table-light">
+            <th>TỔNG CỘNG</th>
+            <th>6.250.000 VND</th>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button class="btn btn-success">
+          <i class="bi bi-cash"></i> Ghi nhận thanh toán
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

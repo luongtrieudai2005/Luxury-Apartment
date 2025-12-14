@@ -1,9 +1,18 @@
-<div class="sidebar bg-white border-end d-flex flex-column" style="height: 100vh;">
+<div
+  class="sidebar bg-white border-end d-flex flex-column"
+  style="height: 100vh"
+>
   <!-- User Info - Fixed top -->
   <div class="flex-shrink-0">
     <div class="text-center py-3 border-bottom">
       <!-- <img src="{{ url_for('static', filename='../../static/img/lenhuthao.jpg') }}" class="rounded-circle mb-2" width="60" height="60" alt="Avatar"> -->
-      <img src="{{ url_for('profile.avatar_me') }}" class="rounded-circle mb-2" width="60" height="60" alt="Avatar">
+      <img
+        src="{{ url_for('profile.avatar_me') }}"
+        class="rounded-circle mb-2"
+        width="60"
+        height="60"
+        alt="Avatar"
+      />
 
       <h6 class="mb-0">{{ session.get('full_name') or 'Username' }}</h6>
       <small class="text-muted">{{ session.get('role') or 'admin' }}</small>
@@ -12,22 +21,26 @@
     <!-- Search -->
     <div class="p-3">
       <div class="input-group input-group-sm">
-        <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control border-0" placeholder="Tìm kiếm mục">
+        <span class="input-group-text bg-light border-0"
+          ><i class="bi bi-search"></i
+        ></span>
+        <input
+          type="text"
+          class="form-control border-0"
+          placeholder="Tìm kiếm mục"
+        />
       </div>
     </div>
   </div>
 
-
   <!-- Menu - Scrollable area -->
-  <div class="flex-grow-1 overflow-auto" style="scrollbar-width: thin;">
+  <div class="flex-grow-1 overflow-auto" style="scrollbar-width: thin">
     <ul class="nav flex-column px-2 pb-3">
-
-<li class="nav-item">
-  <a class="nav-link" href="{{ url_for('profile.profile') }}">
-    <i class="bi bi-person-circle"></i> Hồ sơ cá nhân
-  </a>
-</li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('profile.profile') }}">
+          <i class="bi bi-person-circle"></i> Hồ sơ cá nhân
+        </a>
+      </li>
 
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('main.home') }}">
@@ -37,39 +50,75 @@
 
       <!-- Quản lý lưu trú -->
       <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuLuutru">
+        <a
+          class="nav-link d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#menuLuutru"
+        >
           <span><i class="bi bi-people"></i> Quản lý lưu trú</span>
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuLuutru">
           <div class="nav flex-column">
-            <a href="{{ url_for('core.register_stay') }}" class="nav-link py-1">Đăng ký lưu trú</a>
-            <a href="{{ url_for('core.manage_houses') }}" class="nav-link py-1">Quản lý nhà</a>
-            <a href="{{ url_for('core.bookings') }}" class="nav-link py-1">Đặt phòng</a>
-            <a href="{{ url_for('core.contracts') }}" class="nav-link py-1">Hợp đồng thuê</a>
+            <a href="{{ url_for('core.register_stay') }}" class="nav-link py-1"
+              >Đăng ký lưu trú</a
+            >
+            <a href="{{ url_for('core.manage_houses') }}" class="nav-link py-1"
+              >Quản lý nhà</a
+            >
+            <a href="{{ url_for('core.bookings') }}" class="nav-link py-1"
+              >Đặt phòng</a
+            >
+            <a href="{{ url_for('core.contracts') }}" class="nav-link py-1"
+              >Hợp đồng thuê</a
+            >
+            <a href="{{ url_for('core.rental_history') }}" class="nav-link py-1"
+              >Hồ sơ & Lịch sử thuê</a
+            >
           </div>
         </div>
       </li>
 
       <!-- Quản lý dịch vụ -->
       <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuDichvu">
+        <a
+          class="nav-link d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#menuDichvu"
+        >
           <span><i class="bi bi-heart"></i> Quản lý dịch vụ</span>
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuDichvu">
           <div class="nav flex-column">
-            <a href="{{ url_for('core.utilities') }}" class="nav-link py-1">Chỉ số điện nước</a>
-            <a href="{{ url_for('core.services') }}" class="nav-link py-1">Dịch vụ khác</a>
-            <a href="{{ url_for('core.parking') }}" class="nav-link py-1">Phương tiện</a>
-            <a href="{{ url_for('core.requests_feedback') }}" class="nav-link py-1">Yêu cầu/Phản ánh</a>
+            <a href="{{ url_for('core.utilities') }}" class="nav-link py-1"
+              >Tiện ích & chỉ số dịch vụ</a
+            >
+            <a href="{{ url_for('core.billing') }}" class="nav-link py-1"
+              >Thanh toán & hóa đơn</a
+            >
+            <a href="{{ url_for('core.parking') }}" class="nav-link py-1"
+              >Phương tiện</a
+            >
+            <a
+              href="{{ url_for('core.requests_feedback') }}"
+              class="nav-link py-1"
+              >Yêu cầu/Phản ánh</a
+            >
+            <a href="{{ url_for('core.mobile_support') }}" class="nav-link py-1"
+              >Hỗ trợ khách thuê di động</a
+            >
           </div>
         </div>
       </li>
 
       <!-- QUẢN LÝ NĂNG LƯỢNG & IOT - MỚI -->
       <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuIoT">
+        <a
+          class="nav-link d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#menuIoT"
+        >
           <span><i class="bi bi-router"></i> Năng lượng & IoT</span>
           <i class="bi bi-chevron-down small"></i>
         </a>
@@ -78,7 +127,10 @@
             <a href="{{ url_for('iot.dashboard') }}" class="nav-link py-1">
               <i class="bi bi-speedometer2"></i> Dashboard IoT
             </a>
-            <a href="{{ url_for('iot.energy_monitoring') }}" class="nav-link py-1">
+            <a
+              href="{{ url_for('iot.energy_monitoring') }}"
+              class="nav-link py-1"
+            >
               <i class="bi bi-lightning"></i> Giám sát năng lượng
             </a>
             <a href="{{ url_for('iot.devices') }}" class="nav-link py-1">
@@ -87,7 +139,10 @@
             <a href="{{ url_for('iot.alerts') }}" class="nav-link py-1">
               <i class="bi bi-bell"></i> Cảnh báo
             </a>
-            <a href="{{ url_for('iot.simulator') }}" class="nav-link py-1 text-warning">
+            <a
+              href="{{ url_for('iot.simulator') }}"
+              class="nav-link py-1 text-warning"
+            >
               <i class="bi bi-terminal"></i> Simulator (Demo)
             </a>
           </div>
@@ -96,37 +151,67 @@
 
       <!-- Báo cáo & Thống kê -->
       <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuBaocao">
+        <a
+          class="nav-link d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#menuBaocao"
+        >
           <span><i class="bi bi-bar-chart-line"></i> Báo cáo & Thống kê</span>
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuBaocao">
           <div class="nav flex-column">
-            <a href="{{ url_for('reports.index') }}" class="nav-link py-1">Dashboard báo cáo</a>
-            <a href="{{ url_for('reports.revenue_report') }}" class="nav-link py-1">Báo cáo doanh thu</a>
+            <a href="{{ url_for('reports.index') }}" class="nav-link py-1"
+              >Dashboard báo cáo</a
+            >
+            <a
+              href="{{ url_for('reports.revenue_report') }}"
+              class="nav-link py-1"
+              >Báo cáo doanh thu</a
+            >
           </div>
         </div>
       </li>
 
       <!-- QUẢN TRỊ HỆ THỐNG & CẤU HÌNH -->
       <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuQuantri">
+        <a
+          class="nav-link d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#menuQuantri"
+        >
           <span><i class="bi bi-gear-fill"></i> Quản trị hệ thống</span>
           <i class="bi bi-chevron-down small"></i>
         </a>
         <div class="collapse ps-3" id="menuQuantri">
           <div class="nav flex-column">
-            <a href="{{ url_for('admin.system_config') }}" class="nav-link py-1">Cấu hình hệ thống</a>
-            <a href="{{ url_for('admin.user_management') }}" class="nav-link py-1">Quản lý người dùng</a>
-            <a href="{{ url_for('admin.price_config') }}" class="nav-link py-1">Biểu giá điện/nước</a>
-            <a href="{{ url_for('admin.backup_restore') }}" class="nav-link py-1">Sao lưu & Phục hồi</a>
+            <a href="{{ url_for('admin.system_config') }}" class="nav-link py-1"
+              >Cấu hình hệ thống</a
+            >
+            <a
+              href="{{ url_for('admin.user_management') }}"
+              class="nav-link py-1"
+              >Quản lý người dùng</a
+            >
+            <a href="{{ url_for('admin.price_config') }}" class="nav-link py-1"
+              >Biểu giá điện/nước</a
+            >
+            <a
+              href="{{ url_for('admin.backup_restore') }}"
+              class="nav-link py-1"
+              >Sao lưu & Phục hồi</a
+            >
           </div>
         </div>
       </li>
 
       <!-- Công cụ tiện ích -->
       <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuTienich">
+        <a
+          class="nav-link d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          href="#menuTienich"
+        >
           <span><i class="bi bi-tools"></i> Công cụ tiện ích</span>
           <i class="bi bi-chevron-down small"></i>
         </a>

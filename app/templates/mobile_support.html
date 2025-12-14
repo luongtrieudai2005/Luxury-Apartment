@@ -1,0 +1,804 @@
+{% extends "base.html" %} {% block title %}Hỗ trợ khách thuê di động{% endblock
+%} {% block content %}
+<div class="container-fluid">
+  <h3 class="mb-4"><i class="bi bi-phone"></i> Hỗ trợ khách thuê di động</h3>
+
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4" id="mobileTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="dashboard-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#dashboard"
+        type="button"
+      >
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="users-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#users"
+        type="button"
+      >
+        <i class="bi bi-people"></i> Người dùng App
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="requests-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#requests"
+        type="button"
+      >
+        <i class="bi bi-chat-square-text"></i> Yêu cầu hỗ trợ
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="notifications-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#notifications"
+        type="button"
+      >
+        <i class="bi bi-bell"></i> Thông báo Push
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="analytics-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#analytics"
+        type="button"
+      >
+        <i class="bi bi-graph-up"></i> Phân tích
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tabs Content -->
+  <div class="tab-content" id="mobileTabsContent">
+    <!-- TAB 1: Dashboard -->
+    <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+      <!-- Tổng quan -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-primary border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Tổng người dùng App</div>
+                  <h3 class="mb-0">1,245</h3>
+                  <small class="text-success"
+                    ><i class="bi bi-arrow-up"></i> +12% tuần này</small
+                  >
+                </div>
+                <div
+                  class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-people fs-4 text-primary"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-success border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Hoạt động hôm nay</div>
+                  <h3 class="mb-0">342</h3>
+                  <small class="text-muted">Người dùng</small>
+                </div>
+                <div
+                  class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-activity fs-4 text-success"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-warning border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Yêu cầu đang xử lý</div>
+                  <h3 class="mb-0">28</h3>
+                  <small class="text-warning"
+                    ><i class="bi bi-clock"></i> Cần xử lý</small
+                  >
+                </div>
+                <div
+                  class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-chat-dots fs-4 text-warning"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-info border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Thông báo gửi hôm nay</div>
+                  <h3 class="mb-0">156</h3>
+                  <small class="text-muted">Push notifications</small>
+                </div>
+                <div
+                  class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-bell fs-4 text-info"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hoạt động gần đây -->
+      <div class="row g-3">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div
+              class="card-header bg-white d-flex justify-content-between align-items-center"
+            >
+              <h6 class="mb-0">Hoạt động gần đây</h6>
+              <button class="btn btn-sm btn-outline-primary">Xem tất cả</button>
+            </div>
+            <div class="card-body p-0">
+              <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                  <div class="d-flex align-items-start">
+                    <div
+                      class="bg-success bg-opacity-10 rounded-circle p-2 me-3"
+                    >
+                      <i class="bi bi-check-circle text-success"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="d-flex justify-content-between">
+                        <strong>Nguyễn Văn A</strong>
+                        <small class="text-muted">2 phút trước</small>
+                      </div>
+                      <small class="text-muted"
+                        >Đã xem thông báo: "Hóa đơn tháng 12 đã sẵn sàng"</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-group-item">
+                  <div class="d-flex align-items-start">
+                    <div
+                      class="bg-warning bg-opacity-10 rounded-circle p-2 me-3"
+                    >
+                      <i class="bi bi-wrench text-warning"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="d-flex justify-content-between">
+                        <strong>Trần Thị B</strong>
+                        <small class="text-muted">15 phút trước</small>
+                      </div>
+                      <small class="text-muted"
+                        >Gửi yêu cầu: "Sửa ổ khóa cửa phòng 201"</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-group-item">
+                  <div class="d-flex align-items-start">
+                    <div class="bg-info bg-opacity-10 rounded-circle p-2 me-3">
+                      <i class="bi bi-eye text-info"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="d-flex justify-content-between">
+                        <strong>Lê Văn C</strong>
+                        <small class="text-muted">1 giờ trước</small>
+                      </div>
+                      <small class="text-muted"
+                        >Xem chỉ số điện nước tháng 12</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-group-item">
+                  <div class="d-flex align-items-start">
+                    <div
+                      class="bg-primary bg-opacity-10 rounded-circle p-2 me-3"
+                    >
+                      <i class="bi bi-file-text text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="d-flex justify-content-between">
+                        <strong>Phạm Minh D</strong>
+                        <small class="text-muted">2 giờ trước</small>
+                      </div>
+                      <small class="text-muted">Xem hợp đồng thuê nhà</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">Thống kê nhanh</h6>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <small>Tỷ lệ hoạt động</small>
+                  <small class="fw-bold">27.5%</small>
+                </div>
+                <div class="progress" style="height: 8px">
+                  <div
+                    class="progress-bar bg-success"
+                    style="width: 27.5%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <small>Yêu cầu xử lý đúng hạn</small>
+                  <small class="fw-bold">85%</small>
+                </div>
+                <div class="progress" style="height: 8px">
+                  <div class="progress-bar bg-info" style="width: 85%"></div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <small>Đánh giá App (4.5/5)</small>
+                  <small class="fw-bold">90%</small>
+                </div>
+                <div class="progress" style="height: 8px">
+                  <div class="progress-bar bg-warning" style="width: 90%"></div>
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="d-flex justify-content-between mb-2">
+                <small class="text-muted">Phiên bản App mới nhất</small>
+                <span class="badge bg-primary">v2.1.0</span>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <small class="text-muted">Người dùng cập nhật</small>
+                <span class="badge bg-success">92%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Người dùng App -->
+    <div class="tab-pane fade" id="users" role="tabpanel">
+      <!-- Bộ lọc -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              id="searchMobileUser"
+              placeholder="Tìm theo tên, SĐT, email..."
+            />
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="filterAppVersion">
+              <option value="">Tất cả phiên bản</option>
+              <option value="2.1.0">v2.1.0 (Mới nhất)</option>
+              <option value="2.0.5">v2.0.5</option>
+              <option value="older">Cũ hơn</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="filterLoginStatus">
+              <option value="">Tất cả trạng thái</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="inactive">Không hoạt động</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-success w-100" onclick="exportMobileUsers()">
+              <i class="bi bi-file-excel"></i> Xuất Excel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảng người dùng -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Người dùng</th>
+                <th>Phòng</th>
+                <th>Thiết bị</th>
+                <th>Phiên bản App</th>
+                <th>Lần đăng nhập cuối</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="mobileUsersTableBody">
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 35px; height: 35px; font-size: 14px"
+                    >
+                      NVA
+                    </div>
+                    <div>
+                      <strong>Nguyễn Văn A</strong><br />
+                      <small class="text-muted">0901234567</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  Phòng 101<br />
+                  <small class="text-muted">22L Quận 7</small>
+                </td>
+                <td>
+                  <i class="bi bi-phone text-primary"></i> iPhone 14<br />
+                  <small class="text-muted">iOS 17.2</small>
+                </td>
+                <td><span class="badge bg-success">v2.1.0</span></td>
+                <td>
+                  5 phút trước<br />
+                  <small class="text-muted">14/12/2024 10:30</small>
+                </td>
+                <td><span class="badge bg-success">Hoạt động</span></td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-info"
+                    onclick="viewUserDetail(1)"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-primary"
+                    onclick="sendNotificationToUser(1)"
+                  >
+                    <i class="bi bi-send"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 35px; height: 35px; font-size: 14px"
+                    >
+                      TTB
+                    </div>
+                    <div>
+                      <strong>Trần Thị B</strong><br />
+                      <small class="text-muted">0912345678</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  Phòng 201<br />
+                  <small class="text-muted">223 Quận 1</small>
+                </td>
+                <td>
+                  <i class="bi bi-phone text-success"></i> Samsung S23<br />
+                  <small class="text-muted">Android 14</small>
+                </td>
+                <td><span class="badge bg-warning">v2.0.5</span></td>
+                <td>
+                  2 giờ trước<br />
+                  <small class="text-muted">14/12/2024 08:15</small>
+                </td>
+                <td><span class="badge bg-success">Hoạt động</span></td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-info"
+                    onclick="viewUserDetail(2)"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-primary"
+                    onclick="sendNotificationToUser(2)"
+                  >
+                    <i class="bi bi-send"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 35px; height: 35px; font-size: 14px"
+                    >
+                      LVC
+                    </div>
+                    <div>
+                      <strong>Lê Văn C</strong><br />
+                      <small class="text-muted">0923456789</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  Phòng 102<br />
+                  <small class="text-muted">22L Quận 7</small>
+                </td>
+                <td>
+                  <i class="bi bi-phone text-primary"></i> iPhone 12<br />
+                  <small class="text-muted">iOS 16.5</small>
+                </td>
+                <td><span class="badge bg-danger">v1.9.2</span></td>
+                <td>
+                  3 ngày trước<br />
+                  <small class="text-muted">11/12/2024 15:45</small>
+                </td>
+                <td><span class="badge bg-secondary">Không hoạt động</span></td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-info"
+                    onclick="viewUserDetail(3)"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-warning"
+                    onclick="remindUpdate(3)"
+                  >
+                    <i class="bi bi-arrow-repeat"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div
+          class="card-footer d-flex justify-content-between align-items-center"
+        >
+          <span class="text-muted"
+            >Hiển thị 1-3 trong tổng số 1,245 người dùng</span
+          >
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled">
+                <a class="page-link" href="#">«</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Yêu cầu hỗ trợ -->
+    <div class="tab-pane fade" id="requests" role="tabpanel">
+      <!-- Bộ lọc -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <input
+              type="text"
+              class="form-control"
+              id="searchRequest"
+              placeholder="Tìm theo mã yêu cầu, người gửi..."
+            />
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterRequestStatus">
+              <option value="">Tất cả trạng thái</option>
+              <option value="pending">Chờ xử lý</option>
+              <option value="processing">Đang xử lý</option>
+              <option value="completed">Hoàn thành</option>
+              <option value="cancelled">Đã hủy</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterRequestType">
+              <option value="">Tất cả loại</option>
+              <option value="maintenance">Bảo trì</option>
+              <option value="support">Hỗ trợ</option>
+              <option value="complaint">Phản ánh</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterPriority">
+              <option value="">Tất cả mức độ</option>
+              <option value="high">Cao</option>
+              <option value="medium">Trung bình</option>
+              <option value="low">Thấp</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <div class="btn-group w-100">
+              <button class="btn btn-primary" onclick="refreshRequests()">
+                <i class="bi bi-arrow-clockwise"></i> Làm mới
+              </button>
+              <button class="btn btn-success" onclick="exportRequests()">
+                <i class="bi bi-file-excel"></i> Xuất
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảng yêu cầu -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Mã YC</th>
+                <th>Người gửi</th>
+                <th>Loại yêu cầu</th>
+                <th>Nội dung</th>
+                <th>Mức độ</th>
+                <th>Thời gian</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="requestsTableBody">
+              <tr>
+                <td><strong>#SR001</strong></td>
+                <td>
+                  <strong>Nguyễn Văn A</strong><br />
+                  <small class="text-muted">Phòng 101</small>
+                </td>
+                <td><span class="badge bg-warning">Bảo trì</span></td>
+                <td>
+                  <strong>Sửa điều hòa</strong><br />
+                  <small class="text-muted"
+                    >Điều hòa không lạnh, cần kiểm tra</small
+                  >
+                </td>
+                <td><span class="badge bg-danger">Cao</span></td>
+                <td>
+                  15 phút trước<br />
+                  <small class="text-muted">14/12/2024 10:20</small>
+                </td>
+                <td><span class="badge bg-warning">Chờ xử lý</span></td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-success"
+                    onclick="assignRequest(1)"
+                  >
+                    <i class="bi bi-person-check"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-info"
+                    onclick="viewRequestDetail(1)"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td><strong>#SR002</strong></td>
+                <td>
+                  <strong>Trần Thị B</strong><br />
+                  <small class="text-muted">Phòng 201</small>
+                </td>
+                <td><span class="badge bg-info">Hỗ trợ</span></td>
+                <td>
+                  <strong>Hỏi về hóa đơn</strong><br />
+                  <small class="text-muted"
+                    >Không hiểu chi tiết tiền điện tháng này</small
+                  >
+                </td>
+                <td><span class="badge bg-primary">Trung bình</span></td>
+                <td>
+                  2 giờ trước<br />
+                  <small class="text-muted">14/12/2024 08:00</small>
+                </td>
+                <td><span class="badge bg-info">Đang xử lý</span></td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-warning"
+                    onclick="updateRequestStatus(2)"
+                  >
+                    <i class="bi bi-arrow-repeat"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-info"
+                    onclick="viewRequestDetail(2)"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 4: Thông báo Push -->
+    <div class="tab-pane fade" id="notifications" role="tabpanel">
+      <div class="row g-3">
+        <!-- Gửi thông báo -->
+        <div class="col-md-5">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0"><i class="bi bi-send"></i> Gửi thông báo</h6>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Đối tượng</label>
+                <select class="form-select">
+                  <option>Tất cả khách thuê</option>
+                  <option>Theo phòng</option>
+                  <option>Theo khách cụ thể</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Tiêu đề</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ví dụ: Nhắc nhở thanh toán"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Nội dung</label>
+                <textarea
+                  class="form-control"
+                  rows="4"
+                  placeholder="Hóa đơn tháng 12 đã được phát hành..."
+                ></textarea>
+              </div>
+
+              <button
+                class="btn btn-primary w-100"
+                onclick="sendPushNotification()"
+              >
+                <i class="bi bi-bell"></i> Gửi thông báo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lịch sử thông báo -->
+        <div class="col-md-7">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">
+                <i class="bi bi-clock-history"></i> Lịch sử thông báo
+              </h6>
+            </div>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item">
+                <strong>Nhắc nợ tiền phòng</strong>
+                <div class="small text-muted">
+                  Gửi cho Phòng 101 – 10 phút trước
+                </div>
+              </div>
+              <div class="list-group-item">
+                <strong>Hết hạn hợp đồng</strong>
+                <div class="small text-muted">
+                  Gửi cho Nguyễn Văn A – 1 giờ trước
+                </div>
+              </div>
+              <div class="list-group-item">
+                <strong>Thông báo bảo trì thang máy</strong>
+                <div class="small text-muted">Gửi toàn bộ – Hôm qua</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 5: Phân tích -->
+    <div class="tab-pane fade" id="analytics" role="tabpanel">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h3 class="text-primary">85%</h3>
+              <p class="text-muted mb-0">Yêu cầu xử lý đúng hạn</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h3 class="text-success">4.5 / 5</h3>
+              <p class="text-muted mb-0">Đánh giá App</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h3 class="text-warning">28</h3>
+              <p class="text-muted mb-0">Yêu cầu tồn đọng</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function exportMobileUsers() {
+        alert("Xuất danh sách người dùng App (demo)");
+      }
+
+      function sendNotificationToUser(id) {
+        alert("Gửi thông báo đến người dùng ID: " + id);
+      }
+
+      function remindUpdate(id) {
+        alert("Nhắc người dùng cập nhật App (demo)");
+      }
+
+      function refreshRequests() {
+        alert("Làm mới danh sách yêu cầu");
+      }
+
+      function exportRequests() {
+        alert("Xuất danh sách yêu cầu");
+      }
+
+      function assignRequest(id) {
+        alert("Phân công xử lý yêu cầu #" + id);
+      }
+
+      function viewRequestDetail(id) {
+        alert("Xem chi tiết yêu cầu #" + id);
+      }
+
+      function updateRequestStatus(id) {
+        alert("Cập nhật trạng thái yêu cầu #" + id);
+      }
+
+      function sendPushNotification() {
+        alert("Thông báo Push đã được gửi (demo)");
+      }
+    </script>
+  </div>
+</div>
+{% endblock %}

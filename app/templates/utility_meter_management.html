@@ -1,0 +1,239 @@
+{% extends "base.html" %} {% block title %}Quản lý tiện ích & chỉ số dịch vụ{%
+endblock %} {% block content %}
+
+<h3 class="mb-4">
+  <i class="bi bi-lightning-charge"></i>
+  Quản lý tiện ích & chỉ số dịch vụ
+</h3>
+
+<!-- Bộ lọc -->
+<div class="card p-3 shadow-sm mb-4">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Tìm nhà / phòng..."
+      />
+    </div>
+
+    <div class="col-md-3">
+      <button class="btn btn-info w-100">
+        <i class="bi bi-bell"></i> Nhắc ghi chỉ số
+      </button>
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select">
+        <option>Sắp xếp theo</option>
+        <option>A → Z</option>
+        <option>Z → A</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- BẢNG TỔNG QUAN -->
+<div class="card shadow-sm p-3">
+  <table class="table table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Nhà</th>
+        <th>Điện (kWh)</th>
+        <th>Nước (m³)</th>
+        <th>Phí dịch vụ</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>22L Quận 7</td>
+        <td>110</td>
+        <td>12</td>
+        <td>280,000 ₫</td>
+        <td class="text-center">
+          <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#utilityModal"
+            onclick="loadUtility('22L Quận 7', 1200, 350)"
+          >
+            Quản lý chỉ số
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td>223 Quận 1</td>
+        <td>95</td>
+        <td>10</td>
+        <td>250,000 ₫</td>
+        <td class="text-center">
+          <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#utilityModal"
+            onclick="loadUtility('223 Quận 1', 980, 280)"
+          >
+            Quản lý chỉ số
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %} {% block modals %}
+<!-- MODAL QUẢN LÝ TIỆN ÍCH -->
+<div class="modal fade" id="utilityModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-tools"></i>
+          Quản lý tiện ích – <span id="houseName"></span>
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- TAB -->
+        <ul class="nav nav-tabs mb-3">
+          <li class="nav-item">
+            <button
+              class="nav-link active"
+              data-bs-toggle="tab"
+              data-bs-target="#tab-meter"
+            >
+              Điện & Nước
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="tab"
+              data-bs-target="#tab-services"
+            >
+              Phí dịch vụ
+            </button>
+          </li>
+          <li class="nav-item">
+            <button
+              class="nav-link"
+              data-bs-toggle="tab"
+              data-bs-target="#tab-history"
+            >
+              Lịch sử
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- TAB 1 -->
+          <div class="tab-pane fade show active" id="tab-meter">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label>Chỉ số điện kỳ trước</label>
+                <input class="form-control" id="oldElectric" disabled />
+              </div>
+
+              <div class="col-md-6">
+                <label>Chỉ số điện mới *</label>
+                <input class="form-control" id="newElectric" type="number" />
+              </div>
+
+              <div class="col-md-6">
+                <label>Chỉ số nước kỳ trước</label>
+                <input class="form-control" id="oldWater" disabled />
+              </div>
+
+              <div class="col-md-6">
+                <label>Chỉ số nước mới *</label>
+                <input class="form-control" id="newWater" type="number" />
+              </div>
+
+              <div class="col-12">
+                <div class="alert alert-warning d-none" id="warningBox">
+                  ⚠️ Chỉ số nhập không hợp lệ hoặc bất thường
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2 -->
+          <div class="tab-pane fade" id="tab-services">
+            <table class="table">
+              <tr>
+                <td>Internet</td>
+                <td>
+                  <input type="number" class="form-control" value="100000" />
+                </td>
+              </tr>
+              <tr>
+                <td>Vệ sinh</td>
+                <td>
+                  <input type="number" class="form-control" value="30000" />
+                </td>
+              </tr>
+              <tr>
+                <td>Gửi xe</td>
+                <td>
+                  <input type="number" class="form-control" value="150000" />
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- TAB 3 -->
+          <div class="tab-pane fade" id="tab-history">
+            <ul class="list-group">
+              <li class="list-group-item">
+                Tháng 11/2024 – Điện: 110 kWh – Nước: 10 m³
+              </li>
+              <li class="list-group-item">
+                Tháng 10/2024 – Điện: 98 kWh – Nước: 9 m³
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-success" onclick="confirmUtility()">
+          ✔ Xác nhận & tạo dữ liệu hóa đơn
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  let oldE = 0;
+  let oldW = 0;
+
+  function loadUtility(name, electric, water) {
+    document.getElementById("houseName").innerText = name;
+    document.getElementById("oldElectric").value = electric;
+    document.getElementById("oldWater").value = water;
+    oldE = electric;
+    oldW = water;
+  }
+
+  function confirmUtility() {
+    const e = Number(document.getElementById("newElectric").value);
+    const w = Number(document.getElementById("newWater").value);
+
+    if (e < oldE || w < oldW || !e || !w) {
+      document.getElementById("warningBox").classList.remove("d-none");
+      return;
+    }
+
+    document.getElementById("warningBox").classList.add("d-none");
+    alert("✅ Dữ liệu đã lưu & đồng bộ sang Hóa đơn (UC09)");
+  }
+</script>
+{% endblock %}

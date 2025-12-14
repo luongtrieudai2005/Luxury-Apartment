@@ -1,121 +1,775 @@
-{% extends "base.html" %}
-{% block title %}Yêu cầu/Phản ánh{% endblock %}
+{% extends "base.html" %} {% block title %}Yêu cầu phản ánh & Quản lý bảo trì{%
+endblock %} {% block content %}
+<div class="container-fluid">
+  <h3 class="mb-4">
+    <i class="bi bi-tools"></i> Quản lý yêu cầu phản ánh & Bảo trì
+  </h3>
 
-{% block content %}
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4" id="requestTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="all-requests-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#all-requests"
+        type="button"
+      >
+        <i class="bi bi-list-ul"></i> Tất cả yêu cầu
+        <span class="badge bg-danger ms-1">15</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="pending-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#pending"
+        type="button"
+      >
+        <i class="bi bi-clock"></i> Chờ xử lý
+        <span class="badge bg-warning ms-1">5</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="processing-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#processing"
+        type="button"
+      >
+        <i class="bi bi-gear"></i> Đang xử lý
+        <span class="badge bg-info ms-1">8</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="completed-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#completed"
+        type="button"
+      >
+        <i class="bi bi-check-circle"></i> Hoàn tất
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="statistics-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#statistics"
+        type="button"
+      >
+        <i class="bi bi-graph-up"></i> Thống kê
+      </button>
+    </li>
+  </ul>
 
-<h3 class="mb-4">Yêu cầu/Phản ánh</h3>
+  <!-- Tabs Content -->
+  <div class="tab-content" id="requestTabsContent">
+    <!-- TAB 1: Tất cả yêu cầu -->
+    <div class="tab-pane fade show active" id="all-requests" role="tabpanel">
+      <!-- Thanh tìm kiếm và lọc -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <input
+              type="text"
+              class="form-control"
+              id="searchRequest"
+              placeholder="Tìm theo mã, khách hàng, phòng..."
+            />
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterHouse">
+              <option value="">Tất cả nhà</option>
+              <option value="1">22L Quận 7</option>
+              <option value="2">223 Quận 1</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterType">
+              <option value="">Tất cả loại</option>
+              <option value="maintenance">Bảo trì</option>
+              <option value="repair">Sửa chữa</option>
+              <option value="complaint">Phản ánh</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterPriority">
+              <option value="">Mức độ ưu tiên</option>
+              <option value="urgent">Khẩn cấp</option>
+              <option value="high">Cao</option>
+              <option value="medium">Trung bình</option>
+              <option value="low">Thấp</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <div class="btn-group w-100">
+              <button class="btn btn-primary" onclick="addNewRequest()">
+                <i class="bi bi-plus-lg"></i> Tạo yêu cầu
+              </button>
+              <button class="btn btn-success" onclick="exportRequests()">
+                <i class="bi bi-file-excel"></i> Xuất
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class="card p-3 shadow-sm mb-4">
+      <!-- Bảng danh sách yêu cầu -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th width="8%">Mã YC</th>
+                <th width="15%">Khách hàng</th>
+                <th width="10%">Nhà/Phòng</th>
+                <th width="12%">Loại yêu cầu</th>
+                <th width="25%">Nội dung</th>
+                <th width="8%">Mức độ</th>
+                <th width="10%">Ngày tạo</th>
+                <th width="10%">Trạng thái</th>
+                <th width="12%">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="requestsTableBody">
+              <!-- Yêu cầu 1 - KHẨN CẤP -->
+              <tr data-status="pending" data-priority="urgent">
+                <td><strong class="text-danger">#YC001</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 30px; height: 30px; font-size: 12px"
+                    >
+                      NVA
+                    </div>
+                    <div>
+                      <strong>Nguyễn Văn A</strong><br />
+                      <small class="text-muted">0901234567</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  22L Quận 7<br />
+                  <small class="text-muted">Phòng 002</small>
+                </td>
+                <td><span class="badge bg-danger">Sửa chữa</span></td>
+                <td>
+                  <div class="text-box" data-id="1">
+                    <strong class="text-danger">Mất điện toàn bộ phòng</strong
+                    ><br />
+                    <small class="text-muted"
+                      >Mất điện mất wifi thường xuyên, vòi nước cứng khó sử
+                      dụng. Cần xử lý gấp vì đang có người ốm trong
+                      phòng.</small
+                    >
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-danger">
+                    <i class="bi bi-exclamation-triangle"></i> Khẩn cấp
+                  </span>
+                </td>
+                <td>
+                  14/12/2024<br />
+                  <small class="text-muted">08:30</small>
+                </td>
+                <td><span class="badge bg-warning">Chờ xử lý</span></td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm w-100">
+                    <button class="btn btn-success" onclick="assignStaff(1)">
+                      <i class="bi bi-person-check"></i> Phân công
+                    </button>
+                    <button class="btn btn-info" onclick="viewRequestDetail(1)">
+                      <i class="bi bi-eye"></i> Chi tiết
+                    </button>
+                  </div>
+                </td>
+              </tr>
 
-  <!-- Hàng 1 -->
-  <div class="row g-3">
-    <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="Tìm cơ sở lưu trú...">
+              <!-- Yêu cầu 2 - ĐANG XỬ LÝ -->
+              <tr data-status="processing" data-priority="high">
+                <td><strong class="text-primary">#YC002</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 30px; height: 30px; font-size: 12px"
+                    >
+                      TTB
+                    </div>
+                    <div>
+                      <strong>Trần Thị B</strong><br />
+                      <small class="text-muted">0912345678</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  223 Quận 1<br />
+                  <small class="text-muted">Phòng 001</small>
+                </td>
+                <td><span class="badge bg-warning">Bảo trì</span></td>
+                <td>
+                  <div class="text-box" data-id="2">
+                    <strong>Thang máy bị hư</strong><br />
+                    <small class="text-muted"
+                      >Thang máy bị hư và tạo tiếng ồn lớn khi hoạt động. Đã gọi
+                      thợ đến kiểm tra.</small
+                    >
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-warning">
+                    <i class="bi bi-exclamation-circle"></i> Cao
+                  </span>
+                </td>
+                <td>
+                  13/12/2024<br />
+                  <small class="text-muted">15:45</small>
+                </td>
+                <td>
+                  <span class="badge bg-info">Đang xử lý</span><br />
+                  <small class="text-muted">NV: Minh (60%)</small>
+                </td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm w-100">
+                    <button class="btn btn-primary" onclick="updateProgress(2)">
+                      <i class="bi bi-arrow-repeat"></i> Cập nhật
+                    </button>
+                    <button class="btn btn-info" onclick="viewRequestDetail(2)">
+                      <i class="bi bi-eye"></i> Chi tiết
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Yêu cầu 3 - HOÀN TẤT -->
+              <tr data-status="completed" data-priority="medium">
+                <td><strong class="text-success">#YC003</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 30px; height: 30px; font-size: 12px"
+                    >
+                      LVC
+                    </div>
+                    <div>
+                      <strong>Lê Văn C</strong><br />
+                      <small class="text-muted">0923456789</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  22L Quận 7<br />
+                  <small class="text-muted">Phòng 101</small>
+                </td>
+                <td><span class="badge bg-info">Phản ánh</span></td>
+                <td>
+                  <div class="text-box" data-id="3">
+                    <strong>Điều hòa không lạnh</strong><br />
+                    <small class="text-muted"
+                      >Điều hòa phòng khách không thổi lạnh. Đã vệ sinh và nạp
+                      gas xong.</small
+                    >
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-primary">
+                    <i class="bi bi-dash-circle"></i> Trung bình
+                  </span>
+                </td>
+                <td>
+                  12/12/2024<br />
+                  <small class="text-muted">10:20</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">Hoàn tất</span><br />
+                  <small class="text-success">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                    4.5
+                  </small>
+                </td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm w-100">
+                    <button class="btn btn-info" onclick="viewRequestDetail(3)">
+                      <i class="bi bi-eye"></i> Chi tiết
+                    </button>
+                    <button class="btn btn-secondary" onclick="viewFeedback(3)">
+                      <i class="bi bi-chat-quote"></i> Đánh giá
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Yêu cầu 4 - MỚI -->
+              <tr data-status="pending" data-priority="low">
+                <td><strong>#YC004</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                      style="width: 30px; height: 30px; font-size: 12px"
+                    >
+                      PMD
+                    </div>
+                    <div>
+                      <strong>Phạm Minh D</strong><br />
+                      <small class="text-muted">0934567890</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  223 Quận 1<br />
+                  <small class="text-muted">Phòng 202</small>
+                </td>
+                <td><span class="badge bg-secondary">Khác</span></td>
+                <td>
+                  <div class="text-box" data-id="4">
+                    <strong>Yêu cầu thay bóng đèn</strong><br />
+                    <small class="text-muted"
+                      >Bóng đèn phòng ngủ bị cháy, cần thay mới.</small
+                    >
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">
+                    <i class="bi bi-info-circle"></i> Thấp
+                  </span>
+                </td>
+                <td>
+                  14/12/2024<br />
+                  <small class="text-muted">09:15</small>
+                </td>
+                <td><span class="badge bg-warning">Chờ xử lý</span></td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm w-100">
+                    <button class="btn btn-success" onclick="assignStaff(4)">
+                      <i class="bi bi-person-check"></i> Phân công
+                    </button>
+                    <button class="btn btn-info" onclick="viewRequestDetail(4)">
+                      <i class="bi bi-eye"></i> Chi tiết
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div
+          class="card-footer d-flex justify-content-between align-items-center"
+        >
+          <span class="text-muted">Hiển thị 1-4 trong tổng số 15 yêu cầu</span>
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled">
+                <a class="page-link" href="#">«</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Chờ xử lý -->
+    <div class="tab-pane fade" id="pending" role="tabpanel">
+      <div class="alert alert-warning">
+        <i class="bi bi-clock"></i> Có <strong>5 yêu cầu</strong> đang chờ xử
+        lý. Vui lòng phân công nhân viên sớm nhất!
+      </div>
+      <!-- Nội dung tương tự tab 1 nhưng chỉ hiển thị status="pending" -->
+    </div>
+
+    <!-- TAB 3: Đang xử lý -->
+    <div class="tab-pane fade" id="processing" role="tabpanel">
+      <div class="alert alert-info">
+        <i class="bi bi-gear"></i> Có <strong>8 yêu cầu</strong> đang được xử lý
+        bởi nhân viên bảo trì.
+      </div>
+      <!-- Nội dung tương tự tab 1 nhưng chỉ hiển thị status="processing" -->
+    </div>
+
+    <!-- TAB 4: Hoàn tất -->
+    <div class="tab-pane fade" id="completed" role="tabpanel">
+      <div class="alert alert-success">
+        <i class="bi bi-check-circle"></i> Đã hoàn thành
+        <strong>127 yêu cầu</strong> trong tháng này.
+      </div>
+      <!-- Nội dung tương tự tab 1 nhưng chỉ hiển thị status="completed" -->
+    </div>
+
+    <!-- TAB 5: Thống kê -->
+    <div class="tab-pane fade" id="statistics" role="tabpanel">
+      <!-- Cards thống kê -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-primary border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Tổng yêu cầu</div>
+                  <h3 class="mb-0">156</h3>
+                  <small class="text-muted">Tháng này</small>
+                </div>
+                <div
+                  class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-clipboard-data fs-4 text-primary"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-success border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Hoàn thành</div>
+                  <h3 class="mb-0">127</h3>
+                  <small class="text-success">81.4%</small>
+                </div>
+                <div
+                  class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-check-circle fs-4 text-success"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-warning border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Thời gian TB</div>
+                  <h3 class="mb-0">2.5 <small class="fs-6">ngày</small></h3>
+                  <small class="text-muted">Xử lý</small>
+                </div>
+                <div
+                  class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-clock-history fs-4 text-warning"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-info border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Đánh giá TB</div>
+                  <h3 class="mb-0">4.6 <small class="fs-6">/5.0</small></h3>
+                  <small class="text-muted">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-half text-warning"></i>
+                  </small>
+                </div>
+                <div
+                  class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px"
+                >
+                  <i class="bi bi-star fs-4 text-info"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ -->
+      <div class="row g-3">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">Biểu đồ yêu cầu theo thời gian</h6>
+            </div>
+            <div class="card-body">
+              <canvas id="requestsChart" height="80"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">Phân loại yêu cầu</h6>
+            </div>
+            <div class="card-body">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top nhân viên -->
+      <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Top nhân viên bảo trì xuất sắc</h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Hạng</th>
+                  <th>Nhân viên</th>
+                  <th>Yêu cầu hoàn thành</th>
+                  <th>Thời gian TB</th>
+                  <th>Đánh giá</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge bg-warning">🥇 1</span></td>
+                  <td>
+                    <strong>Nguyễn Văn Minh</strong><br />
+                    <small class="text-muted">Nhân viên bảo trì</small>
+                  </td>
+                  <td>45 yêu cầu</td>
+                  <td>1.8 ngày</td>
+                  <td>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <strong>5.0</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge bg-secondary">🥈 2</span></td>
+                  <td>
+                    <strong>Trần Văn B</strong><br />
+                    <small class="text-muted">Nhân viên bảo trì</small>
+                  </td>
+                  <td>38 yêu cầu</td>
+                  <td>2.1 ngày</td>
+                  <td>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-half text-warning"></i>
+                    <strong>4.7</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge bg-light text-dark">🥉 3</span></td>
+                  <td>
+                    <strong>Lê Thị C</strong><br />
+                    <small class="text-muted">Nhân viên bảo trì</small>
+                  </td>
+                  <td>32 yêu cầu</td>
+                  <td>2.3 ngày</td>
+                  <td>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <i class="bi bi-star text-warning"></i>
+                    <strong>4.5</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- Hàng 2 -->
-  <div class="row g-3 mt-2">
-    <div class="col-md-3">
-      <select class="form-select">
-        <option selected>Sắp xếp theo</option>
-        <option value="az">Từ A - Z</option>
-        <option value="za">Từ Z - A</option>
-      </select>
-    </div>
-  </div>
-
 </div>
 
-<div class="card shadow-sm p-3">
-  <table class="table table-bordered align-middle">
-    <thead class="custom-header">
-      <tr>
-        <th>Nhà</th>
-        <th>Phòng</th>
-        <th>Nội dung</th>
-        <th>Chức năng</th>
-      </tr>
-    </thead>
-
-    <tbody>
-
-      <!-- DÒNG 1 -->
-      <tr>
-        <td>22L Quận 7</td>
-        <td>002</td>
-        <td>
-          <div class="text-box" data-id="1">
-            Mất điện mất wifi thường xuyên, vòi nước cứng khó sử dụng.
-          </div>
-        </td>
-        <td class="text-center">
-          <a href="#" class="btn btn-light btn-sm">Phản hồi</a>
-        </td>
-      </tr>
-
-      <!-- DÒNG 2 -->
-      <tr>
-        <td>223 Quận 1</td>
-        <td>001</td>
-        <td>
-          <div class="text-box" data-id="2">
-            Thang máy bị hư và tạo tiếng ồn lớn khi hoạt động.
-          </div>
-        </td>
-        <td class="text-center">
-          <a href="#" class="btn btn-light btn-sm">Phản hồi</a>
-        </td>
-      </tr>
-
-    </tbody>
-  </table>
-</div>
-
-<style>
-  .more-link {
-    color: #007bff;
-    cursor: pointer;
-    font-size: 13px;
-  }
-</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const MAX_LENGTH = 50; // số ký tự tối đa trước khi rút gọn
-    const items = document.querySelectorAll(".text-box");
+  /* ==========================
+   MODAL HANDLERS
+========================== */
 
-    items.forEach(item => {
-      const fullText = item.innerText.trim();
-      const id = item.dataset.id;
+  function viewRequestDetail(id) {
+    document.getElementById("modalRequestId").innerText = id;
+    document.getElementById("requestDetailContent").innerHTML = `
+    <p><strong>Mã yêu cầu:</strong> #YC00${id}</p>
+    <p><strong>Mô tả:</strong> Nội dung chi tiết yêu cầu...</p>
+    <p><strong>Lịch sử xử lý:</strong></p>
+    <ul>
+      <li>Tạo yêu cầu</li>
+      <li>Phân công nhân viên</li>
+      <li>Đang xử lý</li>
+    </ul>
+  `;
+    new bootstrap.Modal(document.getElementById("requestDetailModal")).show();
+  }
 
-      if (fullText.length > MAX_LENGTH) {
-        const shortText = fullText.substring(0, MAX_LENGTH) + "...";
+  function assignStaff(id) {
+    document.getElementById("assignRequestId").value = "#YC00" + id;
+    new bootstrap.Modal(document.getElementById("assignStaffModal")).show();
+  }
 
-        item.innerHTML = `
-          <span id="short-${id}" class="cell-text">${shortText}</span>
-          <span id="full-${id}" class="full-text" style="display:none;">${fullText}</span>
-          <span id="link-${id}" class="more-link" onclick="toggleMore(${id})">xem thêm</span>
-        `;
-      }
+  function submitAssignStaff() {
+    alert("Đã phân công nhân viên (demo)");
+    bootstrap.Modal.getInstance(
+      document.getElementById("assignStaffModal")
+    ).hide();
+  }
+
+  function updateProgress(id) {
+    document.getElementById("progressRequestId").value = "#YC00" + id;
+    new bootstrap.Modal(document.getElementById("updateProgressModal")).show();
+  }
+
+  function submitUpdateProgress() {
+    alert("Đã cập nhật tiến độ (demo)");
+    bootstrap.Modal.getInstance(
+      document.getElementById("updateProgressModal")
+    ).hide();
+  }
+
+  /* ==========================
+   CHARTS
+========================== */
+
+  const ctx1 = document.getElementById("requestsChart");
+  if (ctx1) {
+    new Chart(ctx1, {
+      type: "line",
+      data: {
+        labels: ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"],
+        datasets: [
+          {
+            label: "Yêu cầu",
+            data: [32, 45, 51, 28],
+            borderWidth: 2,
+            tension: 0.4,
+          },
+        ],
+      },
     });
-  });
+  }
 
-  function toggleMore(id) {
-    const shortText = document.getElementById(`short-${id}`);
-    const fullText = document.getElementById(`full-${id}`);
-    const link = document.getElementById(`link-${id}`);
-
-    if (fullText.style.display === "none") {
-      shortText.style.display = "none";
-      fullText.style.display = "inline";
-      link.innerText = "thu gọn";
-    } else {
-      shortText.style.display = "inline";
-      fullText.style.display = "none";
-      link.innerText = "xem thêm";
-    }
+  const ctx2 = document.getElementById("categoryChart");
+  if (ctx2) {
+    new Chart(ctx2, {
+      type: "doughnut",
+      data: {
+        labels: ["Bảo trì", "Sửa chữa", "Phản ánh", "Khác"],
+        datasets: [
+          {
+            data: [45, 32, 21, 12],
+          },
+        ],
+      },
+    });
   }
 </script>
+{% endblock %} {% block modals %}
+
+<!-- Modal: Chi tiết yêu cầu -->
+<div class="modal fade" id="requestDetailModal" tabindex="-1">
+  <div
+    class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-file-text"></i> Chi tiết yêu cầu #<span
+            id="modalRequestId"
+          ></span>
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body" id="requestDetailContent"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button class="btn btn-primary">
+          <i class="bi bi-printer"></i> In
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Phân công -->
+<div class="modal fade" id="assignStaffModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-person-check"></i> Phân công nhân viên
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input class="form-control mb-2" id="assignRequestId" readonly />
+        <select class="form-select mb-2">
+          <option>Nguyễn Văn Minh</option>
+          <option>Trần Văn B</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button class="btn btn-success">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Cập nhật -->
+<div class="modal fade" id="updateProgressModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-arrow-repeat"></i> Cập nhật tiến độ
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input class="form-control mb-2" id="progressRequestId" readonly />
+        <input type="range" class="form-range" min="0" max="100" />
+        <textarea class="form-control mt-2" placeholder="Ghi chú"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button class="btn btn-primary">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

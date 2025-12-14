@@ -1,0 +1,782 @@
+{% extends "base.html" %}
+{% block title %}Hồ sơ & Lịch sử thuê nhà{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h3 class="mb-4">
+  Hồ sơ & Lịch sử thuê
+</h3>
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4" id="rentalTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="tenants-tab" data-bs-toggle="tab" data-bs-target="#tenants" type="button">
+        <i class="bi bi-person-badge"></i> Hồ sơ khách thuê
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button">
+        <i class="bi bi-calendar-check"></i> Lịch sử thuê nhà
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics" type="button">
+        <i class="bi bi-graph-up"></i> Thống kê
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tabs Content -->
+  <div class="tab-content" id="rentalTabsContent">
+    
+    <!-- TAB 1: Hồ sơ khách thuê -->
+    <div class="tab-pane fade show active" id="tenants" role="tabpanel">
+      
+      <!-- Thanh tìm kiếm và lọc -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input type="text" class="form-control" id="searchTenant" placeholder="Tìm khách thuê (tên, SĐT, CCCD)...">
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="filterTenantStatus">
+              <option value="">Tất cả trạng thái</option>
+              <option value="active">Đang thuê</option>
+              <option value="expired">Hết hạn</option>
+              <option value="terminated">Đã chấm dứt</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="filterHouse">
+              <option value="">Tất cả nhà</option>
+              <option value="1">22L Quận 7</option>
+              <option value="2">223 Quận 1</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-success w-100" onclick="exportTenants()">
+              <i class="bi bi-file-excel"></i> Xuất Excel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảng hồ sơ khách thuê -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Mã KH</th>
+                <th>Họ và tên</th>
+                <th>SĐT / Email</th>
+                <th>CCCD</th>
+                <th>Phòng hiện tại</th>
+                <th>Ngày bắt đầu thuê</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="tenantsTableBody">
+              <tr data-tenant-id="1" data-status="active">
+                <td><strong>KH001</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 14px;">
+                      NVA
+                    </div>
+                    <div class="ms-2">
+                      <strong>Nguyễn Văn A</strong><br>
+                      <small class="text-muted">Nam, 28 tuổi</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  0901234567<br>
+                  <small class="text-muted">nguyenvana@email.com</small>
+                </td>
+                <td>001234567890</td>
+                <td>
+                  Phòng 101<br>
+                  <small class="text-muted">22L Quận 7</small>
+                </td>
+                <td>01/12/2024</td>
+                <td><span class="badge bg-success">Đang thuê</span></td>
+                <td>
+                  <button class="btn btn-sm btn-info" onclick="viewTenantDetail(1)" title="Xem chi tiết">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-primary" onclick="viewRentalHistory(1)" title="Lịch sử thuê">
+                    <i class="bi bi-clock-history"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" onclick="editTenant(1)" title="Chỉnh sửa">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr data-tenant-id="2" data-status="active">
+                <td><strong>KH002</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 14px;">
+                      TTB
+                    </div>
+                    <div class="ms-2">
+                      <strong>Trần Thị B</strong><br>
+                      <small class="text-muted">Nữ, 25 tuổi</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  0912345678<br>
+                  <small class="text-muted">tranthib@email.com</small>
+                </td>
+                <td>009876543210</td>
+                <td>
+                  Phòng 201<br>
+                  <small class="text-muted">223 Quận 1</small>
+                </td>
+                <td>15/09/2024</td>
+                <td><span class="badge bg-success">Đang thuê</span></td>
+                <td>
+                  <button class="btn btn-sm btn-info" onclick="viewTenantDetail(2)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-primary" onclick="viewRentalHistory(2)">
+                    <i class="bi bi-clock-history"></i>
+                  </button>
+                  <button class="btn btn-sm btn-warning" onclick="editTenant(2)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr data-tenant-id="3" data-status="expired">
+                <td><strong>KH003</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; font-size: 14px;">
+                      LVC
+                    </div>
+                    <div class="ms-2">
+                      <strong>Lê Văn C</strong><br>
+                      <small class="text-muted">Nam, 32 tuổi</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  0923456789<br>
+                  <small class="text-muted">levanc@email.com</small>
+                </td>
+                <td>012345678901</td>
+                <td>
+                  <span class="text-muted">Không còn thuê</span>
+                </td>
+                <td>01/01/2024</td>
+                <td><span class="badge bg-warning">Hết hạn</span></td>
+                <td>
+                  <button class="btn btn-sm btn-info" onclick="viewTenantDetail(3)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-primary" onclick="viewRentalHistory(3)">
+                    <i class="bi bi-clock-history"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="text-muted">Hiển thị 1-3 trong tổng số 3 khách thuê</span>
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item disabled"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Lịch sử thuê nhà -->
+    <div class="tab-pane fade" id="history" role="tabpanel">
+      
+      <!-- Bộ lọc -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label small">Từ ngày</label>
+            <input type="date" class="form-control" id="filterStartDate">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Đến ngày</label>
+            <input type="date" class="form-control" id="filterEndDate">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Nhà</label>
+            <select class="form-select" id="filterHistoryHouse">
+              <option value="">Tất cả</option>
+              <option value="1">22L Quận 7</option>
+              <option value="2">223 Quận 1</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">&nbsp;</label>
+            <button class="btn btn-primary w-100" onclick="filterHistory()">
+              <i class="bi bi-funnel"></i> Lọc
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline lịch sử -->
+      <div class="card shadow-sm p-4">
+        <div class="timeline">
+          
+          <!-- Item 1 -->
+          <div class="timeline-item mb-4">
+            <div class="timeline-marker bg-success"></div>
+            <div class="timeline-content card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0">
+                    <i class="bi bi-file-text text-success"></i> Hợp đồng mới
+                    <span class="badge bg-success ms-2">Đang hoạt động</span>
+                  </h6>
+                  <small class="text-muted">01/12/2024</small>
+                </div>
+                <p class="mb-2">
+                  <strong>Nguyễn Văn A</strong> bắt đầu thuê <strong>Phòng 101, 22L Quận 7</strong>
+                </p>
+                <div class="row g-2 small">
+                  <div class="col-md-4">
+                    <i class="bi bi-calendar-check"></i> Thời hạn: 12 tháng
+                  </div>
+                  <div class="col-md-4">
+                    <i class="bi bi-cash"></i> Giá: 5.000.000 VNĐ/tháng
+                  </div>
+                  <div class="col-md-4">
+                    <i class="bi bi-shield-check"></i> Tiền cọc: 10.000.000 VNĐ
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <button class="btn btn-sm btn-outline-primary" onclick="viewContractDetail('HD001')">
+                    <i class="bi bi-eye"></i> Xem hợp đồng
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="timeline-item mb-4">
+            <div class="timeline-marker bg-info"></div>
+            <div class="timeline-content card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0">
+                    <i class="bi bi-arrow-repeat text-info"></i> Gia hạn hợp đồng
+                  </h6>
+                  <small class="text-muted">15/09/2024</small>
+                </div>
+                <p class="mb-2">
+                  <strong>Trần Thị B</strong> gia hạn thuê <strong>Phòng 201, 223 Quận 1</strong>
+                </p>
+                <div class="row g-2 small">
+                  <div class="col-md-4">
+                    <i class="bi bi-calendar-check"></i> Gia hạn: 6 tháng
+                  </div>
+                  <div class="col-md-4">
+                    <i class="bi bi-cash"></i> Giá mới: 7.200.000 VNĐ/tháng
+                  </div>
+                  <div class="col-md-4">
+                    <i class="bi bi-percent"></i> Tăng: +200.000 VNĐ
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="timeline-item mb-4">
+            <div class="timeline-marker bg-danger"></div>
+            <div class="timeline-content card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0">
+                    <i class="bi bi-x-circle text-danger"></i> Chấm dứt hợp đồng
+                    <span class="badge bg-danger ms-2">Đã kết thúc</span>
+                  </h6>
+                  <small class="text-muted">30/11/2024</small>
+                </div>
+                <p class="mb-2">
+                  <strong>Lê Văn C</strong> kết thúc thuê <strong>Phòng 102, 22L Quận 7</strong>
+                </p>
+                <div class="row g-2 small">
+                  <div class="col-md-6">
+                    <i class="bi bi-calendar-x"></i> Thời gian thuê: 11 tháng
+                  </div>
+                  <div class="col-md-6">
+                    <i class="bi bi-check-circle"></i> Đã hoàn trả cọc: 10.000.000 VNĐ
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <span class="badge bg-light text-dark">Lý do: Chuyển công tác</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="timeline-item mb-4">
+            <div class="timeline-marker bg-warning"></div>
+            <div class="timeline-content card border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h6 class="mb-0">
+                    <i class="bi bi-exclamation-triangle text-warning"></i> Cảnh báo
+                  </h6>
+                  <small class="text-muted">25/11/2024</small>
+                </div>
+                <p class="mb-2">
+                  <strong>Phòng 101</strong> sắp hết hạn hợp đồng trong 7 ngày
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Thống kê -->
+    <div class="tab-pane fade" id="statistics" role="tabpanel">
+      
+      <!-- Tổng quan -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-primary border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Tổng khách thuê</div>
+                  <h3 class="mb-0">15</h3>
+                </div>
+                <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="bi bi-people fs-4 text-primary"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-success border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Đang thuê</div>
+                  <h3 class="mb-0">12</h3>
+                </div>
+                <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="bi bi-check-circle fs-4 text-success"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-warning border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Hết hạn</div>
+                  <h3 class="mb-0">2</h3>
+                </div>
+                <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="bi bi-clock-history fs-4 text-warning"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-info border-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <div class="text-muted small">Thời gian thuê TB</div>
+                  <h3 class="mb-0">8.5 <small class="fs-6">tháng</small></h3>
+                </div>
+                <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                  <i class="bi bi-graph-up fs-4 text-info"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ -->
+      <div class="row g-3">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">Số lượng khách thuê theo tháng (2024)</h6>
+            </div>
+            <div class="card-body">
+              <canvas id="tenantChart" height="80"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">Tỷ lệ trạng thái</h6>
+            </div>
+            <div class="card-body">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top khách thuê lâu nhất -->
+      <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+          <h6 class="mb-0">Top 5 khách thuê lâu nhất</h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Hạng</th>
+                  <th>Khách hàng</th>
+                  <th>Phòng</th>
+                  <th>Thời gian thuê</th>
+                  <th>Tổng thanh toán</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge bg-warning">🥇 1</span></td>
+                  <td>Nguyễn Văn A</td>
+                  <td>Phòng 101</td>
+                  <td>24 tháng</td>
+                  <td class="text-success fw-bold">120.000.000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td><span class="badge bg-secondary">🥈 2</span></td>
+                  <td>Trần Thị B</td>
+                  <td>Phòng 201</td>
+                  <td>18 tháng</td>
+                  <td class="text-success fw-bold">126.000.000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td><span class="badge bg-light text-dark">🥉 3</span></td>
+                  <td>Phạm Minh D</td>
+                  <td>Phòng 102</td>
+                  <td>15 tháng</td>
+                  <td class="text-success fw-bold">82.500.000 VNĐ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* Timeline styling */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #dee2e6;
+}
+
+.timeline-item {
+  position: relative;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -26px;
+  top: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid white;
+  z-index: 1;
+}
+
+.timeline-content {
+  margin-left: 10px;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ==================== DEMO DATA ====================
+const tenantsData = {
+  1: {
+    id: 'KH001',
+    name: 'Nguyễn Văn A',
+    phone: '0901234567',
+    email: 'nguyenvana@email.com',
+    id_number: '001234567890',
+    dob: '15/03/1996',
+    gender: 'Nam',
+    address: 'Quận Bình Thạnh, TP.HCM',
+    current_room: 'Phòng 101, 22L Quận 7',
+    start_date: '01/12/2024',
+    contract_duration: '12 tháng',
+    monthly_rent: '5.000.000 VNĐ',
+    deposit: '10.000.000 VNĐ',
+    status: 'active',
+    payment_history: [
+      {month: '12/2024', amount: '5.000.000', status: 'paid'},
+      {month: '11/2024', amount: '5.000.000', status: 'paid'},
+      {month: '10/2024', amount: '5.000.000', status: 'paid'}
+    ],
+    notes: 'Khách hàng thanh toán đúng hạn, không có vấn đề gì'
+  },
+  2: {
+    id: 'KH002',
+    name: 'Trần Thị B',
+    phone: '0912345678',
+    email: 'tranthib@email.com',
+    id_number: '009876543210',
+    dob: '22/08/1999',
+    gender: 'Nữ',
+    address: 'Quận Thủ Đức, TP.HCM',
+    current_room: 'Phòng 201, 223 Quận 1',
+    start_date: '15/09/2024',
+    contract_duration: '6 tháng',
+    monthly_rent: '7.000.000 VNĐ',
+    deposit: '14.000.000 VNĐ',
+    status: 'active',
+    payment_history: [
+      {month: '12/2024', amount: '7.000.000', status: 'paid'},
+      {month: '11/2024', amount: '7.000.000', status: 'paid'},
+      {month: '10/2024', amount: '7.000.000', status: 'pending'}
+    ],
+    notes: 'Đã gia hạn hợp đồng 1 lần'
+  },
+  3: {
+    id: 'KH003',
+    name: 'Lê Văn C',
+    phone: '0923456789',
+    email: 'levanc@email.com',
+    id_number: '012345678901',
+    dob: '10/05/1992',
+    gender: 'Nam',
+    address: 'Quận 3, TP.HCM',
+    current_room: 'Không còn thuê',
+    start_date: '01/01/2024',
+    end_date: '30/11/2024',
+    contract_duration: '11 tháng',
+    monthly_rent: '5.500.000 VNĐ',
+    deposit: '10.000.000 VNĐ (đã hoàn trả)',
+    status: 'expired',
+    payment_history: [
+      {month: '11/2024', amount: '5.500.000', status: 'paid'},
+      {month: '10/2024', amount: '5.500.000', status: 'paid'}
+    ],
+    notes: 'Đã kết thúc hợp đồng do chuyển công tác'
+  }
+};
+
+// ==================== EVENT LISTENERS ====================
+
+// Tìm kiếm khách thuê
+document.getElementById('searchTenant')?.addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const rows = document.querySelectorAll('#tenantsTableBody tr');
+  
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+});
+
+// Lọc theo trạng thái
+document.getElementById('filterTenantStatus')?.addEventListener('change', function (e) {
+  const status = e.target.value;
+  const rows = document.querySelectorAll('#tenantsTableBody tr');
+
+  rows.forEach(row => {
+    if (!status || row.dataset.status === status) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+
+
+// ==================== ACTION FUNCTIONS ====================
+
+// Xem chi tiết khách thuê
+function viewTenantDetail(tenantId) {
+  const tenant = tenantsData[tenantId];
+  if (!tenant) return;
+
+  const paymentRows = tenant.payment_history.map(p => `
+    <tr>
+      <td>${p.month}</td>
+      <td>${p.amount} VNĐ</td>
+      <td>
+        <span class="badge ${p.status === 'paid' ? 'bg-success' : 'bg-warning'}">
+          ${p.status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+
+  document.getElementById('tenantDetailContent').innerHTML = `
+    <div class="row">
+      <div class="col-md-6">
+        <h6>Thông tin cá nhân</h6>
+        <p><strong>Họ tên:</strong> ${tenant.name}</p>
+        <p><strong>CCCD:</strong> ${tenant.id_number}</p>
+        <p><strong>SĐT:</strong> ${tenant.phone}</p>
+        <p><strong>Email:</strong> ${tenant.email}</p>
+        <p><strong>Địa chỉ:</strong> ${tenant.address}</p>
+      </div>
+      <div class="col-md-6">
+        <h6>Thông tin thuê</h6>
+        <p><strong>Phòng:</strong> ${tenant.current_room}</p>
+        <p><strong>Ngày bắt đầu:</strong> ${tenant.start_date}</p>
+        <p><strong>Thời hạn:</strong> ${tenant.contract_duration}</p>
+        <p><strong>Giá thuê:</strong> ${tenant.monthly_rent}</p>
+        <p><strong>Tiền cọc:</strong> ${tenant.deposit}</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <h6>Lịch sử thanh toán</h6>
+    <table class="table table-sm table-bordered">
+      <thead>
+        <tr>
+          <th>Tháng</th>
+          <th>Số tiền</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${paymentRows}
+      </tbody>
+    </table>
+
+    <p><strong>Ghi chú:</strong> ${tenant.notes}</p>
+  `;
+
+  new bootstrap.Modal(document.getElementById('tenantDetailModal')).show();
+}
+
+// Xem lịch sử thuê (chuyển tab)
+function viewRentalHistory(tenantId) {
+  document.querySelector('#history-tab').click();
+}
+
+// Export Excel (demo)
+function exportTenants() {
+  alert('Xuất danh sách khách thuê ra Excel (demo)');
+}
+
+// Lọc lịch sử (demo)
+function filterHistory() {
+  alert('Áp dụng bộ lọc lịch sử thuê (demo)');
+}
+
+// Xem hợp đồng
+function viewContractDetail(contractId) {
+  alert('Xem chi tiết hợp đồng ' + contractId + ' (demo)');
+}
+
+// ==================== CHARTS ====================
+
+// Biểu đồ khách thuê theo tháng
+const tenantChart = new Chart(
+  document.getElementById('tenantChart'),
+  {
+    type: 'line',
+    data: {
+      labels: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+      datasets: [{
+        label: 'Số khách thuê',
+        data: [5,6,7,8,9,10,11,12,12,13,14,15],
+        borderColor: '#0d6efd',
+        backgroundColor: 'rgba(13,110,253,0.1)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  }
+);
+
+// Biểu đồ trạng thái
+const statusChart = new Chart(
+  document.getElementById('statusChart'),
+  {
+    type: 'doughnut',
+    data: {
+      labels: ['Đang thuê', 'Hết hạn', 'Đã chấm dứt'],
+      datasets: [{
+        data: [12, 2, 1],
+        backgroundColor: ['#198754', '#ffc107', '#dc3545']
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  }
+);
+</script>
+
+{% endblock %}
+
+{% block modals %}
+<!-- Modal chi tiết khách thuê -->
+<div class="modal fade" id="tenantDetailModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-person-badge"></i> Hồ sơ chi tiết khách thuê
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="tenantDetailContent">
+        <!-- Nội dung sẽ được load động -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -27,22 +27,34 @@ def contracts():
     from_booking = request.args.get("from_booking")
     return render_template("contract_management.html", from_booking=from_booking)
 
+@bp.route("/rental-history")
+def rental_history():
+    """Quản lý hồ sơ & lịch sử thuê nhà"""   
+    return render_template("rental_history.html")
+
 @bp.route("/utilities")
 def utilities():
-    """Quản lý chỉ số điện nước"""
-    return render_template("electric_water_readings.html")
+    """Quản tiện ích và chỉ số dịch vụ"""
+    return render_template("utility_meter_management.html")
+
 
 @bp.route("/parking")
 def parking():
     """Quản lý phương tiện"""
     return render_template("parking_vehicles.html")
 
-@bp.route("/services")
-def services():
-    """Quản lý dịch vụ khác"""
-    return render_template("other_services.html")
+@bp.route("/billing")
+def billing():
+    """Quản lý thanh toán & hóa đơn"""
+    return render_template("billing_management.html")
+
 
 @bp.route("/requests")
 def requests_feedback():
     """Yêu cầu/Phản ánh"""
     return render_template("requests_feedback.html")
+
+@bp.route("/mobile-support")
+def mobile_support():
+    """Hỗ trợ khách thuê di động - Quản lý app mobile"""
+    return render_template("mobile_support.html")
