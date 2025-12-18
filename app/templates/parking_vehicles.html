@@ -1,72 +1,1041 @@
-{% extends "base.html" %}
-{% block title %}Quản lý phương tiện{% endblock %}
+{% extends "base.html" %} {% block title %}Quản lý phương tiện & Bãi đỗ{%
+endblock %} {% block content %}
+<div class="container-fluid">
+  <h3 class="mb-4">
+    <i class="bi bi-car-front"></i> Quản lý phương tiện & Bãi đỗ
+  </h3>
 
-{% block content %}
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4" id="parkingTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="parking-map-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#parking-map"
+        type="button"
+      >
+        <i class="bi bi-grid-3x3"></i> Sơ đồ bãi đỗ
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="vehicles-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#vehicles"
+        type="button"
+      >
+        <i class="bi bi-car-front-fill"></i> Danh sách phương tiện
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="register-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#register"
+        type="button"
+      >
+        <i class="bi bi-plus-circle"></i> Đăng ký mới
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="fees-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#fees"
+        type="button"
+      >
+        <i class="bi bi-cash-coin"></i> Phí gửi xe
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="statistics-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#statistics"
+        type="button"
+      >
+        <i class="bi bi-graph-up"></i> Thống kê
+      </button>
+    </li>
+  </ul>
 
-<h3 class="mb-4">Quản lý phương tiện</h3>
+  <!-- Tabs Content -->
+  <div class="tab-content" id="parkingTabsContent">
+    <!-- TAB 1: Sơ đồ bãi đỗ -->
+    <div class="tab-pane fade show active" id="parking-map" role="tabpanel">
+      <!-- Thống kê nhanh -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Tổng chỗ đỗ</div>
+                  <h3 class="mb-0">50</h3>
+                </div>
+                <i class="bi bi-p-square fs-1 text-primary"></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<div class="card p-3 shadow-sm mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Đã sử dụng</div>
+                  <h3 class="mb-0 text-success">38</h3>
+                </div>
+                <i class="bi bi-check-circle fs-1 text-success"></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <!-- Hàng 1 -->
-  <div class="row g-3">
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Còn trống</div>
+                  <h3 class="mb-0 text-info">12</h3>
+                </div>
+                <i class="bi bi-dash-circle fs-1 text-info"></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Tìm kiếm -->
-    <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="Tìm cơ sở lưu trú...">
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small">Tỷ lệ sử dụng</div>
+                  <h3 class="mb-0 text-warning">76%</h3>
+                </div>
+                <i class="bi bi-percent fs-1 text-warning"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chú thích -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <strong>Chú thích:</strong>
+          </div>
+          <div class="col-auto">
+            <span
+              class="badge"
+              style="background-color: #28a745; padding: 10px 15px"
+            >
+              <i class="bi bi-car-front"></i> Đã thuê
+            </span>
+          </div>
+          <div class="col-auto">
+            <span
+              class="badge"
+              style="background-color: #17a2b8; padding: 10px 15px"
+            >
+              <i class="bi bi-dash-circle"></i> Còn trống
+            </span>
+          </div>
+          <div class="col-auto">
+            <span
+              class="badge"
+              style="background-color: #ffc107; padding: 10px 15px"
+            >
+              <i class="bi bi-exclamation-triangle"></i> Bảo trì
+            </span>
+          </div>
+          <div class="col-auto">
+            <span
+              class="badge"
+              style="background-color: #dc3545; padding: 10px 15px"
+            >
+              <i class="bi bi-x-circle"></i> Không khả dụng
+            </span>
+          </div>
+          <div class="col ms-auto">
+            <button
+              class="btn btn-primary btn-sm"
+              onclick="refreshParkingMap()"
+            >
+              <i class="bi bi-arrow-clockwise"></i> Làm mới
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sơ đồ bãi đỗ - Tầng 1 -->
+      <div class="card shadow-sm mb-4">
+        <div
+          class="card-header bg-white d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">
+            <i class="bi bi-building"></i> Tầng 1 - Khu A (Ô tô)
+          </h5>
+          <span class="badge bg-info">20 chỗ</span>
+        </div>
+        <div class="card-body">
+          <div class="parking-grid">
+            <!-- Hàng 1 -->
+            <div class="parking-row mb-3">
+              <div
+                class="parking-slot occupied"
+                onclick="viewSlotDetail('A01')"
+                title="Click để xem chi tiết"
+              >
+                <div class="slot-number">A01</div>
+                <div class="slot-info">
+                  <i class="bi bi-car-front"></i><br />
+                  <small>Nguyễn Văn A</small><br />
+                  <small class="text-muted">29A-12345</small>
+                </div>
+              </div>
+
+              <div
+                class="parking-slot occupied"
+                onclick="viewSlotDetail('A02')"
+              >
+                <div class="slot-number">A02</div>
+                <div class="slot-info">
+                  <i class="bi bi-car-front"></i><br />
+                  <small>Trần Thị B</small><br />
+                  <small class="text-muted">30B-67890</small>
+                </div>
+              </div>
+
+              <div class="parking-slot available" onclick="assignSlot('A03')">
+                <div class="slot-number">A03</div>
+                <div class="slot-info">
+                  <i class="bi bi-dash-circle"></i><br />
+                  <small class="text-muted">Trống</small>
+                </div>
+              </div>
+
+              <div
+                class="parking-slot occupied"
+                onclick="viewSlotDetail('A04')"
+              >
+                <div class="slot-number">A04</div>
+                <div class="slot-info">
+                  <i class="bi bi-car-front"></i><br />
+                  <small>Lê Văn C</small><br />
+                  <small class="text-muted">51C-11111</small>
+                </div>
+              </div>
+
+              <div class="parking-slot available" onclick="assignSlot('A05')">
+                <div class="slot-number">A05</div>
+                <div class="slot-info">
+                  <i class="bi bi-dash-circle"></i><br />
+                  <small class="text-muted">Trống</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Đường đi -->
+            <div class="parking-road mb-3">
+              <i class="bi bi-arrow-left-right"></i> Lối đi
+            </div>
+
+            <!-- Hàng 2 -->
+            <div class="parking-row mb-3">
+              <div
+                class="parking-slot occupied"
+                onclick="viewSlotDetail('A06')"
+              >
+                <div class="slot-number">A06</div>
+                <div class="slot-info">
+                  <i class="bi bi-car-front"></i><br />
+                  <small>Phạm Minh D</small><br />
+                  <small class="text-muted">59D-22222</small>
+                </div>
+              </div>
+
+              <div
+                class="parking-slot maintenance"
+                onclick="viewSlotDetail('A07')"
+              >
+                <div class="slot-number">A07</div>
+                <div class="slot-info">
+                  <i class="bi bi-exclamation-triangle"></i><br />
+                  <small class="text-warning">Bảo trì</small>
+                </div>
+              </div>
+
+              <div
+                class="parking-slot occupied"
+                onclick="viewSlotDetail('A08')"
+              >
+                <div class="slot-number">A08</div>
+                <div class="slot-info">
+                  <i class="bi bi-car-front"></i><br />
+                  <small>Võ Thị E</small><br />
+                  <small class="text-muted">60E-33333</small>
+                </div>
+              </div>
+
+              <div class="parking-slot available" onclick="assignSlot('A09')">
+                <div class="slot-number">A09</div>
+                <div class="slot-info">
+                  <i class="bi bi-dash-circle"></i><br />
+                  <small class="text-muted">Trống</small>
+                </div>
+              </div>
+
+              <div
+                class="parking-slot occupied"
+                onclick="viewSlotDetail('A10')"
+              >
+                <div class="slot-number">A10</div>
+                <div class="slot-info">
+                  <i class="bi bi-car-front"></i><br />
+                  <small>Hoàng Văn F</small><br />
+                  <small class="text-muted">61F-44444</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sơ đồ bãi đỗ - Tầng 2 -->
+      <div class="card shadow-sm">
+        <div
+          class="card-header bg-white d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">
+            <i class="bi bi-building"></i> Tầng 2 - Khu B (Xe máy)
+          </h5>
+          <span class="badge bg-info">30 chỗ</span>
+        </div>
+        <div class="card-body">
+          <div class="parking-grid-motorcycle">
+            <!-- Hàng 1 - Xe máy (compact) -->
+            <div class="parking-row-motorcycle mb-3">
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B01')"
+              >
+                <div class="slot-number-sm">B01</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B02')"
+              >
+                <div class="slot-number-sm">B02</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle available"
+                onclick="assignSlot('B03')"
+              >
+                <div class="slot-number-sm">B03</div>
+                <i class="bi bi-dash-circle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B04')"
+              >
+                <div class="slot-number-sm">B04</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B05')"
+              >
+                <div class="slot-number-sm">B05</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle available"
+                onclick="assignSlot('B06')"
+              >
+                <div class="slot-number-sm">B06</div>
+                <i class="bi bi-dash-circle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B07')"
+              >
+                <div class="slot-number-sm">B07</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B08')"
+              >
+                <div class="slot-number-sm">B08</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle available"
+                onclick="assignSlot('B09')"
+              >
+                <div class="slot-number-sm">B09</div>
+                <i class="bi bi-dash-circle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B10')"
+              >
+                <div class="slot-number-sm">B10</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+            </div>
+
+            <!-- Đường đi -->
+            <div class="parking-road-sm mb-3">
+              <i class="bi bi-arrow-left-right"></i>
+            </div>
+
+            <!-- Hàng 2 - Xe máy -->
+            <div class="parking-row-motorcycle mb-3">
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B11')"
+              >
+                <div class="slot-number-sm">B11</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle available"
+                onclick="assignSlot('B12')"
+              >
+                <div class="slot-number-sm">B12</div>
+                <i class="bi bi-dash-circle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B13')"
+              >
+                <div class="slot-number-sm">B13</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B14')"
+              >
+                <div class="slot-number-sm">B14</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle maintenance"
+                onclick="viewSlotDetail('B15')"
+              >
+                <div class="slot-number-sm">B15</div>
+                <i class="bi bi-exclamation-triangle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B16')"
+              >
+                <div class="slot-number-sm">B16</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle available"
+                onclick="assignSlot('B17')"
+              >
+                <div class="slot-number-sm">B17</div>
+                <i class="bi bi-dash-circle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B18')"
+              >
+                <div class="slot-number-sm">B18</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle occupied"
+                onclick="viewSlotDetail('B19')"
+              >
+                <div class="slot-number-sm">B19</div>
+                <i class="bi bi-bicycle"></i>
+              </div>
+              <div
+                class="parking-slot-motorcycle available"
+                onclick="assignSlot('B20')"
+              >
+                <div class="slot-number-sm">B20</div>
+                <i class="bi bi-dash-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-  </div>
+    <!-- TAB 2: Danh sách phương tiện -->
+    <div class="tab-pane fade" id="vehicles" role="tabpanel">
+      <!-- Bộ lọc -->
+      <div class="card p-3 shadow-sm mb-4">
+        <div class="row g-3">
+          <div class="col-md-3">
+            <input
+              type="text"
+              class="form-control"
+              id="searchVehicle"
+              placeholder="Tìm biển số, chủ xe..."
+            />
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterVehicleType">
+              <option value="">Tất cả loại xe</option>
+              <option value="car">Ô tô</option>
+              <option value="motorcycle">Xe máy</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterVehicleStatus">
+              <option value="">Tất cả trạng thái</option>
+              <option value="active">Đang hoạt động</option>
+              <option value="inactive">Không hoạt động</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="filterVehicleHouse">
+              <option value="">Tất cả nhà</option>
+              <option value="1">22L Quận 7</option>
+              <option value="2">223 Quận 1</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <div class="btn-group w-100">
+              <button class="btn btn-primary" onclick="registerVehicle()">
+                <i class="bi bi-plus-lg"></i> Đăng ký xe
+              </button>
+              <button class="btn btn-success" onclick="exportVehicles()">
+                <i class="bi bi-file-excel"></i> Xuất
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Hàng 2: Sắp xếp theo -->
-  <div class="row g-3 mt-2">
-    <div class="col-md-3">
-      <select class="form-select">
-        <option selected>Sắp xếp theo</option>
-        <option value="az">Từ A - Z</option>
-        <option value="za">Từ Z - A</option>
-      </select>
+      <!-- Bảng danh sách phương tiện -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Loại xe</th>
+                <th>Biển số</th>
+                <th>Chủ xe</th>
+                <th>Phòng</th>
+                <th>Vị trí đỗ</th>
+                <th>Phí/tháng</th>
+                <th>Ngày đăng ký</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="vehiclesTableBody">
+              <!-- Xe 1 - Ô tô -->
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-primary text-white rounded p-2 me-2">
+                      <i class="bi bi-car-front fs-5"></i>
+                    </div>
+                    <strong>Ô tô</strong>
+                  </div>
+                </td>
+                <td>
+                  <strong class="text-primary">29A-12345</strong><br />
+                  <small class="text-muted">Toyota Vios</small>
+                </td>
+                <td>
+                  <strong>Nguyễn Văn A</strong><br />
+                  <small class="text-muted">0901234567</small>
+                </td>
+                <td>
+                  Phòng 101<br />
+                  <small class="text-muted">22L Quận 7</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">A01 - Tầng 1</span>
+                </td>
+                <td>
+                  <strong class="text-success">500.000 đ</strong>
+                </td>
+                <td>
+                  01/01/2024<br />
+                  <small class="text-muted">11 tháng</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">Hoạt động</span>
+                </td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm">
+                    <button class="btn btn-info" onclick="viewVehicleDetail(1)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-warning" onclick="editVehicle(1)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteVehicle(1)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Xe 2 - Ô tô -->
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-primary text-white rounded p-2 me-2">
+                      <i class="bi bi-car-front fs-5"></i>
+                    </div>
+                    <strong>Ô tô</strong>
+                  </div>
+                </td>
+                <td>
+                  <strong class="text-primary">30B-67890</strong><br />
+                  <small class="text-muted">Honda City</small>
+                </td>
+                <td>
+                  <strong>Trần Thị B</strong><br />
+                  <small class="text-muted">0912345678</small>
+                </td>
+                <td>
+                  Phòng 201<br />
+                  <small class="text-muted">223 Quận 1</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">A02 - Tầng 1</span>
+                </td>
+                <td>
+                  <strong class="text-success">500.000 đ</strong>
+                </td>
+                <td>
+                  15/03/2024<br />
+                  <small class="text-muted">9 tháng</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">Hoạt động</span>
+                </td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm">
+                    <button class="btn btn-info" onclick="viewVehicleDetail(2)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-warning" onclick="editVehicle(2)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteVehicle(2)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Xe 3 - Xe máy -->
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-success text-white rounded p-2 me-2">
+                      <i class="bi bi-bicycle fs-5"></i>
+                    </div>
+                    <strong>Xe máy</strong>
+                  </div>
+                </td>
+                <td>
+                  <strong class="text-success">59D1-22222</strong><br />
+                  <small class="text-muted">Honda Wave</small>
+                </td>
+                <td>
+                  <strong>Lê Văn C</strong><br />
+                  <small class="text-muted">0923456789</small>
+                </td>
+                <td>
+                  Phòng 102<br />
+                  <small class="text-muted">22L Quận 7</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">B01 - Tầng 2</span>
+                </td>
+                <td>
+                  <strong class="text-success">100.000 đ</strong>
+                </td>
+                <td>
+                  10/05/2024<br />
+                  <small class="text-muted">7 tháng</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">Hoạt động</span>
+                </td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm">
+                    <button class="btn btn-info" onclick="viewVehicleDetail(3)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-warning" onclick="editVehicle(3)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteVehicle(3)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Xe 4 - Xe máy -->
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="bg-success text-white rounded p-2 me-2">
+                      <i class="bi bi-bicycle fs-5"></i>
+                    </div>
+                    <strong>Xe máy</strong>
+                  </div>
+                </td>
+                <td>
+                  <strong class="text-success">60E1-33333</strong><br />
+                  <small class="text-muted">Yamaha Exciter</small>
+                </td>
+                <td>
+                  <strong>Phạm Minh D</strong><br />
+                  <small class="text-muted">0934567890</small>
+                </td>
+                <td>
+                  Phòng 202<br />
+                  <small class="text-muted">223 Quận 1</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">B02 - Tầng 2</span>
+                </td>
+                <td>
+                  <strong class="text-success">100.000 đ</strong>
+                </td>
+                <td>
+                  20/06/2024<br />
+                  <small class="text-muted">6 tháng</small>
+                </td>
+                <td>
+                  <span class="badge bg-success">Hoạt động</span>
+                </td>
+                <td>
+                  <div class="btn-group-vertical btn-group-sm">
+                    <button class="btn btn-info" onclick="viewVehicleDetail(4)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-warning" onclick="editVehicle(4)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteVehicle(4)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div
+          class="card-footer d-flex justify-content-between align-items-center"
+        >
+          <span class="text-muted"
+            >Hiển thị 1-4 trong tổng số 38 phương tiện</span
+          >
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled">
+                <a class="page-link" href="#">«</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <!-- TAB 4: PHÍ GỬI XE -->
+    <div class="tab-pane fade" id="fees">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0">
+                <i class="bi bi-cash-coin"></i> Bảng phí gửi xe
+              </h6>
+            </div>
+            <div class="card-body p-0">
+              <table class="table table-bordered mb-0 align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Loại xe</th>
+                    <th>Hình thức</th>
+                    <th>Phí</th>
+                    <th>Áp dụng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ô tô</td>
+                    <td>Tháng</td>
+                    <td><strong class="text-success">500.000 đ</strong></td>
+                    <td>Tất cả nhà</td>
+                  </tr>
+                  <tr>
+                    <td>Xe máy</td>
+                    <td>Tháng</td>
+                    <td><strong class="text-success">100.000 đ</strong></td>
+                    <td>Tất cả nhà</td>
+                  </tr>
+                  <tr>
+                    <td>Xe vãng lai</td>
+                    <td>Theo lượt</td>
+                    <td><strong>5.000 đ</strong></td>
+                    <td>Ban ngày</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h6 class="mb-0"><i class="bi bi-info-circle"></i> Ghi chú</h6>
+            </div>
+            <div class="card-body">
+              <ul class="small mb-0">
+                <li>Phí cộng vào hóa đơn hàng tháng</li>
+                <li>Xe vãng lai thu trực tiếp</li>
+                <li>Có thể cấu hình lại</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: THỐNG KÊ -->
+    <div class="tab-pane fade" id="statistics">
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-primary border-4">
+            <div class="card-body">
+              <div class="text-muted small">Tổng phương tiện</div>
+              <h3>38</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-success border-4">
+            <div class="card-body">
+              <div class="text-muted small">Đang hoạt động</div>
+              <h3 class="text-success">35</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-warning border-4">
+            <div class="card-body">
+              <div class="text-muted small">Chỗ trống</div>
+              <h3 class="text-warning">12</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card shadow-sm border-start border-info border-4">
+            <div class="card-body">
+              <div class="text-muted small">Doanh thu / tháng</div>
+              <h3 class="text-info">18.500.000 đ</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <i class="bi bi-bar-chart"></i>
+        Thống kê được tổng hợp từ dữ liệu phương tiện và phí gửi xe
+      </div>
     </div>
   </div>
-
 </div>
 
+<!-- TAB 3: Đăng ký phương tiện mới -->
+<div class="tab-pane fade" id="register" role="tabpanel">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-plus-circle"></i> Đăng ký phương tiện mới
+          </h5>
+        </div>
+        <div class="card-body">
+          <form id="registerVehicleForm">
+            <!-- Bước 1: Thông tin chủ xe -->
+            <div class="mb-4">
+              <h6 class="fw-bold mb-3">1. Thông tin chủ xe</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Họ tên chủ xe</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Nguyễn Văn A"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Số điện thoại</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="09xxxxxxxx"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Nhà / Cơ sở</label>
+                  <select class="form-select" required>
+                    <option value="">-- Chọn nhà --</option>
+                    <option>22L Quận 7</option>
+                    <option>223 Quận 1</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phòng</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Phòng 101"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
 
-<!-- Bảng quản lý điện nước -->
-<div class="card shadow-sm p-3">
-  <table class="table table-bordered align-middle">
-    <thead class="custom-header">
-      <tr>
-        <th>Nhà</th>
-        <th>Số lượng xe</th>
-        <th>Chổ trống</th>
-        <th>Tổng phí</th>
-        <th>Chức năng</th>
-      </tr>
-    </thead>
+            <hr />
 
-    <tbody>
-      <tr>
-        <td>22L Quận 7</td>
-        <td>30</td>
-        <td>7</td>
-        <td>100.000</td>
-        <td class="text-center">
-          <a href="#" class="btn btn-light btn-sm">Xem chi tiết</a>
-        </td>
-      </tr>
+            <!-- Bước 2: Thông tin phương tiện -->
+            <div class="mb-4">
+              <h6 class="fw-bold mb-3">2. Thông tin phương tiện</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Loại xe</label>
+                  <select class="form-select" required>
+                    <option value="">-- Chọn loại xe --</option>
+                    <option>Ô tô</option>
+                    <option>Xe máy</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Biển số xe</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="59A-12345"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Hãng / Dòng xe</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Toyota Vios"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Màu xe</label>
+                  <input type="text" class="form-control" placeholder="Trắng" />
+                </div>
+              </div>
+            </div>
 
-      <tr>
-        <td>223 Quận 1</td>
-        <td>45</td>
-        <td>10</td>
-        <td>100.000</td>
-        <td class="text-center">
-          <a href="#" class="btn btn-light btn-sm">Xem chi tiết</a>
-        </td>
-      </tr>
-    </tbody>
+            <hr />
 
-  </table>
+            <!-- Bước 3: Phân bổ chỗ đậu -->
+            <div class="mb-4">
+              <h6 class="fw-bold mb-3">3. Phân bổ chỗ đậu</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Khu vực / Tầng</label>
+                  <select class="form-select">
+                    <option>Tầng 1 - Khu A (Ô tô)</option>
+                    <option>Tầng 2 - Khu B (Xe máy)</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Ô đậu xe</label>
+                  <select class="form-select">
+                    <option>A03</option>
+                    <option>A05</option>
+                    <option>B03</option>
+                    <option>B06</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <hr />
+
+            <!-- Bước 4: Phí gửi xe -->
+            <div class="mb-4">
+              <h6 class="fw-bold mb-3">4. Phí gửi xe</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Hình thức thu</label>
+                  <select class="form-select">
+                    <option>Thu theo tháng</option>
+                    <option>Thu theo lượt</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phí/tháng</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    value="500.000"
+                    readonly
+                  />
+                  <small class="text-muted"
+                    >Tích hợp vào hóa đơn hàng tháng</small
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="text-end">
+              <button type="reset" class="btn btn-secondary">Hủy</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i> Lưu đăng ký
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
 {% endblock %}
